@@ -1,0 +1,11 @@
+node_modules
+__pycache__
+static/js/*
+static/i/*
+.coverage
+.vscode
+backup
+*.pyc
+venv*
+dist
+.env
