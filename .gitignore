@@ -1,5 +1,6 @@
 node_modules
 __pycache__
+**/*.sqlite
 static/js/*
 static/i/*
 .coverage
