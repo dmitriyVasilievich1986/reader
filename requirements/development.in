@@ -1,0 +1,10 @@
+-r base.in
+
+build
+mypy
+pip-compile-multi
+pre-commit
+pylint
+pytest
+pytest-cov
+ruff
