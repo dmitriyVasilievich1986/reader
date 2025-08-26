@@ -88,8 +88,9 @@ export function BooksPage() {
                   />
                 </Link>
                 <ImageListItemBar
-                  title={book.name}
+                  sx={{maxWidth: "150px", textOverflow:"clip", overflowX: "hidden" }}
                   subtitle={<span>by: @{book.author_name}</span>}
+                  title={book.name}
                   position="below"
                 />
               </ImageListItem>
