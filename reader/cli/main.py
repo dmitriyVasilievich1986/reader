@@ -5,6 +5,7 @@ from reader import db
 from reader.app import create_app
 from pathlib import Path
 import pydash
+import re
 
 
 main = FlaskGroup(create_app=create_app)
@@ -36,7 +37,8 @@ def add_book(path: str) -> None:
     db.session.commit()
     for i, f in enumerate(pages, start=1):
         url = f"/static/i/{author_name}/{name}/{f.name}"
-        page = Page(book=book, position=i, cover=url)
+        position = int(re.search(r'(\d+)', f.name).group(0))
+        page = Page(book=book, position=position, cover=url)
         db.session.add(page)
-        click.echo(f"\tAdding page {i}: {url}")
+        click.echo(f"\tAdding page {position}: {url}")
     db.session.commit()

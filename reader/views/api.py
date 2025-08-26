@@ -10,6 +10,7 @@ class PageModelApi(ModelRestApi):
     resource_name = "Page"
     allow_browser_login = True
     datamodel = SQLAInterface(Page)
+    order_columns = ["position"]
     
     show_columns = [
         Page.id.key,
