@@ -4,7 +4,6 @@ import rison from "rison";
 
 import ImageListItem from "@mui/material/ImageListItem";
 import Autocomplete from "@mui/material/Autocomplete";
-import ImageList from "@mui/material/ImageList";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid2";
 import Box from "@mui/material/Box";
@@ -64,20 +63,24 @@ export function BooksPage() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
-        <Grid size={{ xs: 12, sm: 4, md: 3 }} sx={{ p: 1 }}>
-          <Autocomplete
-            onChange={(_, v) => onChangeHandler(v)}
-            getOptionLabel={(option) => option.name}
-            getOptionKey={(option) => option.id}
-            disablePortal
-            onOpen={getAuthors}
-            options={authors}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="Authors" />}
-          />
+        <Grid size={{ xs: 12, sm: 4, md: 2 }} sx={{ p: 1 }}>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Autocomplete
+              onChange={(_, v) => onChangeHandler(v)}
+              getOptionLabel={(option) => option.name}
+              getOptionKey={(option) => option.id}
+              disablePortal
+              onOpen={getAuthors}
+              options={authors}
+              sx={{ width: "90%", maxWidth: "300px" }}
+              renderInput={(params) => (
+                <TextField {...params} label="Authors" />
+              )}
+            />
+          </Box>
         </Grid>
-        <Grid size={{ xs: 12, sm: 8, md: 6 }}>
-          <ImageList sx={{ width: 900 }} cols={4}>
+        <Grid size={{ xs: 12, sm: 8, md: 9 }}>
+          <Grid container spacing={2} sx={{ p: 1 }} justifyContent="center">
             {books.map((book) => (
               <ImageListItem key={book.id}>
                 <Link to={`/book/${book.id}${getRison(book.id)}`}>
@@ -88,16 +91,23 @@ export function BooksPage() {
                   />
                 </Link>
                 <ImageListItemBar
-                  sx={{maxWidth: "150px", textOverflow:"clip", overflowX: "hidden" }}
+                  sx={{
+                    maxWidth: "150px",
+                    textOverflow: "clip",
+                    overflowX: "hidden",
+                  }}
                   subtitle={<span>by: @{book.author_name}</span>}
                   title={book.name}
                   position="below"
                 />
               </ImageListItem>
             ))}
-          </ImageList>
+          </Grid>
         </Grid>
-        <Grid size={{ xs: 12, sm: 4, md: 3 }}></Grid>
+        <Grid
+          size={{ xs: 12, md: 1 }}
+          sx={{ display: { xs: "none", md: "block" } }}
+        ></Grid>
       </Grid>
     </Box>
   );
