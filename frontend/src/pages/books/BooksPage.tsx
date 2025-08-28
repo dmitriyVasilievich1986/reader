@@ -104,7 +104,10 @@ export function BooksPage() {
             ))}
           </Grid>
         </Grid>
-        <Grid size={{ xs: 12, sm: 0, md: 1 }}></Grid>
+        <Grid
+          size={{ xs: 12, md: 1 }}
+          sx={{ display: { xs: "none", md: "block" } }}
+        ></Grid>
       </Grid>
     </Box>
   );
