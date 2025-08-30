@@ -27,7 +27,10 @@ export function BookPage() {
       {pages.map((page) => (
         <ListItem disablePadding key={page.position}>
           <Grid justifyContent="center" container width="100vw">
-            <img style={{maxHeight: "80vh", maxWidth:"90vw"}} src={page.cover} />
+            <img
+              style={{ width: "90vw", maxWidth: "900px" }}
+              src={page.cover}
+            />
           </Grid>
         </ListItem>
       ))}
