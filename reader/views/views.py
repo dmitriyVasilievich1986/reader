@@ -1,6 +1,6 @@
 from typing import override
 
-from flask_appbuilder import BaseView, IndexView, expose
+from flask_appbuilder import BaseView, expose, IndexView
 from flask_appbuilder.security.decorators import has_access
 
 
@@ -22,7 +22,8 @@ class BookView(BaseView):
     @expose("/<string:pk>/")
     @has_access
     def book_view(
-        self, pk: str | int | None = None  # pylint: disable=unused-argument
+        self,
+        pk: str | int | None = None,  # pylint: disable=unused-argument
     ) -> str:
         """
         Renders the index.html template with the given appbuilder object.
@@ -35,4 +36,3 @@ class BookView(BaseView):
         """
 
         return self.render_template("index.html", appbuilder=self.appbuilder)
-
