@@ -3,8 +3,10 @@
 build
 mypy
 pip-compile-multi
+pip-tools==7.4.1
 pre-commit
 pylint
 pytest
 pytest-cov
 ruff
+uv
