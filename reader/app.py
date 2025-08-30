@@ -1,7 +1,8 @@
 from flask import Flask
-from reader.views.views import ReaderIndexView, BookView
+
+from reader import appbuilder, db
 from reader.views.api import AuthorModelApi, BookModelApi, PageModelApi
-from reader import appbuilder, db, migrate
+from reader.views.views import BookView, ReaderIndexView
 
 
 def create_app() -> Flask:
