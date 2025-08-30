@@ -49,6 +49,7 @@ def add_book(path: str) -> None:
     for i, f in enumerate(pages, start=1):
         url = f"/static/i/{author_name}/{name}/{f.name}"
         if (position_regex := re.search(r"(\d+)", f.name)) is None:
+            click.echo(f"\tWarning: Skipping file '{f.name}' as it does not contain a number in its name.", err=True)
             continue
         position = int(position_regex.group(0))
         page = Page(book=book, position=position, cover=url)
