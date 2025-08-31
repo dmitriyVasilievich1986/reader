@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  backend:
+    container_name: reader
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:3000"
+    volumes:
+      - ./reader:/app/reader
+      - ./static:/app/static
+    command: >
+      sh -c "uv run reader run --host 0.0.0.0 --port 3000 --debug"
