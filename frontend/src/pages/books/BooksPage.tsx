@@ -63,7 +63,7 @@ export function BooksPage() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
-        <Grid size={{ xs: 12, sm: 4, md: 2 }} sx={{ p: 1 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 2 }} sx={{ p: 1 }}>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Autocomplete
               onChange={(_, v) => onChangeHandler(v)}
@@ -79,7 +79,7 @@ export function BooksPage() {
             />
           </Box>
         </Grid>
-        <Grid size={{ xs: 12, sm: 8, md: 9 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 9 }}>
           <Grid container spacing={2} sx={{ p: 1 }} justifyContent="center">
             {books.map((book) => (
               <ImageListItem key={book.id}>
