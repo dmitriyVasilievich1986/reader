@@ -25,7 +25,6 @@ COPY ./LICENSE /app/LICENSE
 COPY ./Readme.md /app/Readme.md
 COPY ./pyproject.toml /app/pyproject.toml
 
-RUN ls -la /app/reader
 
 RUN --mount=type=bind,target=/app/uv.lock,src=./uv.lock \
     pip install uv && uv sync
