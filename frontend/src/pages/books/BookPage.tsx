@@ -1,23 +1,22 @@
-import { useSearchParams } from "react-router";
+import { useSearchParams, useParams } from "react-router";
 import { useState, useEffect } from "react";
-import rison from "rison";
 
 import ListItem from "@mui/material/ListItem";
 import Grid from "@mui/material/Grid2";
 import List from "@mui/material/List";
 
-import { RisonClass, call } from "../../support/caller";
+import { call } from "../../support/caller";
 import { PageType } from "./types";
 
 export function BookPage() {
   const [pages, setPages] = useState<PageType[]>([]);
   const [searchParams] = useSearchParams();
+  const params = useParams();
 
   useEffect(() => {
-    const r = new RisonClass(rison.decode(searchParams.get("q")));
     call<PageType[]>({
       method: "get",
-      url: `/api/v1/page/${r.call()}`,
+      url: `/api/v1/book/${params.bookId}/pages`,
       onSucces: setPages,
     });
   }, [searchParams]);

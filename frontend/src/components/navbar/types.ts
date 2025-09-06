@@ -12,3 +12,8 @@ export type MenuType = {
   label: AvailableMenus;
   url: string;
 };
+
+export type PathNameType = {
+  label: string;
+  to: string;
+};

@@ -83,7 +83,7 @@ export function BooksPage() {
           <Grid container spacing={2} sx={{ p: 1 }} justifyContent="center">
             {books.map((book) => (
               <ImageListItem key={book.id}>
-                <Link to={`/book/${book.id}${getRison(book.id)}`}>
+                <Link to={`/book/${book.id}?${searchParams.toString()}`}>
                   <img
                     src={book.cover}
                     style={{ height: 300, width: 200 }}

@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 
 import { RisonClass, call } from "../../support/caller";
 import { AvailableMenus, MenuType } from "./types";
+import { Breadcrumbs } from "./Breadcrumbs";
 
 const HOME: MenuType = { label: AvailableMenus.Home, url: "/" };
 
@@ -28,53 +29,56 @@ export function Navbar() {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#15616d",
-        color: "#ffecd1",
-      }}
-      height={100}
-    >
-      <Grid
-        container
-        spacing={4}
-        columns={2}
-        direction="row"
-        wrap="nowrap"
-        rowSpacing={4}
-        width="100%"
-        maxWidth={600}
+    <>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#15616d",
+          color: "#ffecd1",
+        }}
+        height={100}
       >
         <Grid
-          size={4}
-          justifyContent="center"
           container
-          sx={{ cursor: "pointer" }}
+          spacing={4}
+          columns={2}
+          direction="row"
+          wrap="nowrap"
+          rowSpacing={4}
+          width="100%"
+          maxWidth={600}
         >
-          <NavLink className="navlink" to={HOME.url}>
-            {HOME.label}
-          </NavLink>
-        </Grid>
-        {menu.map((item) => (
           <Grid
-            key={item.label}
             size={4}
             justifyContent="center"
             container
             sx={{ cursor: "pointer" }}
           >
-            <NavLink
-              className="navlink"
-              to={`${item.url}${getRison(item.label)}`}
-            >
-              {item.label}
+            <NavLink className="navlink" to={HOME.url}>
+              {HOME.label}
             </NavLink>
           </Grid>
-        ))}
-      </Grid>
-    </Box>
+          {menu.map((item) => (
+            <Grid
+              key={item.label}
+              size={4}
+              justifyContent="center"
+              container
+              sx={{ cursor: "pointer" }}
+            >
+              <NavLink
+                className="navlink"
+                to={`${item.url}${getRison(item.label)}`}
+              >
+                {item.label}
+              </NavLink>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+      <Breadcrumbs />
+    </>
   );
 }
