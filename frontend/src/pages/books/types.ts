@@ -15,6 +15,9 @@ export type BookType = {
   id: number;
   name: string;
   cover: string;
+  views: number;
   author_name: string;
   description: string;
+  created_at: string;
+  updated_at: string;
 };
