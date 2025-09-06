@@ -1,12 +1,12 @@
 import { useLocation, useSearchParams } from "react-router";
 import React from "react";
 
-import Breadcrumbs from "@mui/material/Breadcrumbs";
+import { default as MUIBreadcrumbs } from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 
 import { PathNameType } from "./types";
 
-export function Breadcrubs() {
+export function Breadcrumbs() {
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
@@ -34,7 +34,7 @@ export function Breadcrubs() {
         padding: "0.5rem 2rem",
       }}
     >
-      <Breadcrumbs aria-label="breadcrumb">
+      <MUIBreadcrumbs aria-label="breadcrumb">
         <Link underline="hover" color="inherit" href="/">
           Home
         </Link>
@@ -43,7 +43,7 @@ export function Breadcrubs() {
             {segment.label}
           </Link>
         ))}
-      </Breadcrumbs>
+      </MUIBreadcrumbs>
     </div>
   );
 }

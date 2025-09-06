@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 
 import { RisonClass, call } from "../../support/caller";
 import { AvailableMenus, MenuType } from "./types";
-import { Breadcrubs } from "./Breadcrubs";
+import { Breadcrumbs } from "./Breadcrumbs";
 
 const HOME: MenuType = { label: AvailableMenus.Home, url: "/" };
 
@@ -78,7 +78,7 @@ export function Navbar() {
           ))}
         </Grid>
       </Box>
-      <Breadcrubs />
+      <Breadcrumbs />
     </>
   );
 }
