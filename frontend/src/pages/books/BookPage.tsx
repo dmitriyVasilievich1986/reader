@@ -17,7 +17,7 @@ export function BookPage() {
     call<PageType[]>({
       method: "get",
       url: `/api/v1/book/${params.bookId}/pages`,
-      onSucces: setPages,
+      onSuccess: setPages,
     });
   }, [searchParams]);
 

@@ -17,7 +17,7 @@ export function Navbar() {
     call<MenuType[]>({
       method: "get",
       url: "/api/v1/menu/",
-      onSucces: (result) => {
+      onSuccess: (result) => {
         setMenu(result.filter((m) => m.label in AvailableMenus));
       },
     });

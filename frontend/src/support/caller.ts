@@ -12,12 +12,12 @@ export function call<R>(props: {
   method: "get" | "post" | "put";
   url: string;
   data?: any;
-  onSucces?: (response: R) => void;
+  onSuccess?: (response: R) => void;
   onFail?: () => void;
 }) {
   axios(props)
     .then((response: ResponseType<R>) => {
-      props?.onSucces && props.onSucces(response.data.result);
+      props?.onSuccess && props.onSuccess(response.data.result);
     })
     .catch((error) => {
       console.log(error);

@@ -27,7 +27,7 @@ export function BooksPage() {
     call<BookType[]>({
       method: "get",
       url: `/api/v1/book/${r.call()}`,
-      onSucces: setBooks,
+      onSuccess: setBooks,
     });
   }, [searchParams]);
 
@@ -35,7 +35,7 @@ export function BooksPage() {
     call<AuthorType[]>({
       method: "get",
       url: "/api/v1/author",
-      onSucces: setAuthors,
+      onSuccess: setAuthors,
     });
   };
 

@@ -31,13 +31,13 @@ export function HomePage() {
     call<BookType[]>({
       method: "get",
       url: `/api/v1/book/${mostViewdRison.call()}`,
-      onSucces: setMostViewedBooks,
+      onSuccess: setMostViewedBooks,
     });
 
     call<BookType[]>({
       method: "get",
       url: `/api/v1/book/${newestRison.call()}`,
-      onSucces: setNewestBooks,
+      onSuccess: setNewestBooks,
     });
   }, [searchParams]);
 
