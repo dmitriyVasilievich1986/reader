@@ -47,9 +47,9 @@ class Book(Model):
     cover = Column(String, default="/static/i/noimage.jpg")
     views = Column(Integer, default=0, nullable=False)
 
-    created_at = Column(DateTime, nullable=False, default=datetime.now())
+    created_at = Column(DateTime, nullable=False, default=datetime.now)
     updated_at = Column(
-        DateTime, nullable=False, onupdate=datetime.now(), default=datetime.now()
+        DateTime, nullable=False, onupdate=datetime.now, default=datetime.now
     )
 
     author_id = Column(Integer, ForeignKey("author.id"))
