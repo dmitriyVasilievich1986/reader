@@ -5,7 +5,7 @@ import rison from "rison";
 import ImageListItem from "@mui/material/ImageListItem";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 
 import ImageListItemBar from "@mui/material/ImageListItemBar";
