@@ -4,7 +4,7 @@ import { BooksPage, BookPage, HomePage } from "./pages";
 
 function App() {
   return (
-    <div>
+    <div style={{ overflowY: "scroll", height: "100vh" }}>
       <Navbar />
       <Routes>
         <Route path="" element={<HomePage />} />
