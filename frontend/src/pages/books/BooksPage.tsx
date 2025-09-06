@@ -1,17 +1,15 @@
-import { useSearchParams, Link } from "react-router";
+import { useSearchParams } from "react-router";
 import { useState, useEffect } from "react";
 import rison from "rison";
 
-import ImageListItem from "@mui/material/ImageListItem";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 
-import ImageListItemBar from "@mui/material/ImageListItemBar";
-
 import { RisonFilterClass, RisonClass, call } from "../../support/caller";
 import { AuthorType, BookType } from "../../types";
+import { BookCard } from "../../components";
 
 export function BooksPage() {
   const [authors, setAuthors] = useState<AuthorType[]>([]);
@@ -78,25 +76,7 @@ export function BooksPage() {
         <Grid size={{ xs: 12, sm: 12, md: 9 }}>
           <Grid container spacing={2} sx={{ p: 1 }} justifyContent="center">
             {books.map((book) => (
-              <ImageListItem key={book.id}>
-                <Link to={`/book/${book.id}?${searchParams.toString()}`}>
-                  <img
-                    src={book.cover}
-                    style={{ height: 300, width: 200 }}
-                    loading="lazy"
-                  />
-                </Link>
-                <ImageListItemBar
-                  sx={{
-                    maxWidth: "150px",
-                    textOverflow: "clip",
-                    overflowX: "hidden",
-                  }}
-                  subtitle={<span>by: @{book.author_name}</span>}
-                  title={book.name}
-                  position="below"
-                />
-              </ImageListItem>
+              <BookCard book={book} key={book.id} />
             ))}
           </Grid>
         </Grid>
