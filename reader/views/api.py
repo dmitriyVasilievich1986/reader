@@ -3,10 +3,13 @@ from typing import Any
 from flask import Response
 from flask_appbuilder.api import expose, ModelRestApi
 from flask_appbuilder.const import API_RESULT_RES_KEY
-from flask_appbuilder.models.sqla.filters import FilterRelationOneToManyEqual
+from flask_appbuilder.exceptions import (
+    InvalidColumnArgsFABException,
+)
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 
 from reader.models.main import Author, Book, Category, Page
+from reader.views.schemas import BookPageSchema
 
 
 class PageModelApi(ModelRestApi):
@@ -20,29 +23,6 @@ class PageModelApi(ModelRestApi):
         Page.cover.key,
         Page.position.key,
     ]
-
-    @expose("/book/<pk>/")
-    def pages(self, pk: str | int, **kwargs: Any) -> Response:
-        filters = self._base_filters + [
-            FilterRelationOneToManyEqual(Page.book, Book.id, pk)
-        ]
-
-        item = self.datamodel.get(
-            pk,
-            filters,
-            self.show_select_columns,
-            self.show_outer_default_load,
-        )
-        if not item:
-            return self.response_404()
-
-        response = {}
-        response["id"] = pk
-        response[API_RESULT_RES_KEY] = PageModelApi.show_model_schema.dump(
-            item, many=False
-        )
-
-        return self.response(200, message="Hello")
 
 
 class BookModelApi(ModelRestApi):
@@ -65,6 +45,34 @@ class BookModelApi(ModelRestApi):
         Book.description.key,
         "author_name",
     ]
+
+    @expose("/<pk>/pages")
+    def pages(self, pk: str, **kwargs: Any) -> Response:
+        response: dict[str, Any] = {}
+        args = kwargs.get("rison", {})
+        try:
+            select_columns, _ = self._handle_columns_args(
+                args,
+                self.show_select_columns,
+                self.show_columns,
+            )
+        except InvalidColumnArgsFABException as e:
+            return self.response_400(message=str(e))
+
+        item: Book = self.datamodel.get(
+            pk,
+            self._base_filters,
+            select_columns,
+            self.show_outer_default_load,
+        )
+        if not item:
+            return self.response_404()
+
+        self.set_response_key_mappings(response, self.get, args)
+
+        response["id"] = pk
+        response[API_RESULT_RES_KEY] = BookPageSchema().dump(item.pages, many=True)
+        return self.response(200, **response)
 
 
 class CategoryModelApi(ModelRestApi):
