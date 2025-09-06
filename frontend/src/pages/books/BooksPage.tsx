@@ -11,7 +11,7 @@ import Box from "@mui/material/Box";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 
 import { RisonFilterClass, RisonClass, call } from "../../support/caller";
-import { AuthorType, BookType } from "./types";
+import { AuthorType, BookType } from "../../types";
 
 export function BooksPage() {
   const [authors, setAuthors] = useState<AuthorType[]>([]);

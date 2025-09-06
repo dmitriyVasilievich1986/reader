@@ -6,7 +6,7 @@ import Grid from "@mui/material/Grid2";
 import List from "@mui/material/List";
 
 import { call } from "../../support/caller";
-import { PageType } from "./types";
+import { PageType } from "../../types";
 
 export function BookPage() {
   const [pages, setPages] = useState<PageType[]>([]);
