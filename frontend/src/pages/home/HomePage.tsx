@@ -11,7 +11,7 @@ import { RisonClass, call } from "../../support/caller";
 import { BookCard } from "../../components";
 
 export function HomePage() {
-  const [mostViewdBooks, setMostViewdBooks] = useState<BookType[]>([]);
+  const [mostViewedBooks, setMostViewedBooks] = useState<BookType[]>([]);
   const [newestBooks, setNewestBooks] = useState<BookType[]>([]);
 
   const [searchParams] = useSearchParams();
@@ -31,7 +31,7 @@ export function HomePage() {
     call<BookType[]>({
       method: "get",
       url: `/api/v1/book/${mostViewdRison.call()}`,
-      onSucces: setMostViewdBooks,
+      onSucces: setMostViewedBooks,
     });
 
     call<BookType[]>({
@@ -47,7 +47,7 @@ export function HomePage() {
         <Chip label="Popular" size="small" />
       </Divider>
       <Grid container spacing={2} sx={{ p: 1 }} justifyContent="center">
-        {mostViewdBooks.map((book) => (
+        {mostViewedBooks.map((book) => (
           <BookCard book={book} key={book.id} />
         ))}
       </Grid>
