@@ -20,22 +20,18 @@ export function BooksPage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    const r = new RisonClass(rison.decode(searchParams.get("q")));
+    let q = searchParams.get("q");
+    if (!q) {
+      q = rison.encode(new RisonClass({ order_column: "name" }));
+      setSearchParams({ q });
+    }
+    const r = new RisonClass(rison.decode(q));
     call<BookType[]>({
       method: "get",
       url: `/api/v1/book/${r.call()}`,
       onSucces: setBooks,
     });
   }, [searchParams]);
-
-  const getRison = (bookId: number) => {
-    return new RisonClass({
-      filters: [
-        new RisonFilterClass({ col: "book", opr: "rel_o_m", value: bookId }),
-      ],
-      order_column: "position",
-    }).call();
-  };
 
   const getAuthors = () => {
     call<AuthorType[]>({
