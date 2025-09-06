@@ -1,5 +1,7 @@
+from datetime import datetime
+
 from flask_appbuilder import Model
-from sqlalchemy import Column, ForeignKey, Integer, String, Table
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Table
 from sqlalchemy.orm import relationship
 
 metadata = Model.metadata
@@ -43,6 +45,12 @@ class Book(Model):
     name = Column(String, nullable=False, unique=True)
     description = Column(String, nullable=True)
     cover = Column(String, default="/static/i/noimage.jpg")
+    views = Column(Integer, default=0, nullable=False)
+
+    created_at = Column(DateTime, nullable=False, default=datetime.now)
+    updated_at = Column(
+        DateTime, nullable=False, onupdate=datetime.now, default=datetime.now
+    )
 
     author_id = Column(Integer, ForeignKey("author.id"))
 
@@ -56,6 +64,9 @@ class Book(Model):
     @property
     def author_name(self) -> str:
         return self.author.name
+
+    def increase_views(self) -> None:
+        self.views += 1
 
 
 class Page(Model):

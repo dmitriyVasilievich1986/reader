@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router";
 
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 
-import { RisonClass, call } from "../../support/caller";
 import { AvailableMenus, MenuType } from "./types";
+import { call } from "../../support/caller";
 import { Breadcrumbs } from "./Breadcrumbs";
 
 const HOME: MenuType = { label: AvailableMenus.Home, url: "/" };
@@ -17,16 +17,11 @@ export function Navbar() {
     call<MenuType[]>({
       method: "get",
       url: "/api/v1/menu/",
-      onSucces: (result) => {
+      onSuccess: (result) => {
         setMenu(result.filter((m) => m.label in AvailableMenus));
       },
     });
   }, []);
-
-  const getRison = (label: string) => {
-    if (label === HOME.label) return "";
-    return new RisonClass({ order_column: "name" }).call();
-  };
 
   return (
     <>
@@ -68,10 +63,7 @@ export function Navbar() {
               container
               sx={{ cursor: "pointer" }}
             >
-              <NavLink
-                className="navlink"
-                to={`${item.url}${getRison(item.label)}`}
-              >
+              <NavLink className="navlink" to={item.url}>
                 {item.label}
               </NavLink>
             </Grid>
