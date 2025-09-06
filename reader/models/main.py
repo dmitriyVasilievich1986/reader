@@ -66,4 +66,4 @@ class Page(Model):
     cover = Column(String, default="/static/i/noimage.jpg")
 
     book_id = Column(Integer, ForeignKey("book.id"))
-    book = relationship(Book, backref="page", foreign_keys=[book_id])
+    book = relationship(Book, backref="pages", foreign_keys=[book_id])
