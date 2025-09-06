@@ -1,6 +1,6 @@
 from flask import Flask
 
-from reader import appbuilder, db
+from reader import appbuilder, db, migrate
 from reader.views.api import AuthorModelApi, BookModelApi, PageModelApi
 from reader.views.views import BookView, ReaderIndexView
 
@@ -21,5 +21,8 @@ def create_app() -> Flask:
         appbuilder.add_api(AuthorModelApi)
         appbuilder.add_api(BookModelApi)
         appbuilder.add_api(PageModelApi)
+
+        migrate.directory = app.config["MIGRATIONS_DIR"]
+        migrate.init_app(app, db)
 
     return app
