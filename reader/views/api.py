@@ -36,13 +36,18 @@ class BookModelApi(ModelRestApi):
         Book.description.key,
         Book.author.key,
         Book.categories.key,
+        Book.created_at.key,
+        Book.updated_at.key,
     ]
 
     list_columns = [
         Book.id.key,
         Book.name.key,
         Book.cover.key,
+        Book.views.key,
         Book.description.key,
+        Book.created_at.key,
+        Book.updated_at.key,
         "author_name",
     ]
 
@@ -72,6 +77,8 @@ class BookModelApi(ModelRestApi):
 
         response["id"] = pk
         response[API_RESULT_RES_KEY] = BookPageSchema().dump(item.pages, many=True)
+        item.increase_views()
+        self.datamodel.edit(item)
         return self.response(200, **response)
 
 
