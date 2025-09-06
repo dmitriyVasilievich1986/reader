@@ -1,0 +1,10 @@
+.book-card {
+    max-width: 200px;
+    cursor: pointer;
+
+    &:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+        transform: translateY(-5px);
+        transition: all 0.3s ease;
+    }
+}
