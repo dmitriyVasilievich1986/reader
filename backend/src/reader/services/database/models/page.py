@@ -12,6 +12,7 @@ from .base import Base
 if TYPE_CHECKING:
     from .book import Book
 
+
 class Page(Base):
     """An ordered image reference belonging to exactly one ``Book``."""
 

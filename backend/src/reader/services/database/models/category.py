@@ -3,13 +3,15 @@
 __all__ = ("Category",)
 
 from typing import TYPE_CHECKING
-from .base import Base
 
 from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from .base import Base
+
 if TYPE_CHECKING:
     from .book import Book
+
 
 class Category(Base):
     """A tag-like shelf used to classify books."""

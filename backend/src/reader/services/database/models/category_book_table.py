@@ -7,6 +7,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
 
+
 class CategoryBookTable(Base):
     """A table linking categories to books."""
 

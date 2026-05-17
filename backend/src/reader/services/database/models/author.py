@@ -3,12 +3,15 @@
 __all__ = ("Author",)
 
 from typing import TYPE_CHECKING
+
 from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
+
 if TYPE_CHECKING:
     from .book import Book
+
 
 class Author(Base):
     """A writer credited on one or more books."""

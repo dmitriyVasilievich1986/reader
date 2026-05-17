@@ -1,3 +1,7 @@
+"""Book model for the database."""
+
+__all__ = ("Book",)
+
 from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey, Integer, String
@@ -10,6 +14,7 @@ if TYPE_CHECKING:
     from .category import Category
     from .page import Page
 
+
 class Book(Base):
     """A published work keyed by ``name`` with author, categories, and pages."""
 
@@ -19,10 +24,10 @@ class Book(Base):
     name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
     description: Mapped[str | None] = mapped_column(String, nullable=True)
     cover: Mapped[str | None] = mapped_column(String, nullable=True)
-    
+
     author_id: Mapped[int] = mapped_column(Integer, ForeignKey("author.id"))
     author: Mapped["Author"] = relationship("Author", backref="books")
-    
+
     categories: Mapped[list["Category"]] = relationship("Category", secondary="category_book_table", backref="books")
     pages: Mapped[list["Page"]] = relationship("Page", backref="book")
 
