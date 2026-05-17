@@ -20,8 +20,8 @@ requires-python = ">=3.13"
 dependencies = [
     "aiosqlite>=0.22.1",
     "alembic>=1.18.4",
+    "asyncclick>=8.3.0.7",
     "asyncpg>=0.31.0",
-    "click>=8.0.3",
     "fastapi>=0.136.1",
     "greenlet>=3.5.0",
     "loguru>=0.7.3",

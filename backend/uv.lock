@@ -116,6 +116,18 @@ wheels = [
 ]
 
 [[package]]
+name = "asyncclick"
+version = "8.3.0.7"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "colorama", marker = "sys_platform == 'win32'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f9/ca/25e426d16bd0e91c1c9259112cecd17b2c2c239bdd8e5dba430f3bd5e3ef/asyncclick-8.3.0.7.tar.gz", hash = "sha256:8a80d8ac613098ee6a9a8f0248f60c66c273e22402cf3f115ed7f071acfc71d3", size = 277634, upload-time = "2025-10-11T08:35:44.841Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/01/d9/782ffcb4c97b889bc12d8276637d2739b99520390ee8fec77c07416c5d12/asyncclick-8.3.0.7-py3-none-any.whl", hash = "sha256:7607046de39a3f315867cad818849f973e29d350c10d92f251db3ff7600c6c7d", size = 109925, upload-time = "2025-10-11T08:35:43.378Z" },
+]
+
+[[package]]
 name = "asyncpg"
 version = "0.31.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1162,8 +1174,8 @@ source = { editable = "." }
 dependencies = [
     { name = "aiosqlite" },
     { name = "alembic" },
+    { name = "asyncclick" },
     { name = "asyncpg" },
-    { name = "click" },
     { name = "fastapi" },
     { name = "greenlet" },
     { name = "loguru" },
@@ -1191,8 +1203,8 @@ dev = [
 requires-dist = [
     { name = "aiosqlite", specifier = ">=0.22.1" },
     { name = "alembic", specifier = ">=1.18.4" },
+    { name = "asyncclick", specifier = ">=8.3.0.7" },
     { name = "asyncpg", specifier = ">=0.31.0" },
-    { name = "click", specifier = ">=8.0.3" },
     { name = "fastapi", specifier = ">=0.136.1" },
     { name = "greenlet", specifier = ">=3.5.0" },
     { name = "loguru", specifier = ">=0.7.3" },
