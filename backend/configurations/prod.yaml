@@ -6,7 +6,8 @@ info:
         debug: false
         log_level: INFO
     cors_info:
-        origins: "*"
+        origins:
+            - "*"
         allow_credentials: true
         allow_methods:
             - GET
