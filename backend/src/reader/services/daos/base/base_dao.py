@@ -231,9 +231,9 @@ class BaseDAO[DatabaseModel: Base](ABC):
         if self.select_in_options_all:
             stmt = stmt.options(*map(selectinload, self.select_in_options_all))
 
-        if limit:
+        if limit is not None:
             stmt = stmt.limit(limit)
-        if offset:
+        if offset is not None:
             stmt = stmt.offset(offset)
         if c_filters := self.concat_filters(filters):
             stmt = stmt.where(*c_filters)
