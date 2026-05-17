@@ -44,9 +44,6 @@ async def get_all_categories(
 
     try:
         payload, total = await categories_dao.get_all(**query.model_dump())
-    except IntegrityError as e:
-        logger.exception("Related object not found", exc_info=e)
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Related object not found") from e
     except SQLAlchemyError as e:
         logger.exception("Error getting all categories", exc_info=e)
         raise HTTPException(
@@ -90,9 +87,6 @@ async def get_single_category(
     except NoResultFound as e:
         logger.error(f"Category with ID {category_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Category not found") from e
-    except IntegrityError as e:
-        logger.exception("Related object not found", exc_info=e)
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Related object not found") from e
     except SQLAlchemyError as e:
         logger.exception("Error getting single category", exc_info=e)
         raise HTTPException(

@@ -44,9 +44,6 @@ async def get_all_pages(
 
     try:
         payload, total = await pages_dao.get_all(**query.model_dump())
-    except IntegrityError as e:
-        logger.exception("Related object not found", exc_info=e)
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Related object not found") from e
     except SQLAlchemyError as e:
         logger.exception("Error getting all pages", exc_info=e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error getting all pages") from e
@@ -88,9 +85,6 @@ async def get_single_page(
     except NoResultFound as e:
         logger.error(f"Page with ID {page_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Page not found") from e
-    except IntegrityError as e:
-        logger.exception("Related object not found", exc_info=e)
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Related object not found") from e
     except SQLAlchemyError as e:
         logger.exception("Error getting single page", exc_info=e)
         raise HTTPException(
