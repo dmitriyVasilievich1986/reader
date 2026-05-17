@@ -3,6 +3,9 @@
 These tests exercise the real migration pipeline (``env.py`` + revision files)
 against a per-test SQLite database, so any breakage in revision scripts or in
 the async runner inside ``env.py`` is caught here.
+
+``APPLICATION_TABLES`` lists ORM tables expected after ``upgrade head``; helpers
+introspect SQLite with :mod:`sqlite3` for deterministic assertions.
 """
 
 import sqlite3
@@ -20,14 +23,24 @@ APPLICATION_TABLES: frozenset[str] = frozenset(
 
 
 def _table_names(db_path: Path) -> set[str]:
-    """Return the set of non-internal table names in the SQLite database file."""
+    """List user tables in an on-disk SQLite file.
+
+    Ignores SQLite internal schemas (names prefixed ``sqlite_``).
+
+    Args:
+        db_path (pathlib.Path): Database file path. If the file does not exist,
+            returns an empty set.
+
+    Returns:
+        set[str]: Table names present in ``sqlite_master``.
+
+    """
     if not db_path.exists():
         return set()
     conn = sqlite3.connect(str(db_path))
     try:
         rows = conn.execute(
-            "SELECT name FROM sqlite_master "
-            "WHERE type='table' AND name NOT LIKE 'sqlite_%'",
+            "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'",
         ).fetchall()
     finally:
         conn.close()
@@ -39,7 +52,19 @@ def alembic_config(
     monkeypatch: pytest.MonkeyPatch,
     test_config_file: Path,
 ) -> Config:
-    """Build an Alembic ``Config`` that will read the per-test AppConfig YAML."""
+    """Provide an Alembic ``Config`` bound to this repo's ``alembic.ini``.
+
+    Ensures migrations resolve ``CONFIG_FILE_PATH`` to the same per-test YAML
+    as ``AppConfig`` fixtures (database URL aligns with ``sqlite_db_path``).
+
+    Args:
+        monkeypatch (pytest.MonkeyPatch): Sets ``CONFIG_FILE_PATH`` for the test.
+        test_config_file (pathlib.Path): Minimal config YAML path from ``conftest``.
+
+    Returns:
+        Config: Parsed Alembic configuration pointing at ``ALEMBIC_INI``.
+
+    """
     monkeypatch.setenv("CONFIG_FILE_PATH", str(test_config_file))
     return Config(str(ALEMBIC_INI))
 
@@ -52,7 +77,16 @@ class TestUpgrade:
         alembic_config: Config,
         sqlite_db_path: Path,
     ) -> None:
-        """Running migrations on a fresh path creates the SQLite database file."""
+        """Create the SQLite database file when upgrading against a new path.
+
+        Args:
+            alembic_config (Config): Alembic config for upgrade.
+            sqlite_db_path (pathlib.Path): Expected database file location.
+
+        Returns:
+            None
+
+        """
         assert not sqlite_db_path.exists()
         command.upgrade(alembic_config, "head")
         assert sqlite_db_path.exists()
@@ -62,7 +96,16 @@ class TestUpgrade:
         alembic_config: Config,
         sqlite_db_path: Path,
     ) -> None:
-        """All declared application tables exist after upgrading to head."""
+        """Materialise every application table declared in ``APPLICATION_TABLES``.
+
+        Args:
+            alembic_config (Config): Alembic config for upgrade.
+            sqlite_db_path (pathlib.Path): SQLite file to introspect post-upgrade.
+
+        Returns:
+            None
+
+        """
         command.upgrade(alembic_config, "head")
 
         tables = _table_names(sqlite_db_path)
@@ -74,7 +117,16 @@ class TestUpgrade:
         alembic_config: Config,
         sqlite_db_path: Path,
     ) -> None:
-        """Alembic stamps the database with the head revision identifier."""
+        """Persist the head revision in ``alembic_version``.
+
+        Args:
+            alembic_config (Config): Alembic config for upgrade.
+            sqlite_db_path (pathlib.Path): SQLite file to read ``version_num``.
+
+        Returns:
+            None
+
+        """
         command.upgrade(alembic_config, "head")
 
         assert "alembic_version" in _table_names(sqlite_db_path)
@@ -92,7 +144,16 @@ class TestUpgrade:
         alembic_config: Config,
         sqlite_db_path: Path,
     ) -> None:
-        """The book table is created with a foreign key to author.id."""
+        """Declare ``book.author_id`` as a foreign key to ``author.id``.
+
+        Args:
+            alembic_config (Config): Alembic config for upgrade.
+            sqlite_db_path (pathlib.Path): SQLite file post-upgrade.
+
+        Returns:
+            None
+
+        """
         command.upgrade(alembic_config, "head")
 
         conn = sqlite3.connect(str(sqlite_db_path))
@@ -113,7 +174,16 @@ class TestDowngrade:
         alembic_config: Config,
         sqlite_db_path: Path,
     ) -> None:
-        """All application tables are gone after downgrading to base."""
+        """Remove application tables when downgrading to base.
+
+        Args:
+            alembic_config (Config): Alembic config for upgrade then downgrade.
+            sqlite_db_path (pathlib.Path): SQLite file post-downgrade.
+
+        Returns:
+            None
+
+        """
         command.upgrade(alembic_config, "head")
         command.downgrade(alembic_config, "base")
 
@@ -130,7 +200,16 @@ class TestRoundTrip:
         alembic_config: Config,
         sqlite_db_path: Path,
     ) -> None:
-        """After down/up the application tables are back."""
+        """Restore full schema after downgrade then upgrade again.
+
+        Args:
+            alembic_config (Config): Alembic config across the cycle.
+            sqlite_db_path (pathlib.Path): SQLite file after final upgrade.
+
+        Returns:
+            None
+
+        """
         command.upgrade(alembic_config, "head")
         command.downgrade(alembic_config, "base")
         command.upgrade(alembic_config, "head")

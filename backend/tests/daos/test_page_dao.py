@@ -1,4 +1,9 @@
-"""Tests specific to ``PageDAO`` (eager-loaded ``book`` on single-row reads)."""
+"""Tests for ``PageDAO`` behaviours around the parent ``book`` and list filtering.
+
+Covers eager ``book`` hydration on ``get_by_pk`` and ``get_all`` scoped by
+``book_id`` plus stable ``position`` ordering. Uses migrated SQLite fixtures from
+``daos.conftest``.
+"""
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -9,6 +14,15 @@ class TestPageDAO:
     """The Page DAO exposes the parent ``book`` as a single-row eager option."""
 
     async def test_get_by_pk_eagerly_loads_book(self, session: AsyncSession) -> None:
+        """Hydrate nested ``book`` fields when reloading a persisted page row.
+
+        Args:
+            session (AsyncSession): Migrated-database session under test.
+
+        Returns:
+            None
+
+        """
         authors = AuthorDAO(session=session)
         books = BookDAO(session=session)
         pages = PageDAO(session=session)
@@ -23,6 +37,15 @@ class TestPageDAO:
         assert fetched.position == 42
 
     async def test_get_all_filters_by_book_id(self, session: AsyncSession) -> None:
+        """Restrict list results to pages for one book and sort by ``position``.
+
+        Args:
+            session (AsyncSession): Migrated-database session under test.
+
+        Returns:
+            None
+
+        """
         authors = AuthorDAO(session=session)
         books = BookDAO(session=session)
         pages = PageDAO(session=session)

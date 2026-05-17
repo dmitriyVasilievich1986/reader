@@ -1,4 +1,9 @@
-"""Tests specific to ``BookDAO`` (eager-loaded ``author``, ``categories``, ``pages``)."""
+"""Tests for ``BookDAO`` behaviours around relationship loading.
+
+Covers eager loads on ``get_by_pk`` (``author``, ``categories``, ``pages``),
+the ``author_name`` convenience accessor, and list queries that omit full graph
+loads. Uses migrated SQLite fixtures from ``daos.conftest``.
+"""
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -15,7 +20,19 @@ class TestBookDAO:
         session: AsyncSession,
         db_client: AsyncDatabaseClient,
     ) -> None:
-        """Write through one session, then read through a fresh one to bypass the identity map."""
+        """Hydrate ``author``, ``categories``, and ``pages`` after a pk fetch in new session.
+
+        Persist graph data in one ``AsyncSession``, then reload the book via a factory
+        session so behaviour is observable outside the identity map.
+
+        Args:
+            session (AsyncSession): Write session from ``daos.session`` fixture.
+            db_client (AsyncDatabaseClient): Factory for isolated read ``AsyncSession``.
+
+        Returns:
+            None
+
+        """
         write_authors = AuthorDAO(session=session)
         write_categories = CategoryDAO(session=session)
         write_books = BookDAO(session=session)
@@ -41,6 +58,15 @@ class TestBookDAO:
             assert sorted(p.position for p in fetched.pages) == [1, 2]
 
     async def test_author_name_property(self, session: AsyncSession) -> None:
+        """Expose concatenated ``first_name`` / ``last_name`` from related author.
+
+        Args:
+            session (AsyncSession): Migrated-database session under test.
+
+        Returns:
+            None
+
+        """
         authors = AuthorDAO(session=session)
         books = BookDAO(session=session)
 
@@ -51,8 +77,18 @@ class TestBookDAO:
         assert fetched.author_name == "George Orwell"
 
     async def test_get_all_returns_books_without_relations_loaded(
-        self, session: AsyncSession,
+        self,
+        session: AsyncSession,
     ) -> None:
+        """List books with stable sorting while avoiding heavy relationship payloads.
+
+        Args:
+            session (AsyncSession): Migrated-database session under test.
+
+        Returns:
+            None
+
+        """
         authors = AuthorDAO(session=session)
         books = BookDAO(session=session)
 

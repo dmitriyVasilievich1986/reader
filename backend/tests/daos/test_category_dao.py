@@ -1,4 +1,9 @@
-"""Tests specific to ``CategoryDAO`` (eager-loaded ``books`` on single-row reads)."""
+"""Tests for ``CategoryDAO`` behaviours around relationship loading and constraints.
+
+Covers eager ``books`` (many-to-many via ``category_book_table``) on ``get_by_pk``
+and database enforcement of unique ``category.name``. Uses migrated SQLite fixtures
+from ``daos.conftest``.
+"""
 
 import pytest
 from sqlalchemy.exc import IntegrityError
@@ -17,7 +22,19 @@ class TestCategoryDAO:
         session: AsyncSession,
         db_client: AsyncDatabaseClient,
     ) -> None:
-        """Write through one session, then read through a fresh one to bypass the identity map."""
+        """Hydrate linked ``books`` when fetching category by pk in a fresh session.
+
+        Persist authors, books, and association rows in one ``AsyncSession``, then
+        reload the category through a factory session outside the identity map.
+
+        Args:
+            session (AsyncSession): Write session from ``daos.session`` fixture.
+            db_client (AsyncDatabaseClient): Factory for isolated read ``AsyncSession``.
+
+        Returns:
+            None
+
+        """
         write_authors = AuthorDAO(session=session)
         write_books = BookDAO(session=session)
         write_categories = CategoryDAO(session=session)
@@ -37,7 +54,15 @@ class TestCategoryDAO:
             assert {b.name for b in fetched.books} == {"A Mystery", "B Mystery"}
 
     async def test_unique_name_constraint_via_create(self, session: AsyncSession) -> None:
-        """``name`` is unique — a second create with the same name should fail."""
+        """Surface ``IntegrityError`` when inserting a duplicate ``name``.
+
+        Args:
+            session (AsyncSession): Migrated-database session under test.
+
+        Returns:
+            None
+
+        """
         categories = CategoryDAO(session=session)
         await categories.create(name="Drama")
 

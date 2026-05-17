@@ -1,4 +1,8 @@
-"""Tests specific to ``AuthorDAO`` (eager-loaded ``books`` on single-row reads)."""
+"""Tests for ``AuthorDAO`` behaviours not covered solely by generic base DAO tests.
+
+Focused on eager-loading of ``books`` on ``get_by_pk`` versus narrower column loads
+on list queries (``get_all``), using DAO-level fixtures from ``daos.conftest``.
+"""
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -14,7 +18,19 @@ class TestAuthorDAO:
         session: AsyncSession,
         db_client: AsyncDatabaseClient,
     ) -> None:
-        """Write through one session, then read through a fresh one to bypass the identity map."""
+        """Hydrate ``author.books`` when fetching by primary key in a fresh session.
+
+        Persist related ``Book`` rows in one ``AsyncSession``, then reload the author
+        through a new session so behaviour is not masked by identity-map caching.
+
+        Args:
+            session (AsyncSession): Write session from ``daos.session`` fixture.
+            db_client (AsyncDatabaseClient): Factory for separate read ``AsyncSession``.
+
+        Returns:
+            None
+
+        """
         write_authors = AuthorDAO(session=session)
         write_books = BookDAO(session=session)
 
@@ -28,7 +44,15 @@ class TestAuthorDAO:
             assert {b.name for b in fetched.books} == {"Foundation", "I, Robot"}
 
     async def test_get_all_does_not_require_books(self, session: AsyncSession) -> None:
-        """``get_all`` uses ``load_only`` (no relationship eager-load); list works without books."""
+        """Keep ``get_all`` light: no mandatory ``books`` load for listing authors.
+
+        Args:
+            session (AsyncSession): Migrated-database session under test.
+
+        Returns:
+            None
+
+        """
         authors = AuthorDAO(session=session)
         await authors.create(first_name="Solo")
         rows, total = await authors.get_all()
