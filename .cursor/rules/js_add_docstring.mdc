@@ -1,0 +1,73 @@
+---
+description: Add JSDoc docstrings to all functions, methods, and the module in an open JS/JSX/TS/TSX file.
+globs: **/*.{js,jsx,ts,tsx}
+alwaysApply: false
+---
+
+# Add JS/TS Docstrings
+
+When asked to add docstrings to a JS/JSX/TS/TSX file, apply the following rules consistently across the entire file.
+
+## Scope
+
+- Add a file-level docstring at the very top of the file (before imports) if one is missing.
+- Add docstrings to every function, method, arrow function assigned to a variable, and class that lacks one, including constructors, static methods, and getters/setters.
+- Do not remove or rewrite existing docstrings unless explicitly asked.
+
+## Format
+
+Use **JSDoc** style comments (`/** ... */`).
+
+### File docstring
+
+```js
+/**
+ * Short one-line summary of what this module does.
+ */
+```
+
+### Function / method docstring
+
+```js
+/**
+ * Short one-line summary.
+ *
+ * Longer description if the behaviour is non-obvious. Omit when the
+ * one-liner is already sufficient.
+ *
+ * @param {string} name - Description of the argument.
+ * @param {number} [value=0] - Description. Square brackets denote optional.
+ * @returns {string} Description of the return value. Use `void` if nothing is returned.
+ * @throws {Error} Only include when the function body contains an explicit `throw` statement.
+ */
+```
+
+## Section rules
+
+### @param
+- Include **every** parameter.
+- Format: `@param {Type} name - Description.`
+- For TypeScript files, derive the type from the annotation if present; otherwise infer from context.
+- Optional parameters (those with a default value or marked `?`) use square brackets: `@param {Type} [name=default] - Description.`
+- For destructured parameters, document the individual properties: `@param {Type} name.property - Description.`
+
+### @returns
+- Always include this section.
+- Use `@returns {void}` if the function returns nothing meaningful.
+- If the function returns a Promise, use `@returns {Promise<Type>}`.
+
+### @throws
+- **Only** include this section when the function body contains one or more explicit `throw` statements.
+- Do not add this section for exceptions that may propagate from called functions.
+- Format: `@throws {ErrorType} Condition that triggers this error.`
+
+### @example
+- Do **not** add an `@example` section unless the user explicitly requests it.
+
+## Style notes
+
+- Keep the one-line summary under 100 characters and end it with a period.
+- Use present tense ("Return", "Throw", "Parse"), not past tense.
+- Do not repeat what the type annotation already makes obvious — add meaningful context.
+- Preserve all existing code; only insert or update docstring comments.
+- For React components, describe what the component renders, not its implementation details.
