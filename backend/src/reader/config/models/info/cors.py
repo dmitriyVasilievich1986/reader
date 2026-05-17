@@ -11,7 +11,7 @@ class CORSInfo(BaseModel):
     These values configure how browsers may call the API from other origins.
 
     Attributes:
-        origins (str): Comma-separated allowed origins or "*" to allow any
+        origins (list[str]): List of allowed origins or "*" to allow any
             origin.
         allow_credentials (bool): Whether the server may expose cookies or HTTP
             authentication to cross-origin callers.
@@ -22,9 +22,9 @@ class CORSInfo(BaseModel):
 
     """
 
-    origins: str = Field(
-        "*",
-        description='Comma-separated allowed origins or "*" to allow any origin',
+    origins: list[str] = Field(
+        default_factory=lambda: ["*"],
+        description='List of allowed origins or "*" to allow any origin',
     )
     allow_credentials: bool = Field(
         True,

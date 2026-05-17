@@ -20,8 +20,9 @@ requires-python = ">=3.13"
 dependencies = [
     "aiosqlite>=0.22.1",
     "alembic>=1.18.4",
+    "asyncclick>=8.3.0.7",
     "asyncpg>=0.31.0",
-    "click>=8.0.3",
+    "fastapi>=0.136.1",
     "greenlet>=3.5.0",
     "loguru>=0.7.3",
     "psycopg[binary]>=3.3.4",
@@ -29,6 +30,7 @@ dependencies = [
     "pydantic-settings[yaml]>=2.14.1",
     "pydash>=8.0",
     "sqlalchemy[asyncio]>=2.0.44",
+    "uvicorn>=0.47.0",
 ]
 
 [dependency-groups]
@@ -54,7 +56,7 @@ path = "src/reader/__init__.py"
 Homepage = "https://github.com/dmitriyVasilievich1986/reader"
 
 [project.scripts]
-reader = "reader.cli.main:main"
+reader = "reader.utils.cli.main:main"
 
 [tool.ruff.format]
 # Like Black, use double quotes for strings.

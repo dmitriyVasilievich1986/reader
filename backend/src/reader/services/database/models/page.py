@@ -23,4 +23,4 @@ class Page(Base):
     cover: Mapped[str | None] = mapped_column(String, nullable=True)
 
     book_id: Mapped[int] = mapped_column(Integer, ForeignKey("book.id"))
-    book: Mapped["Book"] = relationship("Book")
+    book: Mapped["Book"] = relationship("Book", back_populates="pages")
