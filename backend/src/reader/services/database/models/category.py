@@ -23,4 +23,4 @@ class Category(Base):
     description: Mapped[str | None] = mapped_column(String, nullable=True)
     cover: Mapped[str | None] = mapped_column(String, nullable=True)
 
-    books: Mapped[list["Book"]] = relationship("Book", secondary="category_book_table", backref="categories")
+    books: Mapped[list["Book"]] = relationship("Book", secondary="category_book_table")

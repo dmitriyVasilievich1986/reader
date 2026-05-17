@@ -23,7 +23,7 @@ class Author(Base):
     last_name: Mapped[str | None] = mapped_column(String, nullable=True)
     cover: Mapped[str | None] = mapped_column(String, nullable=True)
 
-    books: Mapped[list["Book"]] = relationship("Book", backref="author")
+    books: Mapped[list["Book"]] = relationship("Book")
 
     @property
     def name(self) -> str:
