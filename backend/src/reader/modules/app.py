@@ -44,7 +44,6 @@ def get_app(config: AppConfig | None = None) -> FastAPI:
         description=app_config.info.description,
         version=app_version,
         debug=app_config.info.api_info.debug,
-        log_level=app_config.info.api_info.log_level,
         lifespan=lifespan,
     )
 
