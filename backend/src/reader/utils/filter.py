@@ -27,6 +27,42 @@ class Filter[ColumnType: str](BaseModel):
     )
     value: str | int | list[str | int] | float | date | None = Field(..., description="The value to filter by")
 
+    @model_validator(mode="before")
+    @classmethod
+    def coerce_iso_date_string_value(cls, data: Any) -> Any:
+        """Coerce an ISO ``YYYY-MM-DD`` ``value`` string into a ``date`` before validation.
+
+        Runs only for scalar string values under comparison operators
+        (``eq``, ``ge``, ``gt``, ``le``, ``lt``). Pattern (``like``, ``ilike``),
+        null (``isnull``, ``notnull``) and membership (``in``) operators keep
+        their ``value`` untouched. Strings that do not match the ISO date
+        pattern are passed through.
+
+        Args:
+            data (Any): Raw input passed to ``Filter(...)``; coercion only
+                applies when this is a ``dict``.
+
+        Returns:
+            Any: The input (possibly with ``value`` replaced by a ``date``).
+
+        """
+        if not isinstance(data, dict):
+            return data
+
+        operator = data.get("operator")
+        value = data.get("value")
+        if operator not in ("eq", "ge", "gt", "le", "lt"):
+            return data
+        if not isinstance(value, str):
+            return data
+
+        try:
+            data["value"] = datetime.strptime(value, "%Y-%m-%d").date()
+        except ValueError:
+            pass
+
+        return data
+
     @model_validator(mode="after")
     def coerce_iso_date_strings_for_comparison(self) -> Self:
         """Coerce ISO date strings to ``date`` for numeric-style operators.
@@ -62,13 +98,6 @@ class Filter[ColumnType: str](BaseModel):
 
         if self.operator in ("like", "ilike", "isnull", "notnull"):
             return self
-
-        if isinstance(self.value, str):
-            try:
-                parsed = datetime.strptime(self.value, "%Y-%m-%d").date()
-                return self.model_copy(update={"value": parsed})
-            except ValueError:
-                return self
 
         return self
 
