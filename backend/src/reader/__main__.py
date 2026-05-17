@@ -1,8 +1,4 @@
-"""Main entry point for the reader application.
-
-This module provides the main entry point that initializes the FastAPI application
-and runs it using uvicorn ASGI server.
-"""
+"""CLI entry point: load config, construct the app, and serve it with uvicorn."""
 
 import uvicorn
 
@@ -10,12 +6,12 @@ from reader.config.app_config import AppConfig
 from reader.modules.app import get_app
 
 
-def main():
-    """Initialize and run the FastAPI application.
+def main() -> None:
+    """Load application configuration, build the ASGI app, and run uvicorn.
 
-    This function retrieves the application configuration, creates the FastAPI
-    app instance, and starts the uvicorn server with the configured host, port,
-    and log level.
+    Returns:
+        None
+
     """
     config = AppConfig.get_or_create()
 
