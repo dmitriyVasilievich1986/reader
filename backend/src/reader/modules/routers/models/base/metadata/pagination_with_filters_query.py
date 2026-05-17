@@ -10,7 +10,9 @@ from reader.utils.filter import Filter
 from .pagination_query import PaginationQuery
 
 
-class PaginationWithFiltersQuery[SortByType: str, ColumnType: str](PaginationQuery[SortByType]):
+class PaginationWithFiltersQuery[SortByType: str, FilterColumnsType: str](PaginationQuery[SortByType]):
     """Query parameters for pagination with filters."""
 
-    filters: Json[list[Filter[ColumnType]]] | None = Field(None, description="The filters to apply to the parameters")
+    filters: Json[list[Filter[FilterColumnsType]]] | None = Field(
+        None, description="The filters to apply to the parameters"
+    )
