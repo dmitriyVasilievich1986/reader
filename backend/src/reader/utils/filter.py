@@ -2,6 +2,7 @@
 
 __all__ = ("Filter",)
 
+from copy import deepcopy
 from datetime import date, datetime
 from typing import Any, Literal, Self
 
@@ -56,12 +57,13 @@ class Filter[ColumnType: str](BaseModel):
         if not isinstance(value, str):
             return data
 
+        data_copy = deepcopy(data)
         try:
-            data["value"] = datetime.strptime(value, "%Y-%m-%d").date()
+            data_copy["value"] = datetime.strptime(value, "%Y-%m-%d").date()
         except ValueError:
             pass
 
-        return data
+        return data_copy
 
     @model_validator(mode="after")
     def coerce_iso_date_strings_for_comparison(self) -> Self:
