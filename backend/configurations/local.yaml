@@ -1,0 +1,22 @@
+info:
+    name: "Reader"
+    description: "The application for reading books"
+    api_info:
+        app_port: 8000
+        debug: true
+        log_level: DEBUG
+    cors_info:
+        origins: "*"
+        allow_credentials: true
+        allow_methods:
+            - GET
+            - POST
+            - PUT
+            - DELETE
+        allow_headers:
+            - "*"
+
+services:
+    database:
+        provider: "sqlite+aiosqlite"
+        host: reader.sqlite3
