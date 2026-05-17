@@ -289,7 +289,15 @@ class BaseDAO[DatabaseModel: Base](ABC):
         return await self._get_by_pk_raw(session, getattr(obj, self.pk_column_name), self.pk_column_name)
 
     async def create(self, **kwargs) -> DatabaseModel:
-        """Create a row from keyword arguments matching the model fields."""
+        """Create a row from keyword arguments matching the model fields.
+
+        Args:
+            **kwargs: Column names and values for ``database_model``.
+
+        Returns:
+            DatabaseModel: The created row after commit and reload.
+
+        """
         if self.session is not None:
             return await self._create_raw(self.session, **kwargs)
 
@@ -341,46 +349,62 @@ class BaseDAO[DatabaseModel: Base](ABC):
         async with self.database_client.session_factory() as session:  # type: ignore[union-attr]
             return await self._update_raw(session, pk, col, **kwargs)
 
+    @overload
+    async def _delete_raw(self, session: AsyncSession, pk: int | str, pk_column_name: str, instance: None) -> bool: ...
+
+    @overload
     async def _delete_raw(
-        self, session: AsyncSession, pk: int | str, pk_column_name: str, instance: DatabaseModel | None
+        self, session: AsyncSession, pk: None, pk_column_name: None, instance: DatabaseModel
+    ) -> bool: ...
+
+    async def _delete_raw(
+        self,
+        session: AsyncSession,
+        pk: int | str | None = None,
+        pk_column_name: str | None = None,
+        instance: DatabaseModel | None = None,
     ) -> bool:
-        """Delete a row by instance or by primary key lookup.
+        """Delete one row by primary key lookup or delete a loaded instance.
+
+        When ``instance`` is None, the row is fetched with ``pk`` and
+        ``pk_column_name`` before deletion. Otherwise ``pk`` and
+        ``pk_column_name`` are ignored.
 
         Args:
             session (AsyncSession): Active async session.
-            pk (int | str): Primary key value when ``instance`` is omitted.
-            pk_column_name (str): Attribute name of the PK column on the model.
-            instance (DatabaseModel | None, optional): Existing ORM instance to
-                delete. Defaults to None.
+            pk (int | str | None, optional): Primary key value when
+                ``instance`` is None. Defaults to None.
+            pk_column_name (str | None, optional): Model attribute name for the
+                PK column when ``instance`` is None. Defaults to None.
+            instance (DatabaseModel | None, optional): Loaded ORM row to delete;
+                When set, ``pk`` and ``pk_column_name`` are unused. Defaults to
+                None.
 
         Returns:
-            bool: True after successful commit.
+            bool: True after the row was deleted and the session committed.
 
         """
-        instance = instance or await self._get_by_pk_raw(session, pk, pk_column_name)
-        await session.delete(instance)
+        instance_ = await self._get_by_pk_raw(session, pk, pk_column_name) if instance is None else instance  # type: ignore[arg-type]
+        await session.delete(instance_)
         await session.commit()
         return True
 
-    async def delete(
-        self, pk: int | str, pk_column_name: str | None = None, instance: DatabaseModel | None = None
-    ) -> bool:
-        """Delete a row by primary key or by passing a loaded instance.
+    async def delete(self, pk: int | str, pk_column_name: str | None = None) -> bool:
+        """Delete a row by primary key using injected or factory-opened session.
 
         Args:
-            pk (int | str): Primary key value when ``instance`` is omitted.
+            pk (int | str): Primary key value.
             pk_column_name (str | None, optional): PK column attribute name.
                 Defaults to ``self.pk_column_name``.
-            instance (DatabaseModel | None, optional): Row to delete without
-                reloading. Defaults to None.
 
         Returns:
-            bool: True after successful commit.
+            bool: True after the row was deleted and committed.
 
         """
         col = pk_column_name or self.pk_column_name
+
         if self.session is not None:
-            return await self._delete_raw(self.session, pk, col, instance)
+            return await self._delete_raw(self.session, pk, col, None)
 
         async with self.database_client.session_factory() as session:  # type: ignore[union-attr]
-            return await self._delete_raw(session, pk, col, instance)
+            return await self._delete_raw(session, pk, col, None)
