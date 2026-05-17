@@ -1,4 +1,4 @@
-"""App config module."""
+"""Root application configuration model."""
 
 __all__ = ("AppConfig",)
 
@@ -10,11 +10,16 @@ from .models import Info, Services
 
 
 class AppConfig(BaseConfig):
-    """Application configuration settings.
+    """Top-level settings for the Reader application.
 
-    This class holds all application-level configuration settings including
-    allowed hosts, secret key, debug mode, and database connection settings.
-    Supports both SQLite and PostgreSQL database engines.
+    Aggregates descriptive metadata and service endpoints loaded from YAML
+    and environment overrides via BaseConfig.
+
+    Attributes:
+        info (Info): Static application identification and versioning.
+        services (Services): Configuration for downstream services such as the
+            database.
+
     """
 
     info: Info = Field(..., description="The information of the application")
