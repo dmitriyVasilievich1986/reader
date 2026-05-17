@@ -27,13 +27,13 @@ def mount_static_files(app: FastAPI, app_config: "AppConfig") -> None:
 
     """
     if (assets_path := app_config.info.paths_info.assets).exists():
-        logger.debug("Mounting assets from %s...", str(assets_path))
+        logger.debug(f"Mounting assets from {assets_path}...")
         app.mount("/assets", StaticFiles(directory=assets_path), name="assets")
     else:
-        logger.info("Static directory %s does not exist, skipping mount.", str(assets_path))
+        logger.info(f"Static directory {assets_path} does not exist, skipping mount.")
 
     if (images_path := app_config.info.paths_info.images).exists():
-        logger.debug("Mounting images from %s...", str(images_path))
+        logger.debug(f"Mounting images from {images_path}...")
         app.mount("/images", StaticFiles(directory=images_path), name="images")
     else:
-        logger.info("Static directory %s does not exist, skipping mount.", str(images_path))
+        logger.info(f"Static directory {images_path} does not exist, skipping mount.")
