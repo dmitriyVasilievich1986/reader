@@ -1,24 +1,30 @@
-"""init
+"""Alembic migration: initial schema for categories, authors, books, and pages.
 
 Revision ID: 8e3f5d72efaf
-Revises: 
+Revises:
 Create Date: 2025-01-18 13:24:28.514963
 
 """
+
 from typing import Sequence, Union
 
 from alembic import op
-
+from sqlalchemy import Column, ForeignKeyConstraint, Integer, String, UniqueConstraint
 
 # revision identifiers, used by Alembic.
-revision: str = '8e3f5d72efaf'
+revision: str = "8e3f5d72efaf"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
-from sqlalchemy import Column, Integer, String, ForeignKeyConstraint, UniqueConstraint
 
 
 def upgrade() -> None:
+    """Create tables for categories, authors, books, pages, and book-category links.
+
+    Returns:
+        None.
+
+    """
     op.create_table(
         "category",
         Column("id", Integer, primary_key=True),
@@ -77,8 +83,14 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
+    """Drop ``category``, ``author``, ``book``, and ``category_book_tables``.
+
+    Returns:
+        None.
+
+    """
     op.drop_table("category")
     op.drop_table("author")
     op.drop_table("book")
-    
+
     op.drop_table("category_book_tables")

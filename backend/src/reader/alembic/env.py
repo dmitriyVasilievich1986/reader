@@ -1,3 +1,7 @@
+"""Alembic environment configuration."""
+
+__all__ = ("run_migrations_offline", "run_migrations_online")
+
 from logging.config import fileConfig
 
 from alembic import context
