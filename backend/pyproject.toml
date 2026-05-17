@@ -56,7 +56,7 @@ path = "src/reader/__init__.py"
 Homepage = "https://github.com/dmitriyVasilievich1986/reader"
 
 [project.scripts]
-reader = "reader.cli.main:main"
+reader = "reader.utils.cli.main:main"
 
 [tool.ruff.format]
 # Like Black, use double quotes for strings.
