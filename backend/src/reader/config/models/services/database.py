@@ -92,8 +92,8 @@ class Database(BaseModel):
         match self.provider:
             case "sqlite+aiosqlite":
                 return URL.create(self.provider, database=self.host)
-            case "postgresql+asyncpg" | "postgresql+psycopg":
-                if not any((self.user, self.password, self.name)):
+            case "postgresql+asyncpg":
+                if not all((self.user, self.password, self.name)):
                     raise ValueError("User, password and name are required for PostgreSQL")
                 return URL.create(
                     self.provider,
