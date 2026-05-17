@@ -80,7 +80,7 @@ def test_config_file(tmp_path: Path, sqlite_db_path: Path) -> Path:
                 "log_level": "INFO",
             },
             "cors_info": {
-                "origins": "*",
+                "origins": ["*"],
                 "allow_credentials": True,
                 "allow_methods": ["GET"],
                 "allow_headers": ["*"],
