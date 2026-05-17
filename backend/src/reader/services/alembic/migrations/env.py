@@ -12,7 +12,8 @@ from loguru import logger
 from sqlalchemy.engine import Connection
 
 from reader.config import AppConfig
-from reader.services.database import AsyncDatabaseClient, models
+from reader.services.database import AsyncDatabaseClient
+from reader.services.database.models import __all__ as models_all
 from reader.services.database.models.base import mapper_registry
 
 config = context.config
@@ -23,7 +24,7 @@ app_config = AppConfig.get_or_create()
 db_client = AsyncDatabaseClient(app_config=app_config)
 
 logger.info("Alembic migrations started")
-logger.info(f"Models: {models.__all__}")
+logger.info(f"Models: {models_all}")
 
 
 def do_run_migrations(connection: Connection) -> None:
