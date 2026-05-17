@@ -7,7 +7,7 @@ submodules to create a unified Info model.
 
 __all__ = ("Info",)
 
-from expenses_counter import __version__ as app_version
+from reader import __version__ as app_version
 from pydantic import BaseModel, Field
 
 from .api import APIInfo
@@ -23,7 +23,7 @@ class Info(BaseModel):
     configuration model for application-level settings.
 
     Attributes:
-        name: The name of the application. Defaults to "Expenses Counter".
+        name: The name of the application. Defaults to "Reader".
         version: The version of the application, automatically loaded from
             the package version.
         api_info: Configuration settings for the API server.
@@ -31,8 +31,8 @@ class Info(BaseModel):
 
     """
 
-    name: str = Field("Expenses Counter", description="The name of the application")
-    description: str = Field("Expenses Counter", description="The description of the application")
+    name: str = Field("Reader", description="The name of the application")
+    description: str = Field("The application for reading books", description="The description of the application")
     version: str = Field(app_version, description="The version of the application")
 
     api_info: APIInfo = Field(description="The API information", default_factory=APIInfo)  # type: ignore[arg-type]

@@ -47,16 +47,16 @@ class Database(BaseModel):
 
     Example:
         SQLite with aiosqlite configuration:
-        >>> db = Database(provider="sqlite+aiosqlite", host="./data.db")
+        >>> db = Database(provider="sqlite+aiosqlite", host="./reader.sqlite3")
         >>> print(db.url)
-        sqlite+aiosqlite:///./data.db
+        sqlite+aiosqlite:///./reader.sqlite3
 
         PostgreSQL with asyncpg configuration:
         >>> db = Database(
         ...     provider="postgresql+asyncpg",
         ...     host="localhost",
         ...     port=5432,
-        ...     name="expenses_db",
+        ...     name="reader_db",
         ...     user=SecretStr("dbuser"),
         ...     password=SecretStr("dbpass")
         ... )
