@@ -7,8 +7,9 @@ submodules to create a unified Info model.
 
 __all__ = ("Info",)
 
-from reader import __version__ as app_version
 from pydantic import BaseModel, Field
+
+from reader import __version__ as app_version
 
 from .api import APIInfo
 from .cors import CORSInfo
