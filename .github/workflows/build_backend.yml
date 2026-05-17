@@ -1,0 +1,66 @@
+name: build-backend
+
+on:
+  push:
+    branches:
+      - master
+      - development
+  pull_request:
+    branches:
+      - master
+      - development
+
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect backend changes
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+              - '.github/workflows/build_backend.yml'
+
+      - name: Skip backend build (no relevant changes)
+        if: steps.changes.outputs.backend != 'true'
+        run: echo "No backend or workflow changes; marking check successful."
+
+      - name: Set up Python
+        if: steps.changes.outputs.backend == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install uv
+        if: steps.changes.outputs.backend == 'true'
+        uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+          python-version: "3.13"
+          cache-dependency-glob: |
+            backend/uv.lock
+            backend/pyproject.toml
+
+      - name: Install dependencies
+        if: steps.changes.outputs.backend == 'true'
+        run: uv sync --frozen --dev
+
+      - name: Run ruff linter
+        if: steps.changes.outputs.backend == 'true'
+        run: uv run ruff check src/
+
+      - name: Run ruff formatter check
+        if: steps.changes.outputs.backend == 'true'
+        run: uv run ruff format --check src/
+
+      - name: Build release distributions
+        if: steps.changes.outputs.backend == 'true'
+        run: uv build

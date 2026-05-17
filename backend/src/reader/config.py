@@ -1,5 +1,7 @@
-from pathlib import Path
+"""Configuration settings for the Reader application."""
+
 from os import getenv
+from pathlib import Path
 
 BASE_DIR = Path(__file__).parent
 MIGRATIONS_DIR = BASE_DIR / "alembic"

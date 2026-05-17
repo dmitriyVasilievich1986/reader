@@ -1,0 +1,149 @@
+[project]
+name = "reader"
+dynamic = ["version"]
+keywords = ["reader", "files", "library"]
+classifiers = [
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+]
+
+authors = [{ email = "dmitriyvasil@gmail.com" }]
+maintainers = [{ email = "dmitriyvasil@gmail.com" }]
+description = "Library reader"
+
+readme = "Readme.md"
+license = { file = "LICENSE" }
+
+requires-python = ">=3.13"
+dependencies = [
+    "click>=8.0.3",
+    "flask>=2.2.5, <3.0.0",
+    "flask-appbuilder>=4.4.1, <5.0.0",
+    "flask-migrate>=3.1.0, <4.0",
+    "pydash>=8.0",
+    "sqlalchemy>=1.4, <2",
+]
+
+[dependency-groups]
+dev = ["mypy>=2.1.0", "ruff>=0.15.13"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/reader/__init__.py"
+
+[project.urls]
+Homepage = "https://github.com/dmitriyVasilievich1986/reader"
+
+[project.scripts]
+reader = "reader.cli.main:main"
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
+
+# Enable auto-formatting of code examples in docstrings. Markdown,
+# reStructuredText code/literal blocks and doctests are all supported.
+#
+# This is currently disabled by default, but it is planned for this
+# to be opt-out in the future.
+docstring-code-format = false
+
+# Set the line length limit used when formatting code snippets in
+# docstrings.
+#
+# This only has an effect when the `docstring-code-format` setting is
+# enabled.
+docstring-code-line-length = "dynamic"
+
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+
+[tool.ruff.lint]
+# Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
+# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
+# McCabe complexity (`C901`) by default.
+select = [
+    "A",     # flake8-builtins (A)
+    "ARG",   # flake8-unused-arguments (ARG)
+    "ASYNC", # flake8-async (ASYNC)
+    "PTH",   # flake8-use-pathlib (PTH)
+    "B",     # flake8-bugbear (B)
+    "E",     # pycodestyle (E, W)
+    "F",     # Pyflakes (F)
+    "N",     # pep8-naming (N)
+    "W",     # pycodestyle (E, W)
+    "RUF",
+    "SLF",   # flake8-self (SLF)
+    "RET",   # flake8-return (RET)
+    "Q",     # flake8-quotes (Q)
+    "T20",   # flake8-print (T20)
+    "COM",   # flake8-commas (COM)
+    "D",     # pydocstyle (D)
+    "FIX",   # flake8-fixme (FIX)
+]
+ignore = ["E712", "RUF001", "N817", "N814", "RUF100", "COM812", "D203", "D213"]
+
+extend-select = ["I"]
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 18
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 120
+
+[tool.ruff.lint.isort]
+case-sensitive = false
+combine-as-imports = true
+force-sort-within-sections = false
+known-first-party = ["reader"]
+lines-after-imports = -1
+order-by-type = false
+section-order = [
+    "future",
+    "standard-library",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
+known-third-party = [
+    "alembic",
+    "click",
+    "flask",
+    "flask_appbuilder",
+    "flask_migrate",
+    "pydash",
+    "sqlalchemy",
+]
+
+[tool.mypy]
+python_version = "3.13"
+mypy_path = ["src"]
+packages = ["reader"]
+show_error_codes = true
+warn_unused_configs = true
+warn_return_any = true
+warn_unused_ignores = true
+strict_equality = true
+plugins = ["sqlalchemy.ext.mypy.plugin"]

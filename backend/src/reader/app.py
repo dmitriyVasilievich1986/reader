@@ -1,10 +1,22 @@
+"""Application factory assembling Flask, FAB, persistence, routes, and statics."""
+
 from flask import Flask
-from reader.views.views import ReaderIndexView, BookView
+
+from reader import appbuilder, db
 from reader.views.api import AuthorModelApi, BookModelApi, PageModelApi
-from reader import appbuilder, db, migrate
+from reader.views.views import BookView, ReaderIndexView
 
 
 def create_app() -> Flask:
+    """Build a configured Flask app with AppBuilder registrations.
+
+    Applies ``reader.config``, wires ``db`` plus ``appbuilder``, registers web
+    and REST views, then returns ready-to-run WSGI app.
+
+    Returns:
+        Flask: Application instance exposing Reader views and APIs.
+
+    """
     app = Flask(__name__)
 
     app.config.from_object("reader.config")

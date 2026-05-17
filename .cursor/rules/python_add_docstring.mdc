@@ -1,0 +1,75 @@
+---
+description: Add Google-style docstrings to all functions, methods, and the module in an open Python file.
+globs: **/*.py
+alwaysApply: false
+---
+
+# Add Python Docstrings
+
+When asked to add docstrings to a Python file, apply the following rules consistently across the entire file.
+
+## Scope
+
+- Add a module-level docstring at the very top of the file (before imports) if one is missing.
+- Add docstrings to every function, method, and class that lacks one, including `__init__`, static methods, class methods, and property getters.
+- Do not remove or rewrite existing docstrings unless explicitly asked.
+
+## Format
+
+Use **Google style** docstrings.
+
+### Module docstring
+
+```python
+"""Short one-line summary of what this module does."""
+```
+
+### Function / method docstring
+
+```python
+def example(name: str, value: int = 0) -> str:
+    """Short one-line summary.
+
+    Longer description if the behaviour is non-obvious. Omit when the
+    one-liner is already sufficient.
+
+    Args:
+        name (str): Description of the argument.
+        value (int, optional): Description. Defaults to 0.
+
+    Returns:
+        str: Description of the return value. Use "None" if the function
+            returns nothing meaningful.
+
+    Raises:
+        ValueError: Only include this section when the function body
+            contains an explicit `raise` statement. List each exception
+            type that is raised and the condition that triggers it.
+    """
+```
+
+## Section rules
+
+### Args
+- Include **every** parameter except `self` and `cls`.
+- Format: `name (type): Description.`
+- If the parameter has a default value (or is `Optional[...]` / `X | None`), mark it as optional: `name (type, optional): Description. Defaults to <default>.`
+- Derive the type from the annotation if present; if no annotation exists, use the most accurate type you can infer from context.
+
+### Returns
+- Always include this section, even for `-> None` functions: write `None`.
+- If the function returns a tuple, describe each element.
+
+### Raises
+- **Only** include this section when the function body contains one or more explicit `raise` statements.
+- Do not add this section for exceptions that may propagate from called functions.
+
+### Examples
+- Do **not** add an `Examples` section unless the user explicitly requests it.
+
+## Style notes
+
+- Keep the one-line summary under 80 characters and end it with a period.
+- Use present tense ("Return", "Raise", "Parse"), not past tense.
+- Do not repeat what the type annotation already makes obvious — add meaningful context.
+- Preserve all existing code; only insert or update docstring strings.
