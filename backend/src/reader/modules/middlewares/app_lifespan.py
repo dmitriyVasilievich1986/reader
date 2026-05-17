@@ -2,6 +2,7 @@
 
 __all__ = ("lifespan",)
 
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -12,9 +13,7 @@ from reader.services.database import AsyncDatabaseClient
 
 
 @asynccontextmanager
-async def lifespan(
-    app: FastAPI,
-):
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Manage the application lifecycle, initializing and cleaning up services.
 
     Args:
