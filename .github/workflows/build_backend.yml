@@ -61,6 +61,19 @@ jobs:
         if: steps.changes.outputs.backend == 'true'
         run: uv run ruff format --check src/
 
+      - name: Cache mypy incremental data
+        if: steps.changes.outputs.backend == 'true'
+        uses: actions/cache@v4
+        with:
+          path: backend/.mypy_cache
+          key: ${{ runner.os }}-mypy-py3.13-${{ hashFiles('backend/pyproject.toml', 'backend/uv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mypy-py3.13-
+
+      - name: Run mypy
+        if: steps.changes.outputs.backend == 'true'
+        run: uv run mypy
+
       - name: Build release distributions
         if: steps.changes.outputs.backend == 'true'
         run: uv build
