@@ -2,7 +2,7 @@
 
 __all__ = ("Singleton",)
 
-from asyncio import Lock
+from threading import Lock
 from typing import ClassVar
 
 
