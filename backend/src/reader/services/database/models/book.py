@@ -26,10 +26,10 @@ class Book(Base):
     cover: Mapped[str | None] = mapped_column(String, nullable=True)
 
     author_id: Mapped[int] = mapped_column(Integer, ForeignKey("author.id"))
-    author: Mapped["Author"] = relationship("Author")
+    author: Mapped["Author"] = relationship("Author", back_populates="books")
 
     categories: Mapped[list["Category"]] = relationship("Category", secondary="category_book_table")
-    pages: Mapped[list["Page"]] = relationship("Page")
+    pages: Mapped[list["Page"]] = relationship("Page", back_populates="book")
 
     @property
     def author_name(self) -> str:
