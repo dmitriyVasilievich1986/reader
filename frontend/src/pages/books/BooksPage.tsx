@@ -5,7 +5,7 @@ import rison from "rison";
 import ImageListItem from "@mui/material/ImageListItem";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 
 import ImageListItemBar from "@mui/material/ImageListItemBar";
@@ -80,7 +80,7 @@ export function BooksPage() {
           </Box>
         </Grid>
         <Grid size={{ xs: 12, sm: 8, md: 9 }}>
-          <Grid container spacing={2} sx={{ p: 1 }} justifyContent="center">
+          <Grid container spacing={2} sx={{ p: 1, justifyContent: "center" }}>
             {books.map((book) => (
               <ImageListItem key={book.id}>
                 <Link to={`/book/${book.id}${getRison(book.id)}`}>
