@@ -2,7 +2,7 @@
 
 __all__ = ("AsyncDatabaseClient",)
 
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
 
 from loguru import logger
 from sqlalchemy import event, text
