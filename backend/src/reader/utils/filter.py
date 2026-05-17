@@ -57,6 +57,9 @@ class Filter[ColumnType: str](BaseModel):
         if self.operator in ("isnull", "notnull") and self.value is not None:
             raise ValueError(f"Value for '{self.operator}' should be None")
 
+        if self.operator not in ("isnull", "notnull") and self.value is None:
+            raise ValueError(f"Value for '{self.operator}' should not be None")
+
         if self.operator in ("like", "ilike", "isnull", "notnull"):
             return self
 
