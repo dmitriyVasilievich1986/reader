@@ -28,7 +28,9 @@ class Book(Base):
     author_id: Mapped[int] = mapped_column(Integer, ForeignKey("author.id"))
     author: Mapped["Author"] = relationship("Author", back_populates="books")
 
-    categories: Mapped[list["Category"]] = relationship("Category", secondary="category_book_table")
+    categories: Mapped[list["Category"]] = relationship(
+        "Category", secondary="category_book_table", back_populates="books"
+    )
     pages: Mapped[list["Page"]] = relationship("Page", back_populates="book")
 
     @property
