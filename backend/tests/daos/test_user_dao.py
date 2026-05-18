@@ -66,7 +66,7 @@ class TestUserDAOCreate:
 
     async def test_create_uses_db_client_path(
         self,
-        migrated_db: None,
+        migrated_db: None,  # noqa: ARG002
         db_client: AsyncDatabaseClient,
     ) -> None:
         """Open a short-lived session from ``database_client`` and still hash the password.

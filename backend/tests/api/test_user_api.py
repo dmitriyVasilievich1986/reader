@@ -65,7 +65,7 @@ class TestUserLogin:
         assert response.status_code == 401
         assert response.json()["detail"] == "Invalid username or password"
 
-    async def test_login_unknown_user_returns_401(self, client: AsyncClient, migrated_db: None) -> None:
+    async def test_login_unknown_user_returns_401(self, client: AsyncClient, migrated_db: None) -> None:  # noqa: ARG002
         """Unknown username is reported as 401 (no user enumeration leak).
 
         Args:
@@ -133,7 +133,7 @@ class TestUserMe:
 class TestUserAuthorizationGuards:
     """Cross-router checks: ``user_authorized`` / ``admin_required`` behaviour."""
 
-    async def test_missing_token_returns_401(self, client: AsyncClient, migrated_db: None) -> None:
+    async def test_missing_token_returns_401(self, client: AsyncClient, migrated_db: None) -> None:  # noqa: ARG002
         """Requests without an ``Authorization`` header are rejected with 401.
 
         Args:
@@ -148,7 +148,7 @@ class TestUserAuthorizationGuards:
 
         assert response.status_code in {401, 403}
 
-    async def test_malformed_token_returns_401(self, client: AsyncClient, migrated_db: None) -> None:
+    async def test_malformed_token_returns_401(self, client: AsyncClient, migrated_db: None) -> None:  # noqa: ARG002
         """A garbage Bearer token decodes to ``Invalid token`` (401).
 
         Args:
@@ -167,7 +167,7 @@ class TestUserAuthorizationGuards:
         assert response.status_code == 401
         assert response.json()["detail"] == "Invalid token"
 
-    async def test_get_me_without_token_returns_401(self, client: AsyncClient, migrated_db: None) -> None:
+    async def test_get_me_without_token_returns_401(self, client: AsyncClient, migrated_db: None) -> None:  # noqa: ARG002
         """User-specific endpoints honor the same Bearer requirement.
 
         Args:

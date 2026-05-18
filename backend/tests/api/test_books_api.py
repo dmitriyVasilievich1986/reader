@@ -84,9 +84,7 @@ class TestBooksApi:
 
         """
         author_id = await _create_author(admin_client, first_name="Isaac")
-        created = (
-            await admin_client.post("/api/v1/book", json={"name": "Foundation", "author_id": author_id})
-        ).json()
+        created = (await admin_client.post("/api/v1/book", json={"name": "Foundation", "author_id": author_id})).json()
 
         response = await admin_client.get(f"/api/v1/book/{created['id']}")
 
@@ -185,9 +183,7 @@ class TestBooksApi:
 
         """
         author_id = await _create_author(admin_client)
-        created = (
-            await admin_client.post("/api/v1/book", json={"name": "ToDelete", "author_id": author_id})
-        ).json()
+        created = (await admin_client.post("/api/v1/book", json={"name": "ToDelete", "author_id": author_id})).json()
 
         delete_response = await admin_client.delete(f"/api/v1/book/{created['id']}")
 

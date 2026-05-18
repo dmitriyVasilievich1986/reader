@@ -38,7 +38,7 @@ USER_CREDENTIALS = {"username": "user", "password": "userpw"}
 def migrated_db(
     monkeypatch: pytest.MonkeyPatch,
     test_config_file: Path,
-    db_client: AsyncDatabaseClient,
+    db_client: AsyncDatabaseClient,  # noqa: ARG001
 ) -> None:
     """Apply all Alembic migrations to the ephemeral SQLite database.
 
@@ -61,7 +61,7 @@ def migrated_db(
 
 
 @pytest.fixture
-def app(app_config: AppConfig, migrated_db: None) -> FastAPI:
+def app(app_config: AppConfig, migrated_db: None) -> FastAPI:  # noqa: ARG001
     """Build the FastAPI app against the per-test ``AppConfig``.
 
     Args:
@@ -95,7 +95,7 @@ async def client(app: FastAPI) -> AsyncIterator[AsyncClient]:
 
 @pytest.fixture
 async def seed_admin_user(
-    migrated_db: None,
+    migrated_db: None,  # noqa: ARG001
     db_client: AsyncDatabaseClient,
 ) -> dict[str, str]:
     """Persist an admin user against the migrated database.
@@ -122,7 +122,7 @@ async def seed_admin_user(
 
 @pytest.fixture
 async def seed_regular_user(
-    migrated_db: None,
+    migrated_db: None,  # noqa: ARG001
     db_client: AsyncDatabaseClient,
 ) -> dict[str, str]:
     """Persist a non-admin user against the migrated database.

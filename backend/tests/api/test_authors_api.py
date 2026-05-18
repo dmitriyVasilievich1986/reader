@@ -123,9 +123,7 @@ class TestAuthorsApi:
             None
 
         """
-        created = (
-            await admin_client.post("/api/v1/author", json={"first_name": "John", "last_name": "Doe"})
-        ).json()
+        created = (await admin_client.post("/api/v1/author", json={"first_name": "John", "last_name": "Doe"})).json()
 
         response = await admin_client.patch(
             f"/api/v1/author/{created['id']}",
