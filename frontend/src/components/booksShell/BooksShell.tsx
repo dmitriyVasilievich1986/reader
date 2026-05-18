@@ -1,7 +1,13 @@
 /**
- * Barrel module for the booksShell: re-exports {@link BooksShell}.
+ * BooksShell.tsx
  *
- * @module components/booksShell/index
+ * This file contains the BooksShell component, which is a responsive five-column shell for browsing books.
+ * It shows skeleton placeholders when the books are not loaded, otherwise it shows the books as a grid of covers with a title/action bar revealed on hover or keyboard focus (`focus-within`).
+ * Selecting a tile navigates to `/book/:bookId`.
+ *
+ * @param {object} props - Component props.
+ * @param {SimpleBookType[] | null} props.books - Library rows to render, or `null` while loading.
+ * @returns {JSX.Element} Skeleton grid without `Container`, or book grid wrapped in Material UI `Container`.
  */
 
 import InfoIcon from '@mui/icons-material/Info';
