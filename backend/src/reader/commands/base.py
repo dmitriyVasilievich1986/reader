@@ -7,31 +7,12 @@ from typing import Any
 
 
 class BaseCommand(ABC):
-    """Abstract base class for command pattern implementation.
+    """Abstract async command with initialize, validate, and execute hooks.
 
-    This class defines the interface for all command objects in the application.
-    Commands encapsulate business logic operations that can be validated before
-    execution, providing a consistent way to handle operations with pre-conditions.
-
-    All concrete command classes must implement both the validate and execute methods.
-    The typical usage pattern is:
-    1. Validate the command's preconditions
-    2. Execute the command's business logic
-
-    Example:
-        >>> class CreateUserCommand(BaseCommand):
-        ...     def __init__(self, username: str, email: str):
-        ...         self.username = username
-        ...         self.email = email
-        ...
-        ...     def validate(self) -> None:
-        ...         if not self.email or '@' not in self.email:
-        ...             raise ValueError("Invalid email")
-        ...
-        ...     def execute(self) -> None:
-        ...         # Create user logic here
-        ...         pass
-
+    Subclasses implement the three-step lifecycle: optional setup via
+    ``initialize``, precondition checks in ``validate``, then ``execute`` for
+    the main work. Call ``validate`` before ``execute`` once prerequisites
+    are ready.
     """
 
     @abstractmethod
