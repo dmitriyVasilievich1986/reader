@@ -1,12 +1,30 @@
-import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { resolve } from "node:path";
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { defineConfig } from "vite";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+let appVersion = "1.0.0";
+try {
+  appVersion = (
+    JSON.parse(
+      readFileSync(resolve(__dirname, "application-version.json"), "utf-8"),
+    ) as {
+      version: string;
+    }
+  ).version;
+} catch (error) {
+  console.error("Error reading application version:", error);
+}
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   define: {
     "process.env": { mode: "produciton" },
+    "import.meta.env.VITE_APP_VERSION": JSON.stringify(appVersion),
   },
   resolve: {
     alias: {
