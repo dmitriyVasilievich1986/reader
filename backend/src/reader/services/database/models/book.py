@@ -24,6 +24,7 @@ class Book(Base, DateTimeMixin):
     name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
     description: Mapped[str | None] = mapped_column(String, nullable=True)
     cover: Mapped[str | None] = mapped_column(String, nullable=True)
+    watches_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
 
     author_id: Mapped[int] = mapped_column(Integer, ForeignKey("author.id"))
     author: Mapped["Author"] = relationship("Author", back_populates="books")
