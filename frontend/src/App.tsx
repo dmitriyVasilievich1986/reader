@@ -15,10 +15,10 @@ const HomePage = lazy(() => import('@pages/home').then((m) => ({ default: m.Home
 const LoginPage = lazy(() => import('@pages/login').then((m) => ({ default: m.Login })));
 const BooksPage = lazy(() => import('@pages/books').then((m) => ({ default: m.BooksPage })));
 const ReadBookPage = lazy(() => import('@pages/books').then((m) => ({ default: m.ReadBookPage })));
+const ProfilePage = lazy(() => import('@pages/profile').then((m) => ({ default: m.Profile })));
 const SinlgeBookPage = lazy(() =>
   import('@pages/books').then((m) => ({ default: m.SinlgeBookPage }))
 );
-
 /**
  * Root shell: renders a persistent `Navbar` and `Routes`. Library pages (`HomePage`, login, book list,
  * detail, reader) load on demand via `React.lazy()` and code-split bundles.
@@ -47,6 +47,7 @@ function App() {
             <Route path=":bookId" element={<SinlgeBookPage />} />
             <Route path=":bookId/read" element={<ReadBookPage />} />
           </Route>
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </Suspense>
     </Box>
