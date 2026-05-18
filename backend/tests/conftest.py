@@ -93,7 +93,6 @@ def test_config_file(tmp_path: Path, sqlite_db_path: Path) -> Path:
             },
             "auth": {
                 "jwt_secret_key": "test-jwt-secret-key",
-                "password_secret_key": "test-password-secret-key",
                 "jwt_algorithm": "HS256",
             },
         },
