@@ -1,7 +1,10 @@
 /**
- * Barrel module for the readBookPage: re-exports {@link ReadBookPage}.
+ * ReadBookPage.tsx
  *
- * @module pages/books/readBookPage/ReadBookPage
+ * This file contains the ReadBookPage component, which is the page that displays the book reader.
+ * It fetches the pages for the book from the API and displays them in a scrollable container.
+ *
+ * @returns {JSX.Element} The ReadBookPage component.
  */
 
 import Box from '@mui/material/Box';
@@ -18,11 +21,10 @@ import { usePageAPIClient, type PageType } from '@services/apiClient/page';
 import styles from './style.module.css';
 
 /**
- * Single book page route: fetches the book by `bookId` from `useParams`, then renders it through
- * `BookPreview` (which loads up to four pages for preview). While loading—or when `bookId` is missing—shows
- * a skeleton for the hero section; tapping the read button navigates to `/book/:bookId/read`.
+ * Single book reader page route: fetches the pages for the book by `bookId` from `useParams`, then renders them in a scrollable container.
+ * While loading—or when `bookId` is missing—shows a skeleton for the hero section; tapping the read button navigates to `/book/:bookId/read`.
  *
- * @returns {JSX.Element} Skeleton container when `book` is `null`, otherwise the book page layout.
+ * @returns {JSX.Element} Skeleton container when `pages` is `null`, otherwise the book reader page layout.
  */
 export function ReadBookPage() {
   const { bookId } = useParams();
