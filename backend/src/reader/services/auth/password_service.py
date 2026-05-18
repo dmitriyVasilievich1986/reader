@@ -1,4 +1,4 @@
-"""HMAC-SHA256 password hashing and verification using a server secret."""
+"""Password service."""
 
 __all__ = ("PasswordService",)
 
@@ -6,7 +6,7 @@ import bcrypt
 
 
 class PasswordService:
-    """Derive deterministic password digests for storage and comparison."""
+    """Password service."""
 
     @staticmethod
     def hash_password(password: str) -> str:
@@ -16,7 +16,7 @@ class PasswordService:
             password (str): Plain text password to hash.
 
         Returns:
-            str: Hex-encoded HMAC-SHA256 digest.
+            str: Hex-encoded bcrypt digest.
 
         """
         return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
@@ -27,7 +27,7 @@ class PasswordService:
 
         Args:
             password (str): Plain text password to verify.
-            hashed_password (str): Previously stored hex digest from ``hash_password``.
+            hashed_password (str): Previously stored bcrypt digest from ``hash_password``.
 
         Returns:
             bool: True if the digests are equal.
