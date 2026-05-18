@@ -16,7 +16,7 @@ from reader.config.app_config import AppConfig
 from reader.modules.middlewares.app_lifespan import lifespan
 from reader.utils import mount_static_files
 
-from .routers import api_router
+from .routers import api_router, index_router
 
 
 def get_app(config: AppConfig | None = None) -> FastAPI:
@@ -61,6 +61,9 @@ def get_app(config: AppConfig | None = None) -> FastAPI:
 
     logger.debug("Adding API router...")
     app.include_router(api_router)
+
+    logger.debug("Adding index router...")
+    app.include_router(index_router)
 
     logger.info("App created successfully.")
     return app
