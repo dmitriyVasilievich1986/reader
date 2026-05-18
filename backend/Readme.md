@@ -9,18 +9,18 @@ by the frontend.
 
 ## Technology stack
 
-| Layer            | Choice                                              |
-| ---------------- | --------------------------------------------------- |
-| Language         | Python 3.13                                         |
-| Web framework    | FastAPI                                             |
-| ASGI server      | Uvicorn                                             |
-| ORM              | SQLAlchemy 2.x (async) + Alembic for migrations     |
-| Drivers          | `aiosqlite` (SQLite), `psycopg[binary]` / `asyncpg` (PostgreSQL) |
-| Validation       | Pydantic v2 + `pydantic-settings[yaml]`             |
-| CLI              | `asyncclick`                                        |
-| Logging          | Loguru                                              |
-| Tests            | Pytest, `pytest-asyncio`, `httpx` (ASGI transport)  |
-| Tooling          | `uv` for dependency management, `ruff`, `mypy`      |
+| Layer         | Choice                                                           |
+| ------------- | ---------------------------------------------------------------- |
+| Language      | Python 3.13                                                      |
+| Web framework | FastAPI                                                          |
+| ASGI server   | Uvicorn                                                          |
+| ORM           | SQLAlchemy 2.x (async) + Alembic for migrations                  |
+| Drivers       | `aiosqlite` (SQLite), `psycopg[binary]` / `asyncpg` (PostgreSQL) |
+| Validation    | Pydantic v2 + `pydantic-settings[yaml]`                          |
+| CLI           | `asyncclick`                                                     |
+| Logging       | Loguru                                                           |
+| Tests         | Pytest, `pytest-asyncio`, `httpx` (ASGI transport)               |
+| Tooling       | `uv` for dependency management, `ruff`, `mypy`                   |
 
 ---
 
@@ -60,18 +60,21 @@ backend/
 ## Major services
 
 ### `AppConfig` (`reader.config`)
+
 Pydantic-settings model loaded from a YAML file referenced by the
 `CONFIG_FILE_PATH` environment variable. Composes `Info` (API/CORS/paths) and
 `Services` (database) sub-models. Implemented as a singleton via
 `AppConfig.get_or_create()`, with a `reload=True` escape hatch used by tests.
 
 ### `AsyncDatabaseClient` (`reader.services.database`)
+
 Singleton owning a single async SQLAlchemy engine and `async_sessionmaker`.
 Builds the connection URL from `AppConfig`, enables `PRAGMA foreign_keys=ON`
 for SQLite, exposes `session_factory`, an async-generator `get_session` for
 FastAPI DI, plus `healthcheck()` and `close()`.
 
 ### `BaseDAO[Model]` (`reader.services.daos.base`)
+
 Generic async DAO over a single SQLAlchemy declarative model. Provides
 `get_by_pk`, `get_all` (pagination + filters + sorting + eager loads),
 `create`, `update`, `delete`. Subclasses customise eager-load options via
@@ -80,11 +83,13 @@ Generic async DAO over a single SQLAlchemy declarative model. Provides
 `PageDAO`.
 
 ### Routers (`reader.modules.routers`)
+
 - `/api/health` — returns `503` when `AsyncDatabaseClient.healthcheck()` fails, else `200`.
 - `/api/version` — returns the package version from `reader.__version__`.
 - `/api/v1/author`, `/api/v1/book`, `/api/v1/category`, `/api/v1/page` — full CRUD per entity (`GET` list, `GET` by id, `POST`, `PATCH`, `DELETE`). All map `NoResultFound → 404`, `IntegrityError → 400`, and other `SQLAlchemyError → 500`.
 
-### `Filter` DSL (`reader.utils.filter`)
+### `Filter` DSL (`reader.utils.models.filter`)
+
 Pydantic model representing a single WHERE clause (`field`, `op`, `value`).
 Supports `eq`, `ne`, `gt`, `ge`, `lt`, `le`, `in`, `like`, `ilike`, `isnull`,
 `notnull`, with ISO-date coercion for comparison operators. Lists of `Filter`
@@ -92,12 +97,14 @@ are accepted on list endpoints via the `filters` query parameter (JSON-encoded
 string).
 
 ### FastAPI factory (`reader.modules.app.get_app`)
+
 Builds the app from `AppConfig`: title, version, debug, CORS middleware,
 optional static mounts (`/assets`, `/images` when the directories exist), the
 lifespan handler that initialises and disposes `AsyncDatabaseClient`, and
 mounts the combined API router under `/api`.
 
 ### CLI (`reader.utils.cli.main`)
+
 `asyncclick` group exposing `show-config` (prints resolved `AppConfig` as
 JSON) and `run` (launches Uvicorn pointing at the FastAPI factory).
 Registered as the `reader` console script in `pyproject.toml`.
@@ -113,22 +120,22 @@ the files in `configurations/`, or your own copy.
 
 ```yaml
 info:
-    name: "Reader"
-    description: "The application for reading books"
-    api_info:
-        app_port: 8000
-        debug: true
-        log_level: DEBUG
-    cors_info:
-        origins: "*"
-        allow_credentials: true
-        allow_methods: [GET, POST, PUT, DELETE]
-        allow_headers: ["*"]
+  name: "Reader"
+  description: "The application for reading books"
+  api_info:
+    app_port: 8000
+    debug: true
+    log_level: DEBUG
+  cors_info:
+    origins: "*"
+    allow_credentials: true
+    allow_methods: [GET, POST, PUT, DELETE]
+    allow_headers: ["*"]
 
 services:
-    database:
-        provider: "sqlite+aiosqlite"
-        host: reader.sqlite3
+  database:
+    provider: "sqlite+aiosqlite"
+    host: reader.sqlite3
 ```
 
 For PostgreSQL, set `provider: "postgresql+psycopg"` (or `+asyncpg`) and add
@@ -155,8 +162,9 @@ uv run reader show-config
 ```
 
 API docs are exposed by FastAPI at:
+
 - Swagger UI: `http://localhost:8000/docs`
-- ReDoc:      `http://localhost:8000/redoc`
+- ReDoc: `http://localhost:8000/redoc`
 
 ---
 
@@ -190,7 +198,7 @@ Response shape:
 
 ```json
 {
-  "data": [ { "id": 1, "name": "Dune" } ],
+  "data": [{ "id": 1, "name": "Dune" }],
   "metadata": {
     "total": 1,
     "offset": 0,

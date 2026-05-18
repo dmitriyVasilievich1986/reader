@@ -5,7 +5,7 @@ __all__ = ("PaginationMetadata",)
 
 from pydantic import Field
 
-from reader.utils.filter import Filter
+from reader.utils.models.filter import Filter
 
 from ..response import BaseResponseModel
 

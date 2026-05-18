@@ -1,4 +1,4 @@
-"""Tests for ``reader.utils.filter.Filter``.
+"""Tests for ``reader.utils.models.filter.Filter``.
 
 Covers Pydantic validation (operators, list vs scalar, null checks), ISO-8601 date
 string coercion for comparison operators, and SQLAlchemy expression rendering for
@@ -16,7 +16,7 @@ from pydantic import ValidationError
 from sqlalchemy import Integer, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-from reader.utils.filter import Filter
+from reader.utils.models.filter import Filter
 
 
 class _Base(DeclarativeBase):
