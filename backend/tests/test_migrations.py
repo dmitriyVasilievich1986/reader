@@ -137,7 +137,7 @@ class TestUpgrade:
         finally:
             conn.close()
 
-        assert versions == ["8e3f5d72efaf"]
+        assert versions == ["14ba01e0e048"]
 
     def test_book_has_author_foreign_key(
         self,
