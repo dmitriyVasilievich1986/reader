@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router";
 
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 
 import { RisonClass, call } from "../../support/caller";
@@ -35,8 +35,8 @@ export function Navbar() {
         alignItems: "center",
         backgroundColor: "#15616d",
         color: "#ffecd1",
+        height: "100px",
       }}
-      height={100}
     >
       <Grid
         container
@@ -45,15 +45,9 @@ export function Navbar() {
         direction="row"
         wrap="nowrap"
         rowSpacing={4}
-        width="100%"
-        maxWidth={600}
+        sx={{ width: "100%", maxWidth: "600px" }}
       >
-        <Grid
-          size={4}
-          justifyContent="center"
-          container
-          sx={{ cursor: "pointer" }}
-        >
+        <Grid size={4} sx={{ justifyContent: "center" }} container>
           <NavLink className="navlink" to={HOME.url}>
             {HOME.label}
           </NavLink>
@@ -62,9 +56,8 @@ export function Navbar() {
           <Grid
             key={item.label}
             size={4}
-            justifyContent="center"
+            sx={{ justifyContent: "center" }}
             container
-            sx={{ cursor: "pointer" }}
           >
             <NavLink
               className="navlink"

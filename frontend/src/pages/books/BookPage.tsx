@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import rison from "rison";
 
 import ListItem from "@mui/material/ListItem";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import List from "@mui/material/List";
 
 import { RisonClass, call } from "../../support/caller";
@@ -26,7 +26,7 @@ export function BookPage() {
     <List>
       {pages.map((page) => (
         <ListItem disablePadding key={page.position}>
-          <Grid justifyContent="center" container width="100vw">
+          <Grid container sx={{ justifyContent: "center", width: "100vw" }}>
             <img
               style={{ width: "90vw", maxWidth: "900px" }}
               src={page.cover}

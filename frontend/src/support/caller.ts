@@ -11,17 +11,21 @@ type ResponseType<R> = {
 export function call<R>(props: {
   method: "get" | "post" | "put";
   url: string;
-  data?: any;
+  data?: object;
   onSucces?: (response: R) => void;
   onFail?: () => void;
 }) {
   axios(props)
     .then((response: ResponseType<R>) => {
-      props?.onSucces && props.onSucces(response.data.result);
+      if (props?.onSucces) {
+        props.onSucces(response.data.result);
+      }
     })
     .catch((error) => {
       console.log(error);
-      props?.onFail && props.onFail();
+      if (props?.onFail) {
+        props.onFail();
+      }
     });
 }
 
