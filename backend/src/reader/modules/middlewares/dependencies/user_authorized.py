@@ -24,11 +24,11 @@ if TYPE_CHECKING:
 
 from .get_db import get_db
 
-user_token = HTTPBearer(scheme_name="User Token")
+user_token = HTTPBearer(scheme_name="User Token", auto_error=False)
 
 
 async def user_authorized(
-    token_header: Annotated[HTTPAuthorizationCredentials, Depends(user_token)],
+    token_header: Annotated[HTTPAuthorizationCredentials | None, Depends(user_token)],
     db: Annotated[AsyncDatabaseClient, Depends(get_db)],
 ) -> "User":
     """Decode the Bearer JWT and return the authenticated user row.
@@ -46,6 +46,10 @@ async def user_authorized(
             missing; 500 if loading the user fails with a database error.
 
     """
+    if token_header is None:
+        logger.error("No token provided")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
+    
     user_dao = UserDAO(database_client=db)
     jwt_token_service = JWTTokenService(
         secret_key=AppConfig.get_or_create().services.auth.jwt_secret_key.get_secret_value(),
