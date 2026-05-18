@@ -8,8 +8,7 @@ from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, status
 from loguru import logger
 from sqlalchemy.exc import IntegrityError, NoResultFound, SQLAlchemyError
 
-from reader.modules.middlewares.dependencies import get_db
-from reader.modules.middlewares.dependencies.user_authorized import user_authorized
+from reader.modules.middlewares.dependencies import admin_required, get_db, user_authorized
 from reader.modules.routers.models.base.metadata import PaginationMetadata
 from reader.modules.routers.models.requests.authors import GetAllAuthorsQuery, PatchAuthorBody, PostAuthorBody
 from reader.modules.routers.models.responses.authors import (
@@ -20,10 +19,16 @@ from reader.modules.routers.models.responses.authors import (
 from reader.services.daos.author_dao import AuthorDAO
 from reader.services.database import AsyncDatabaseClient
 
-router = APIRouter(prefix="/author", tags=["Authors"], dependencies=[Depends(user_authorized)])
+router = APIRouter(prefix="/author", tags=["Authors"])
 
 
-@router.get("", response_model=GetAllAuthorsResponse, status_code=status.HTTP_200_OK, summary="Get all authors")
+@router.get(
+    "",
+    response_model=GetAllAuthorsResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get all authors",
+    dependencies=[Depends(user_authorized)],
+)
 async def get_all_authors(
     db: Annotated[AsyncDatabaseClient, Depends(get_db)],
     query: Annotated[GetAllAuthorsQuery, Query(description="Pagination and sorting parameters")],
@@ -62,6 +67,7 @@ async def get_all_authors(
     response_model=GetSingleAuthorResponse,
     status_code=status.HTTP_200_OK,
     summary="Get a single author",
+    dependencies=[Depends(user_authorized)],
 )
 async def get_single_author(
     author_id: Annotated[int, Path(..., description="The ID of the author")],
@@ -98,7 +104,11 @@ async def get_single_author(
 
 
 @router.post(
-    "", response_model=GetSingleAuthorResponse, status_code=status.HTTP_201_CREATED, summary="Create a new author"
+    "",
+    response_model=GetSingleAuthorResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create a new author",
+    dependencies=[Depends(admin_required)],
 )
 async def create_author(
     body: Annotated[PostAuthorBody, Body(..., description="The body of the author")],
@@ -136,6 +146,7 @@ async def create_author(
     response_model=GetSingleAuthorResponse,
     status_code=status.HTTP_200_OK,
     summary="Update an author",
+    dependencies=[Depends(admin_required)],
 )
 async def update_author(
     author_id: Annotated[int, Path(..., description="The ID of the author")],
@@ -174,7 +185,13 @@ async def update_author(
     return GetSingleAuthorResponse.model_validate(payload)
 
 
-@router.delete("/{author_id}", response_model=None, status_code=status.HTTP_204_NO_CONTENT, summary="Delete an author")
+@router.delete(
+    "/{author_id}",
+    response_model=None,
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete an author",
+    dependencies=[Depends(admin_required)],
+)
 async def delete_author(
     author_id: Annotated[int, Path(..., description="The ID of the author")],
     db: Annotated[AsyncDatabaseClient, Depends(get_db)],
