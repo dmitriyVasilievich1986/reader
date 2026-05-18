@@ -5,7 +5,8 @@
  */
 
 import Box from '@mui/material/Box';
-import { lazy } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
+import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router';
 
 import { Navbar } from './components';
@@ -30,16 +31,24 @@ function App() {
   return (
     <Box>
       <Navbar />
-      <Routes>
-        <Route path="" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
+      <Suspense
+        fallback={
+          <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+            <CircularProgress />
+          </Box>
+        }
+      >
+        <Routes>
+          <Route path="" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
 
-        <Route path="/book">
-          <Route path="" element={<BooksPage />} />
-          <Route path=":bookId" element={<SinlgeBookPage />} />
-          <Route path=":bookId/read" element={<ReadBookPage />} />
-        </Route>
-      </Routes>
+          <Route path="/book">
+            <Route path="" element={<BooksPage />} />
+            <Route path=":bookId" element={<SinlgeBookPage />} />
+            <Route path=":bookId/read" element={<ReadBookPage />} />
+          </Route>
+        </Routes>
+      </Suspense>
     </Box>
   );
 }
