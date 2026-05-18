@@ -10,18 +10,18 @@ FastAPI.
 
 ## Technology stack
 
-| Layer            | Choice                                              |
-| ---------------- | --------------------------------------------------- |
-| Language         | TypeScript 5.6                                      |
-| UI framework     | React 18 (StrictMode)                               |
-| Build / dev      | Vite 6 (`@vitejs/plugin-react`)                     |
-| Routing          | `react-router` v7                                   |
-| Component kit    | MUI (`@mui/material`, `@mui/icons-material`) + Emotion |
+| Layer            | Choice                                                  |
+| ---------------- | ------------------------------------------------------- |
+| Language         | TypeScript 5.6                                          |
+| UI framework     | React 18 (StrictMode)                                   |
+| Build / dev      | Vite 6 (`@vitejs/plugin-react`)                         |
+| Routing          | `react-router` v7                                       |
+| Component kit    | MUI (`@mui/material`, `@mui/icons-material`) + Emotion  |
 | Styling          | Tailwind CSS 3 (Preflight disabled to coexist with MUI) |
-| State management | Zustand (with Redux DevTools middleware)            |
-| HTTP client      | Axios + `js-cookie` for bearer-token storage        |
-| Utilities        | `dayjs`, `classnames`, `rison`                      |
-| Tooling          | ESLint 9 (typescript-eslint, import order), Prettier |
+| State management | Zustand (with Redux DevTools middleware)                |
+| HTTP client      | Axios + `js-cookie` for bearer-token storage            |
+| Utilities        | `dayjs`, `classnames`, `rison`                          |
+| Tooling          | ESLint 9 (typescript-eslint, import order), Prettier    |
 
 ---
 
@@ -59,12 +59,14 @@ frontend/
 ## Major modules
 
 ### Application shell (`src/App.tsx`)
+
 Top-level Material UI `Box` wrapping a persistent `Navbar` and the active
 route outlet. Page components (`HomePage`, `Login`, `BooksPage`,
 `SinlgeBookPage`, `ReadBookPage`) load on demand via `React.lazy()` so each
 route ships as its own code-split chunk.
 
 Route shape:
+
 - `/` — home
 - `/login` — auth UI
 - `/book` — book grid
@@ -72,17 +74,20 @@ Route shape:
 - `/book/:bookId/read` — paginated reader
 
 ### `apiClientInstance` (`src/services/apiClient/base.ts`)
+
 Singleton Axios instance pre-configured with `baseURL = VITE_API_HOST` and
 JSON content type. A request interceptor reads the `accessToken` cookie:
 when present it sets `Authorization: Bearer <token>`, when missing it
 redirects to `/login?redirectTo=<current path>` and aborts the request.
 
 ### `useApiClientWrapper` (`src/services/apiClient/base.ts`)
+
 Hook returning a `wrapper` helper that toggles the global `isLoading` flag in
 `useMainStore` for the duration of an awaited call. Errors are logged and
 rethrown so callers can still handle them locally.
 
 ### API clients (`src/services/apiClient/{auth,user,book,page}`)
+
 Factory hooks (`useAuthAPIClient`, `useUserAPIClient`, `useBookAPIClient`,
 `usePageAPIClient`) returning a small object of typed methods that target the
 backend's `/api/v1/...` routes. List endpoints accept the same
@@ -91,10 +96,12 @@ serialize `filters` as a JSON string the way the backend's `Filter` DSL
 expects.
 
 ### `useMainStore` (`src/store/main/mainStore.ts`)
+
 Zustand store for app-wide session state: the signed-in `user` and a shared
 `isLoading` flag, plus setters. Wrapped with Redux DevTools middleware.
 
 ### Components (`src/components`)
+
 Reusable building blocks: `Navbar` (with `Logout`), `BooksShell` (layout for
 book grids), `SubmitButton`, `Image`, `Avatar`. Each component lives in its
 own folder with an `index.ts` barrel.
@@ -107,9 +114,9 @@ Configuration is provided to the bundle via Vite environment variables.
 Variables prefixed with `VITE_` are inlined at build time and read through
 `import.meta.env`.
 
-| Variable          | Purpose                                                |
-| ----------------- | ------------------------------------------------------ |
-| `VITE_API_HOST`   | Origin used as the Axios `baseURL` for API calls. Leave empty when the backend serves the bundle from the same origin. |
+| Variable        | Purpose                                                                                                                |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `VITE_API_HOST` | Origin used as the Axios `baseURL` for API calls. Leave empty when the backend serves the bundle from the same origin. |
 
 `application-version.json` is read by `vite.config.ts` and exposed in code as
 `import.meta.env.VITE_APP_VERSION`. Bump this file (or rely on
@@ -117,12 +124,12 @@ Variables prefixed with `VITE_` are inlined at build time and read through
 
 Path aliases configured in both `vite.config.ts` and `tsconfig.app.json`:
 
-| Alias          | Resolves to        |
-| -------------- | ------------------ |
-| `@components`  | `src/components`   |
-| `@pages`       | `src/pages`        |
-| `@store`       | `src/store`        |
-| `@services`    | `src/services`     |
+| Alias         | Resolves to      |
+| ------------- | ---------------- |
+| `@components` | `src/components` |
+| `@pages`      | `src/pages`      |
+| `@store`      | `src/store`      |
+| `@services`   | `src/services`   |
 
 ---
 
