@@ -7,9 +7,10 @@ from pydantic import Field
 
 from reader.modules.routers.models.base import BaseResponseFromModelSchema
 from reader.modules.routers.models.responses.authors.simple_author_response import SimpleAuthorResponse
+from reader.utils.models import DateModel
 
 
-class GetSingleBookResponse(BaseResponseFromModelSchema):
+class GetSingleBookResponse(BaseResponseFromModelSchema, DateModel):
     """Response model for getting a single book."""
 
     id: int = Field(..., description="The ID of the book")
@@ -17,4 +18,5 @@ class GetSingleBookResponse(BaseResponseFromModelSchema):
     description: str | None = Field(None, description="The description of the book")
     cover: str | None = Field(None, description="The cover of the book")
     author_id: int = Field(..., description="The ID of the author of the book")
+    watches_count: int = Field(..., description="The number of times the book has been watched")
     author: SimpleAuthorResponse = Field(..., description="The author of the book")

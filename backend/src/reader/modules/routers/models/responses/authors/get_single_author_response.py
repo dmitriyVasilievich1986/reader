@@ -5,9 +5,10 @@ __all__ = ("GetSingleAuthorResponse",)
 from pydantic import Field
 
 from reader.modules.routers.models.base import BaseResponseFromModelSchema
+from reader.utils.models import DateModel
 
 
-class GetSingleAuthorResponse(BaseResponseFromModelSchema):
+class GetSingleAuthorResponse(BaseResponseFromModelSchema, DateModel):
     """Response model for getting a single author."""
 
     id: int = Field(..., description="The ID of the author")

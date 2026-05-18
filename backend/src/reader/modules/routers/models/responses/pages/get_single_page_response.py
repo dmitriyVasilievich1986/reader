@@ -6,9 +6,10 @@ from pydantic import Field
 
 from reader.modules.routers.models.base import BaseResponseFromModelSchema
 from reader.modules.routers.models.responses.books.simple_book_response import SimpleBookResponse
+from reader.utils.models import DateModel
 
 
-class GetSinglePageResponse(BaseResponseFromModelSchema):
+class GetSinglePageResponse(BaseResponseFromModelSchema, DateModel):
     """Response model for getting a single page."""
 
     id: int = Field(..., description="The ID of the page")
