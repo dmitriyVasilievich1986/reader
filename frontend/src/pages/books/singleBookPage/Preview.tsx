@@ -1,7 +1,7 @@
 /**
  * Barrel module for the bookPreview: re-exports {@link BookPreview}.
  *
- * @module pages/books/sinlgeBookPage/Preview
+ * @module pages/books/singleBookPage/Preview
  */
 
 import ImageList from '@mui/material/ImageList';

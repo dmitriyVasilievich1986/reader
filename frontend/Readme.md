@@ -45,7 +45,7 @@ frontend/
 │   │   ├── login/              # Login (`/login`)
 │   │   └── books/
 │   │       ├── BooksPage.tsx           # Book grid (`/book`)
-│   │       ├── sinlgeBookPage/         # Preview (`/book/:bookId`)
+│   │       ├── singleBookPage/         # Preview (`/book/:bookId`)
 │   │       └── readBookPage/           # Reader (`/book/:bookId/read`)
 │   ├── services/
 │   │   └── apiClient/          # Axios base + auth, user, book, page clients
@@ -62,7 +62,7 @@ frontend/
 
 Top-level Material UI `Box` wrapping a persistent `Navbar` and the active
 route outlet. Page components (`HomePage`, `Login`, `BooksPage`,
-`SinlgeBookPage`, `ReadBookPage`) load on demand via `React.lazy()` so each
+`SingleBookPage`, `ReadBookPage`) load on demand via `React.lazy()` so each
 route ships as its own code-split chunk.
 
 Route shape:

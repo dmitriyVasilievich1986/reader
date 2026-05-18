@@ -1,7 +1,7 @@
 /**
- * Barrel module for the singleBookPage: re-exports {@link SinlgeBookPage}.
+ * Barrel module for the singleBookPage: re-exports {@link SingleBookPage}.
  *
- * @module pages/books/sinlgeBookPage/SinlgeBookPage
+ * @module pages/books/singleBookPage/SingleBookPage
  */
 
 import Box from '@mui/material/Box';
@@ -24,7 +24,7 @@ import styles from './style.module.css';
  *
  * @returns {JSX.Element} Skeleton container when `book` is `null`, otherwise the book page layout.
  */
-export function SinlgeBookPage() {
+export function SingleBookPage() {
   const { bookId } = useParams();
   const navigate = useNavigate();
 
