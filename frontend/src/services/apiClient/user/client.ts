@@ -44,14 +44,5 @@ export const useUserAPIClient = () => {
         return response.data;
       });
     },
-    /**
-     * Fetches the available pages (`GET /api/v1/user/available-pages`).
-     *
-     * @returns {Promise<string[]>} Available pages.
-     */
-    getAvailablePages: async () => {
-      const response = await apiClientInstance.get<string[]>('/api/v1/user/available-pages');
-      return response.data;
-    },
   };
 };
