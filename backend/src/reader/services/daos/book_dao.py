@@ -22,3 +22,4 @@ class BookDAO(BaseDAO[Book]):
         Book.watches_count,
     )
     select_in_options_single = (Book.author, Book.categories, Book.pages)
+    select_in_options_all = (Book.author,)
