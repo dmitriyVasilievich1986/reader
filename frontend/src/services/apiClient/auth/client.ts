@@ -4,6 +4,8 @@
 
 import axios from 'axios';
 
+import { useApiClientWrapper } from '../base';
+
 import type { LoginResponse } from './types';
 
 /**
@@ -12,6 +14,8 @@ import type { LoginResponse } from './types';
  * @returns Auth methods keyed by operation (e.g. `login`).
  */
 export const useAuthAPIClient = () => {
+  const { wrapper } = useApiClientWrapper();
+
   return {
     /**
      * POST `/api/login` with JSON body; returns parsed {@link LoginResponse}.
@@ -21,19 +25,21 @@ export const useAuthAPIClient = () => {
      */
     login: async (username: string, password: string) => {
       const apiHost = import.meta.env.VITE_API_HOST ?? '';
-      const response = await axios.post<LoginResponse>(
-        `${apiHost}/api/v1/user/login`,
-        {
-          username,
-          password,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
+      return wrapper(async () => {
+        const response = await axios.post<LoginResponse>(
+          `${apiHost}/api/v1/user/login`,
+          {
+            username,
+            password,
           },
-        }
-      );
-      return response.data;
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        return response.data;
+      });
     },
   };
 };
