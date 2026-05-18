@@ -18,7 +18,7 @@ export const useAuthAPIClient = () => {
 
   return {
     /**
-     * POST `/api/login` with JSON body; returns parsed {@link LoginResponse}.
+     * POST `/api/v1/user/login` with JSON body; returns parsed {@link LoginResponse}.
      *
      * @param username - Account username.
      * @param password - Account password.
