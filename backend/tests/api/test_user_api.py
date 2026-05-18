@@ -146,7 +146,7 @@ class TestUserAuthorizationGuards:
         """
         response = await client.get("/api/v1/author")
 
-        assert response.status_code in {401, 403}
+        assert response.status_code == 401
 
     async def test_malformed_token_returns_401(self, client: AsyncClient, migrated_db: None) -> None:  # noqa: ARG002
         """A garbage Bearer token decodes to ``Invalid token`` (401).
@@ -180,7 +180,7 @@ class TestUserAuthorizationGuards:
         """
         response = await client.get("/api/v1/user/me")
 
-        assert response.status_code in {401, 403}
+        assert response.status_code == 401
 
     async def test_non_admin_can_list_authors(self, user_client: AsyncClient) -> None:
         """``user_authorized`` allows non-admin reads on listing endpoints.
