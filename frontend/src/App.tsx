@@ -1,7 +1,10 @@
 /**
- * Barrel module for the App: re-exports {@link App}.
+ * App.tsx
  *
- * @module App
+ * This file contains the App component, which is the root component of the application.
+ * It renders the Navbar and the Routes.
+ *
+ * @returns {JSX.Element} Top-level Material UI `Box` wrapping navigation and the active route outlet.
  */
 
 import Box from '@mui/material/Box';
