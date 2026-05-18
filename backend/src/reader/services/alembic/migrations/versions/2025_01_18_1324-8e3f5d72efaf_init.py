@@ -96,9 +96,8 @@ def downgrade() -> None:
         None.
 
     """
-    op.drop_table("category")
-    op.drop_table("author")
-    op.drop_table("book")
-    op.drop_table("page")
-
     op.drop_table("category_book_table")
+    op.drop_table("category")
+    op.drop_table("page")
+    op.drop_table("book")
+    op.drop_table("author")

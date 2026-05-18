@@ -6,6 +6,7 @@ import asyncclick as click
 import uvicorn
 
 from reader import __version__ as app_version
+from reader.commands.add_book import AddBookCommand
 from reader.config import AppConfig
 
 
@@ -66,3 +67,34 @@ def run(host: str, port: int, reload: bool) -> None:
         reload=reload,
         factory=True,
     )
+
+
+@main.command(help="Add a book to the Reader application.")
+@click.option("--book-path", type=click.Path(exists=True, file_okay=False, dir_okay=True), required=True)
+@click.option("--preview", is_flag=True, help="Preview the book structure.", default=False)
+@click.pass_context
+async def add_book(ctx: click.Context, book_path: str, preview: bool) -> None:
+    """Add a book from a local directory or print a dry-run preview.
+
+    Initializes and validates the add-book workflow against ``book_path``. When
+    ``preview`` is set, prints the command state without persisting changes.
+
+    Args:
+        ctx (click.Context): Command context populated by ``main``.
+        book_path (str): Path to the book directory on disk.
+        preview (bool, optional): If true, print the command only. Defaults to
+            ``False``.
+
+    Returns:
+        None
+
+    """
+    app_config: AppConfig = ctx.obj["config"]
+    command = AddBookCommand(book_path, app_config=app_config)
+    await command.initialize()
+    await command.validate()
+
+    if preview:
+        click.echo(str(command))
+    else:
+        await command.execute()
