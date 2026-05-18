@@ -14,7 +14,10 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router';
 
+import { Image } from '@components/image';
+
 import { Logout } from './logout/Logout';
+import { default as defaultImage } from './reader.svg';
 /**
  * Sticky app bar with primary navigation links (e.g. Home).
  *
@@ -34,6 +37,7 @@ export function Navbar() {
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Image src={defaultImage} width={50} height={50} alt="Home" />
               <Stack direction="row" spacing={2}>
                 <Link
                   to="/"
