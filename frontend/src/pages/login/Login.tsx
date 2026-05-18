@@ -58,7 +58,7 @@ export function Login() {
         navigate(redirectTo);
       })
       .catch((error) => {
-        setError(error.response.data.detail || 'An unknown error occurred');
+        setError(error?.response?.data?.detail || 'An unknown error occurred');
       });
   };
 
