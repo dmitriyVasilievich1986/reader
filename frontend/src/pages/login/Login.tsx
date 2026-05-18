@@ -103,7 +103,10 @@ export function Login() {
                 input: {
                   endAdornment: (
                     <InputAdornment position="end">
-                      <IconButton onClick={handleClickShowPassword}>
+                      <IconButton
+                        onClick={handleClickShowPassword}
+                        aria-label="Toggle password visibility"
+                      >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
