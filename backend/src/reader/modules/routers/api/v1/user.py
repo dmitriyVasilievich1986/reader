@@ -45,7 +45,7 @@ async def login(
     user_dao = UserDAO(database_client=db)
 
     try:
-        payload = await user_dao.get_by_username(body.username)
+        user = await user_dao.get_by_username(body.username)
     except NoResultFound as e:
         logger.error(f"User with username {body.username} not found")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password") from e
@@ -53,14 +53,18 @@ async def login(
         logger.exception("Error getting user", exc_info=e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error getting user") from e
 
-    if not PasswordService.check_password(body.password, payload.password):
+    if not user.is_active:
+        logger.error(f"User {body.username} is not active")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User is not active")
+
+    if not PasswordService.check_password(body.password, user.password):
         logger.error(f"Invalid password for user {body.username}")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password")
 
     jwt_service = JWTTokenService(
         secret_key=config.services.auth.jwt_secret_key.get_secret_value(), algorithm=config.services.auth.jwt_algorithm
     )
-    access_token = jwt_service.generate_token(payload.id)
+    access_token = jwt_service.generate_token(user.id)
 
     return LoginResponse(access_token=access_token.token, expires_at=access_token.expires_at)
 
