@@ -5,6 +5,7 @@ __all__ = ("JWTTokenService",)
 from datetime import datetime, timedelta, timezone
 
 import jwt
+from jwt.exceptions import InvalidTokenError
 from jwt.types import Options
 
 from .models import AccessToken, JWTTokenMetadata
@@ -53,6 +54,10 @@ class JWTTokenService:
         """
         options = Options(verify_signature=verify_signature, verify_exp=True)
         payload = jwt.decode(jwt=token, key=self.secret_key, algorithms=[self.algorithm], options=options)
+
+        if "user_id" not in payload or "exp" not in payload:
+            raise InvalidTokenError("Token is missing required claims")
+
         return JWTTokenMetadata(
             user_id=payload["user_id"],
             exp=datetime.fromtimestamp(payload["exp"], timezone.utc),

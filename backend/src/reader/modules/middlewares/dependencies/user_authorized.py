@@ -49,7 +49,7 @@ async def user_authorized(
     if token_header is None:
         logger.error("No token provided")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
-    
+
     user_dao = UserDAO(database_client=db)
     jwt_token_service = JWTTokenService(
         secret_key=AppConfig.get_or_create().services.auth.jwt_secret_key.get_secret_value(),
