@@ -27,8 +27,15 @@ def upgrade() -> None:
         None
 
     """
-    with op.batch_alter_table("book") as batch_op:
-        batch_op.add_column(sa.Column("watches_count", sa.Integer, nullable=False, default=0))
+    op.add_column(
+        "book",
+        sa.Column(
+            "watches_count",
+            sa.Integer,
+            nullable=False,
+            server_default=sa.text("0"),
+        ),
+    )
 
 
 def downgrade() -> None:
@@ -38,5 +45,4 @@ def downgrade() -> None:
         None
 
     """
-    with op.batch_alter_table("book") as batch_op:
-        batch_op.drop_column("watches_count")
+    op.drop_column("book", "watches_count")
