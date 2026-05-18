@@ -21,7 +21,7 @@ class UserDAO(BaseDAO[User]):
             username (str): Login name to resolve.
 
         Returns:
-            User: Matching row from ``main_user``.
+            User: Matching row from ``user``.
 
         """
         return await self.get_by_pk(username, "username")
