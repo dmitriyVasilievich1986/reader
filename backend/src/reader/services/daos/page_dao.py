@@ -11,5 +11,5 @@ class PageDAO(BaseDAO[Page]):
     """DAO for the Page model."""
 
     database_model = Page
-    get_all_columns = (Page.id, Page.position, Page.cover, Page.book_id)
+    get_all_columns = (Page.id, Page.position, Page.cover, Page.book_id, Page.created_at, Page.updated_at)
     select_in_options_single = (Page.book,)

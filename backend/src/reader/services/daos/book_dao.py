@@ -11,5 +11,14 @@ class BookDAO(BaseDAO[Book]):
     """DAO for the Book model."""
 
     database_model = Book
-    get_all_columns = (Book.id, Book.name, Book.description, Book.cover, Book.author_id)
+    get_all_columns = (
+        Book.id,
+        Book.name,
+        Book.description,
+        Book.cover,
+        Book.author_id,
+        Book.created_at,
+        Book.updated_at,
+        Book.watches_count,
+    )
     select_in_options_single = (Book.author, Book.categories, Book.pages)

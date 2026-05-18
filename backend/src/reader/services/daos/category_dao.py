@@ -11,5 +11,12 @@ class CategoryDAO(BaseDAO[Category]):
     """DAO for the Category model."""
 
     database_model = Category
-    get_all_columns = (Category.id, Category.name, Category.description, Category.cover)
+    get_all_columns = (
+        Category.id,
+        Category.name,
+        Category.description,
+        Category.cover,
+        Category.created_at,
+        Category.updated_at,
+    )
     select_in_options_single = (Category.books,)
