@@ -33,9 +33,9 @@ export function BookPreview() {
   useEffect(() => {
     if (!bookId) return;
 
-    getPages(4, 0, 'position', 'asc', [{ column: 'book_id', operator: 'eq', value: bookId }]).then(
-      ({ data }) => setPages(data)
-    );
+    getPages(4, 0, 'position', 'asc', [
+      { column: 'book_id', operator: 'eq', value: parseInt(bookId) },
+    ]).then(({ data }) => setPages(data));
 
     return () => {
       setPages(null);
