@@ -44,7 +44,7 @@ class TestInit:
     def test_stores_database_client_when_provided(
         self,
         db_client: AsyncDatabaseClient,
-        migrated_db: None,
+        migrated_db: None,  # noqa: ARG002
     ) -> None:
         """Retain injected ``AsyncDatabaseClient`` and leave ``session`` unset until use.
 
@@ -165,7 +165,7 @@ class TestCreate:
 
     async def test_create_uses_db_client_path(
         self,
-        migrated_db: None,
+        migrated_db: None,  # noqa: ARG002
         db_client: AsyncDatabaseClient,
     ) -> None:
         """Open short-lived sessions from ``database_client`` when none is injected.
@@ -236,7 +236,7 @@ class TestGetByPk:
 
     async def test_get_by_pk_uses_db_client_path(
         self,
-        migrated_db: None,
+        migrated_db: None,  # noqa: ARG002
         db_client: AsyncDatabaseClient,
     ) -> None:
         """Resolve ``get_by_pk`` via internal session management on client-backed DAO.
@@ -395,7 +395,7 @@ class TestGetAll:
 
     async def test_get_all_uses_db_client_path(
         self,
-        migrated_db: None,
+        migrated_db: None,  # noqa: ARG002
         db_client: AsyncDatabaseClient,
     ) -> None:
         """List authors through internally managed sessions on client-backed DAO.
@@ -452,7 +452,7 @@ class TestUpdate:
 
     async def test_update_uses_db_client_path(
         self,
-        migrated_db: None,
+        migrated_db: None,  # noqa: ARG002
         db_client: AsyncDatabaseClient,
     ) -> None:
         """Persist updates via short-lived sessions on client-backed DAO.
@@ -506,7 +506,7 @@ class TestDelete:
 
     async def test_delete_uses_db_client_path(
         self,
-        migrated_db: None,
+        migrated_db: None,  # noqa: ARG002
         db_client: AsyncDatabaseClient,
     ) -> None:
         """Delete rows through internally managed sessions on client-backed DAO.

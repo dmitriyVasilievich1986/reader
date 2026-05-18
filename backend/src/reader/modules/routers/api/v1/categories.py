@@ -8,7 +8,7 @@ from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, status
 from loguru import logger
 from sqlalchemy.exc import IntegrityError, NoResultFound, SQLAlchemyError
 
-from reader.modules.middlewares.dependencies import get_db
+from reader.modules.middlewares.dependencies import admin_required, get_db, user_authorized
 from reader.modules.routers.models.base.metadata import PaginationMetadata
 from reader.modules.routers.models.requests.categories import GetAllCategoriesQuery, PatchCategoryBody, PostCategoryBody
 from reader.modules.routers.models.responses.categories import (
@@ -22,7 +22,13 @@ from reader.services.database import AsyncDatabaseClient
 router = APIRouter(prefix="/category", tags=["Categories"])
 
 
-@router.get("", response_model=GetAllCategoriesResponse, status_code=status.HTTP_200_OK, summary="Get all categories")
+@router.get(
+    "",
+    response_model=GetAllCategoriesResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get all categories",
+    dependencies=[Depends(user_authorized)],
+)
 async def get_all_categories(
     db: Annotated[AsyncDatabaseClient, Depends(get_db)],
     query: Annotated[GetAllCategoriesQuery, Query(description="Pagination and sorting parameters")],
@@ -61,6 +67,7 @@ async def get_all_categories(
     response_model=GetSingleCategoryResponse,
     status_code=status.HTTP_200_OK,
     summary="Get a single category",
+    dependencies=[Depends(user_authorized)],
 )
 async def get_single_category(
     category_id: Annotated[int, Path(..., description="The ID of the category")],
@@ -97,7 +104,11 @@ async def get_single_category(
 
 
 @router.post(
-    "", response_model=GetSingleCategoryResponse, status_code=status.HTTP_201_CREATED, summary="Create a new category"
+    "",
+    response_model=GetSingleCategoryResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create a new category",
+    dependencies=[Depends(admin_required)],
 )
 async def create_category(
     body: Annotated[PostCategoryBody, Body(..., description="The body of the category")],
@@ -135,6 +146,7 @@ async def create_category(
     response_model=GetSingleCategoryResponse,
     status_code=status.HTTP_200_OK,
     summary="Update a category",
+    dependencies=[Depends(admin_required)],
 )
 async def update_category(
     category_id: Annotated[int, Path(..., description="The ID of the category")],
@@ -174,7 +186,11 @@ async def update_category(
 
 
 @router.delete(
-    "/{category_id}", response_model=None, status_code=status.HTTP_204_NO_CONTENT, summary="Delete a category"
+    "/{category_id}",
+    response_model=None,
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete a category",
+    dependencies=[Depends(admin_required)],
 )
 async def delete_category(
     category_id: Annotated[int, Path(..., description="The ID of the category")],

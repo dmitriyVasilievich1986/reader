@@ -8,7 +8,7 @@ from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, status
 from loguru import logger
 from sqlalchemy.exc import IntegrityError, NoResultFound, SQLAlchemyError
 
-from reader.modules.middlewares.dependencies import get_db
+from reader.modules.middlewares.dependencies import admin_required, get_db, user_authorized
 from reader.modules.routers.models.base.metadata import PaginationMetadata
 from reader.modules.routers.models.requests.pages import GetAllPagesQuery, PatchPageBody, PostPageBody
 from reader.modules.routers.models.responses.pages import (
@@ -22,7 +22,13 @@ from reader.services.database import AsyncDatabaseClient
 router = APIRouter(prefix="/page", tags=["Pages"])
 
 
-@router.get("", response_model=GetAllPagesResponse, status_code=status.HTTP_200_OK, summary="Get all pages")
+@router.get(
+    "",
+    response_model=GetAllPagesResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get all pages",
+    dependencies=[Depends(user_authorized)],
+)
 async def get_all_pages(
     db: Annotated[AsyncDatabaseClient, Depends(get_db)],
     query: Annotated[GetAllPagesQuery, Query(description="Pagination and sorting parameters")],
@@ -59,6 +65,7 @@ async def get_all_pages(
     response_model=GetSinglePageResponse,
     status_code=status.HTTP_200_OK,
     summary="Get a single page",
+    dependencies=[Depends(user_authorized)],
 )
 async def get_single_page(
     page_id: Annotated[int, Path(..., description="The ID of the page")],
@@ -94,7 +101,13 @@ async def get_single_page(
     return GetSinglePageResponse.model_validate(payload)
 
 
-@router.post("", response_model=GetSinglePageResponse, status_code=status.HTTP_201_CREATED, summary="Create a new page")
+@router.post(
+    "",
+    response_model=GetSinglePageResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create a new page",
+    dependencies=[Depends(admin_required)],
+)
 async def create_page(
     body: Annotated[PostPageBody, Body(..., description="The body of the page")],
     db: Annotated[AsyncDatabaseClient, Depends(get_db)],
@@ -131,6 +144,7 @@ async def create_page(
     response_model=GetSinglePageResponse,
     status_code=status.HTTP_200_OK,
     summary="Update a page",
+    dependencies=[Depends(admin_required)],
 )
 async def update_page(
     page_id: Annotated[int, Path(..., description="The ID of the page")],
@@ -169,7 +183,13 @@ async def update_page(
     return GetSinglePageResponse.model_validate(payload)
 
 
-@router.delete("/{page_id}", response_model=None, status_code=status.HTTP_204_NO_CONTENT, summary="Delete a page")
+@router.delete(
+    "/{page_id}",
+    response_model=None,
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete a page",
+    dependencies=[Depends(admin_required)],
+)
 async def delete_page(
     page_id: Annotated[int, Path(..., description="The ID of the page")],
     db: Annotated[AsyncDatabaseClient, Depends(get_db)],
