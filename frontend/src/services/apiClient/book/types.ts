@@ -5,7 +5,7 @@
 export type SimpleAuthorType = {
   id: number;
   firstName: string;
-  lastName: string;
+  lastName: string | null;
 };
 
 /**
