@@ -5,7 +5,6 @@ __all__ = ("SimpleBookResponse",)
 from pydantic import Field
 
 from reader.modules.routers.models.base import BaseResponseFromModelSchema
-from reader.modules.routers.models.responses.authors.simple_author_response import SimpleAuthorResponse
 from reader.utils.models import DateModel
 
 
@@ -18,4 +17,3 @@ class SimpleBookResponse(BaseResponseFromModelSchema, DateModel):
     description: str | None = Field(None, description="The description of the book")
     cover: str | None = Field(None, description="The cover of the book")
     watches_count: int = Field(..., description="The number of times the book has been watched")
-    author: SimpleAuthorResponse = Field(..., description="The author of the book")

@@ -14,7 +14,6 @@ from reader.modules.routers.models.requests.books import GetAllBooksQuery, Patch
 from reader.modules.routers.models.responses.books import (
     GetAllBooksResponse,
     GetSingleBookResponse,
-    SimpleBookResponse,
 )
 from reader.services.daos.book_dao import BookDAO
 from reader.services.database import AsyncDatabaseClient
@@ -54,7 +53,7 @@ async def get_all_books(
         logger.exception("Error getting all books", exc_info=e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error getting all books") from e
 
-    data = [SimpleBookResponse.model_validate(book) for book in payload]
+    data = [GetSingleBookResponse.model_validate(book) for book in payload]
     metadata = PaginationMetadata(total=total, **query.model_dump())
 
     return GetAllBooksResponse(data=data, metadata=metadata)
