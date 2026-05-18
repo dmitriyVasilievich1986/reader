@@ -1,73 +1,52 @@
-import { useState, useEffect } from "react";
-import { NavLink } from "react-router";
+/**
+ * Navbar.tsx
+ *
+ * This file contains the Navbar component, which is a sticky app bar with primary navigation links (e.g. Home).
+ *
+ * @returns MUI `AppBar` wrapping a toolbar and router links.
+ */
 
-import Grid from "@mui/material/Grid";
+import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import { Link } from "react-router";
 
-import { RisonClass, call } from "../../support/caller";
-import { AvailableMenus, MenuType } from "./types";
-
-const HOME: MenuType = { label: AvailableMenus.Home, url: "/" };
-
+/**
+ * Sticky app bar with primary navigation links (e.g. Home).
+ *
+ * @returns MUI `AppBar` wrapping a toolbar and router links.
+ */
 export function Navbar() {
-  const [menu, setMenu] = useState<MenuType[]>([]);
-
-  useEffect(() => {
-    call<MenuType[]>({
-      method: "get",
-      url: "/api/v1/menu/",
-      onSucces: (result) => {
-        setMenu(result.filter((m) => m.label in AvailableMenus));
-      },
-    });
-  }, []);
-
-  const getRison = (label: string) => {
-    if (label === HOME.label) return "";
-    return new RisonClass({ order_column: "name" }).call();
-  };
-
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#15616d",
-        color: "#ffecd1",
-        height: "100px",
-      }}
-    >
-      <Grid
-        container
-        spacing={4}
-        columns={2}
-        direction="row"
-        wrap="nowrap"
-        rowSpacing={4}
-        sx={{ width: "100%", maxWidth: "600px" }}
-      >
-        <Grid size={4} sx={{ justifyContent: "center" }} container>
-          <NavLink className="navlink" to={HOME.url}>
-            {HOME.label}
-          </NavLink>
-        </Grid>
-        {menu.map((item) => (
-          <Grid
-            key={item.label}
-            size={4}
-            sx={{ justifyContent: "center" }}
-            container
+    <AppBar position="sticky">
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+              alignItems: "center",
+            }}
           >
-            <NavLink
-              className="navlink"
-              to={`${item.url}${getRison(item.label)}`}
-            >
-              {item.label}
-            </NavLink>
-          </Grid>
-        ))}
-      </Grid>
-    </Box>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Stack direction="row" spacing={2}>
+                <Link
+                  to="/"
+                  className="text-[#fff3b0] transition-colors hover:text-[#e09f3e] no-underline"
+                >
+                  <Typography variant="h6" sx={{ color: "inherit" }}>
+                    Home
+                  </Typography>
+                </Link>
+              </Stack>
+            </Box>
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 }
