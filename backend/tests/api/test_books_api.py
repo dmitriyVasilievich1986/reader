@@ -226,3 +226,62 @@ class TestBooksApi:
         )
 
         assert response.status_code == 400
+
+    async def test_watch_book_increments_watches_count(self, admin_client: AsyncClient) -> None:
+        """POST to ``/watch`` increments ``watches_count`` by one and returns the updated book.
+
+        Args:
+            admin_client (AsyncClient): Admin-authenticated HTTP client.
+
+        Returns:
+            None
+
+        """
+        author_id = await _create_author(admin_client)
+        created = (await admin_client.post("/api/v1/book", json={"name": "Watched", "author_id": author_id})).json()
+        initial_watches = created["watchesCount"]
+
+        response = await admin_client.post(f"/api/v1/book/{created['id']}/watch")
+
+        assert response.status_code == 200
+        body = response.json()
+        assert body["id"] == created["id"]
+        assert body["watchesCount"] == initial_watches + 1
+
+    async def test_watch_book_multiple_times_accumulates(self, admin_client: AsyncClient) -> None:
+        """Repeated ``/watch`` calls each add one to the counter.
+
+        Args:
+            admin_client (AsyncClient): Admin-authenticated HTTP client.
+
+        Returns:
+            None
+
+        """
+        author_id = await _create_author(admin_client)
+        created = (
+            await admin_client.post("/api/v1/book", json={"name": "Rewatched", "author_id": author_id})
+        ).json()
+        initial_watches = created["watchesCount"]
+
+        for _ in range(3):
+            await admin_client.post(f"/api/v1/book/{created['id']}/watch")
+
+        response = await admin_client.get(f"/api/v1/book/{created['id']}")
+        assert response.status_code == 200
+        assert response.json()["watchesCount"] == initial_watches + 3
+
+    async def test_watch_missing_book_returns_404(self, admin_client: AsyncClient) -> None:
+        """Watching an unknown book id surfaces 404.
+
+        Args:
+            admin_client (AsyncClient): Admin-authenticated HTTP client.
+
+        Returns:
+            None
+
+        """
+        response = await admin_client.post("/api/v1/book/9999/watch")
+
+        assert response.status_code == 404
+        assert response.json()["detail"] == "Book not found"
