@@ -9,6 +9,7 @@ from loguru import logger
 from sqlalchemy.exc import IntegrityError, NoResultFound, SQLAlchemyError
 
 from reader.modules.middlewares.dependencies import get_db
+from reader.modules.middlewares.dependencies.user_authorized import user_authorized
 from reader.modules.routers.models.base.metadata import PaginationMetadata
 from reader.modules.routers.models.requests.pages import GetAllPagesQuery, PatchPageBody, PostPageBody
 from reader.modules.routers.models.responses.pages import (
@@ -19,7 +20,7 @@ from reader.modules.routers.models.responses.pages import (
 from reader.services.daos.page_dao import PageDAO
 from reader.services.database import AsyncDatabaseClient
 
-router = APIRouter(prefix="/page", tags=["Pages"])
+router = APIRouter(prefix="/page", tags=["Pages"], dependencies=[Depends(user_authorized)])
 
 
 @router.get("", response_model=GetAllPagesResponse, status_code=status.HTTP_200_OK, summary="Get all pages")

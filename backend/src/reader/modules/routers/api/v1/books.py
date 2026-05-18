@@ -9,6 +9,7 @@ from loguru import logger
 from sqlalchemy.exc import IntegrityError, NoResultFound, SQLAlchemyError
 
 from reader.modules.middlewares.dependencies import get_db
+from reader.modules.middlewares.dependencies.user_authorized import user_authorized
 from reader.modules.routers.models.base.metadata import PaginationMetadata
 from reader.modules.routers.models.requests.books import GetAllBooksQuery, PatchBookBody, PostBookBody
 from reader.modules.routers.models.responses.books import (
@@ -19,7 +20,7 @@ from reader.modules.routers.models.responses.books import (
 from reader.services.daos.book_dao import BookDAO
 from reader.services.database import AsyncDatabaseClient
 
-router = APIRouter(prefix="/book", tags=["Books"])
+router = APIRouter(prefix="/book", tags=["Books"], dependencies=[Depends(user_authorized)])
 
 
 @router.get("", response_model=GetAllBooksResponse, status_code=status.HTTP_200_OK, summary="Get all books")
