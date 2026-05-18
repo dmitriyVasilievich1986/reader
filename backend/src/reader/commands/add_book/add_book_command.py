@@ -25,7 +25,7 @@ class AddBookCommand(BaseCommand):
     author_first_name: str | None = None
     author_last_name: str | None = None
     book_name: str | None = None
-    files_extensions: tuple[str, ...] = (".jpg", ".jpeg", ".png")
+    file_extensions: tuple[str, ...] = (".jpg", ".jpeg", ".png")
 
     def __init__(self, book_path: Path | str, app_config: AppConfig | None = None):
         """Create an import command for the given book folder.
@@ -125,7 +125,7 @@ class AddBookCommand(BaseCommand):
         if not (parent_folder := self.book_path.parent).is_dir():
             raise ValueError(f"Parent folder {parent_folder} is not a directory")
         for item in self.book_path.iterdir():
-            if item.is_file() and item.suffix in self.files_extensions:
+            if item.is_file() and item.suffix in self.file_extensions:
                 break
         else:
             raise ValueError(f"Book path {self.book_path} does not contain any image files")
@@ -156,7 +156,7 @@ class AddBookCommand(BaseCommand):
         pages: list[str] = []
 
         for item in self.book_path.iterdir():
-            if item.is_file() and item.suffix in self.files_extensions:
+            if item.is_file() and item.suffix in self.file_extensions:
                 pages.append(f"/static/i/{item.parent.parent.name}/{item.parent.name}/{item.name}")
 
         pages.sort()
