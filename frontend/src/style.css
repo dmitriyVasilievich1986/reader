@@ -7,14 +7,14 @@
   html {
     margin: 0;
     padding: 0;
-    font-family: theme("fontFamily.sans");
-    background-color: theme("colors.reader.muted");
+    font-family: theme('fontFamily.sans');
+    background-color: theme('colors.reader.muted');
   }
 }
 
 .navlink {
   text-decoration: none;
-  color: theme("colors.reader.cream");
+  color: theme('colors.reader.cream');
   font-size: larger;
   font-weight: bolder;
   cursor: pointer;

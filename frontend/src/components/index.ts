@@ -1,3 +1,13 @@
-import { Navbar } from "./navbar/Navbar";
+/**
+ * Public entry for the components: re-exports {@link Navbar}, {@link SubmitButton}, {@link Image}, {@link Avatar}, {@link BooksShell}.
+ *
+ * @module components/index
+ */
 
-export { Navbar };
+import { Avatar } from './avatar';
+import { BooksShell } from './booksShell';
+import { Image } from './image';
+import { Navbar } from './navbar';
+import { SubmitButton } from './submitButton';
+
+export { Navbar, SubmitButton, Image, Avatar, BooksShell };

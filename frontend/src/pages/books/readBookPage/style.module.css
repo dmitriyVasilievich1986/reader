@@ -1,0 +1,27 @@
+.stickyProgressWrap {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  /* default MUI light palette background.paper (no ThemeProvider in app) */
+  background-color: #fff;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.pageIndicatorChip {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 20;
+}
+
+.pageStack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pageImage {
+  width: 100%;
+  max-width: 1000px;
+}

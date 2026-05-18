@@ -1,114 +1,40 @@
-import { useSearchParams, Link } from "react-router";
-import { useState, useEffect } from "react";
-import rison from "rison";
+/**
+ * Barrel module for the booksPage: re-exports {@link BooksPage}.
+ *
+ * @module pages/books/index
+ */
 
-import ImageListItem from "@mui/material/ImageListItem";
-import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import Container from '@mui/material/Container';
+import { useState, useEffect } from 'react';
 
-import ImageListItemBar from "@mui/material/ImageListItemBar";
+import { BooksShell } from '@components/booksShell';
+import { useBookAPIClient, type SimpleBookType } from '@services/apiClient/book';
 
-import { RisonFilterClass, RisonClass, call } from "../../support/caller";
-import { AuthorType, BookType } from "./types";
-
+/**
+ * Books list route: loads up to ten books via `getBooks(10)` (API sorting and pagination), then
+ * renders them through `BooksShell`; while the request runs, the shell shows skeleton placeholders.
+ * Clearing state on unmount avoids carrying stale data into future visits.
+ *
+ * @returns {JSX.Element} Top-level Material UI `Container` wrapping the grid shell for that list.
+ */
 export function BooksPage() {
-  const [authors, setAuthors] = useState<AuthorType[]>([]);
-  const [books, setBooks] = useState<BookType[]>([]);
+  const [books, setBooks] = useState<SimpleBookType[] | null>(null);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { getBooks } = useBookAPIClient();
 
   useEffect(() => {
-    const r = new RisonClass(rison.decode(searchParams.get("q")));
-    call<BookType[]>({
-      method: "get",
-      url: `/api/v1/book/${r.call()}`,
-      onSucces: setBooks,
-    });
-  }, [searchParams]);
+    if (books === null) {
+      getBooks(10).then(({ data }) => setBooks(data));
+    }
 
-  const getRison = (bookId: number) => {
-    return new RisonClass({
-      filters: [
-        new RisonFilterClass({ col: "book", opr: "rel_o_m", value: bookId }),
-      ],
-      order_column: "position",
-    }).call();
-  };
-
-  const getAuthors = () => {
-    call<AuthorType[]>({
-      method: "get",
-      url: "/api/v1/author",
-      onSucces: setAuthors,
-    });
-  };
-
-  const onChangeHandler = (author: AuthorType | null) => {
-    const r = new RisonClass(rison.decode(searchParams.get("q")));
-    r.filters =
-      author === null
-        ? []
-        : [
-            new RisonFilterClass({
-              col: "author",
-              opr: "rel_o_m",
-              value: author.id,
-            }),
-          ];
-    setSearchParams({ q: rison.encode(r) });
-  };
+    return () => {
+      setBooks(null);
+    };
+  }, []);
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={2}>
-        <Grid size={{ xs: 12, sm: 4, md: 2 }} sx={{ p: 1 }}>
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <Autocomplete
-              onChange={(_, v) => onChangeHandler(v)}
-              getOptionLabel={(option) => option.name}
-              getOptionKey={(option) => option.id}
-              disablePortal
-              onOpen={getAuthors}
-              options={authors}
-              sx={{ width: "90%", maxWidth: "300px" }}
-              renderInput={(params) => (
-                <TextField {...params} label="Authors" />
-              )}
-            />
-          </Box>
-        </Grid>
-        <Grid size={{ xs: 12, sm: 8, md: 9 }}>
-          <Grid container spacing={2} sx={{ p: 1, justifyContent: "center" }}>
-            {books.map((book) => (
-              <ImageListItem key={book.id}>
-                <Link to={`/book/${book.id}${getRison(book.id)}`}>
-                  <img
-                    src={book.cover}
-                    style={{ height: 300, width: 200 }}
-                    loading="lazy"
-                  />
-                </Link>
-                <ImageListItemBar
-                  sx={{
-                    maxWidth: "150px",
-                    textOverflow: "clip",
-                    overflowX: "hidden",
-                  }}
-                  subtitle={<span>by: @{book.author_name}</span>}
-                  title={book.name}
-                  position="below"
-                />
-              </ImageListItem>
-            ))}
-          </Grid>
-        </Grid>
-        <Grid
-          size={{ xs: 12, md: 1 }}
-          sx={{ display: { xs: "none", md: "block" } }}
-        ></Grid>
-      </Grid>
-    </Box>
+    <Container>
+      <BooksShell books={books} />
+    </Container>
   );
 }

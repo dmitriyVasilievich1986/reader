@@ -1,0 +1,42 @@
+<svg width="100%" viewBox="0 0 680 400" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Manga reader app icon</title>
+  <desc>An open book with warm yellow-brown pages and a red bookmark ribbon</desc>
+
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .page-left, .page-right { fill: #c8a96e; stroke: #5a3e1b; }
+      .spine-rect { fill: #5a3e1b; }
+      .line { stroke: #7a5c2e; }
+    }
+    .page-left, .page-right { fill: #f2d98a; stroke: #8a5c2e; stroke-width: 3; }
+    .spine-rect { fill: #8a5c2e; }
+    .line { stroke: #c4a04a; stroke-width: 5; stroke-linecap: round; }
+    .bookmark { fill: #e54b4b; }
+  </style>
+
+  <!-- Left page -->
+  <path class="page-left"
+    d="M340,90 C310,95 240,100 200,110 L200,310 C240,300 310,295 340,300 Z" />
+
+  <!-- Right page -->
+  <path class="page-right"
+    d="M340,90 C370,95 440,100 480,110 L480,310 C440,300 370,295 340,300 Z" />
+
+  <!-- Spine -->
+  <rect class="spine-rect" x="336" y="88" width="8" height="214" rx="2" />
+
+  <!-- Lines on left page -->
+  <line class="line" x1="222" y1="155" x2="322" y2="151" />
+  <line class="line" x1="222" y1="185" x2="322" y2="181" />
+  <line class="line" x1="222" y1="215" x2="322" y2="211" />
+  <line class="line" x1="222" y1="245" x2="290" y2="241" />
+
+  <!-- Lines on right page -->
+  <line class="line" x1="358" y1="151" x2="458" y2="155" />
+  <line class="line" x1="358" y1="181" x2="458" y2="185" />
+  <line class="line" x1="358" y1="211" x2="458" y2="215" />
+  <line class="line" x1="358" y1="241" x2="420" y2="244" />
+
+  <!-- Bookmark ribbon -->
+  <path class="bookmark" d="M456,110 L476,110 L476,165 L466,155 L456,165 Z" />
+</svg>
