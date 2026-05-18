@@ -1,10 +1,13 @@
 /**
- * Public entry for the components: re-exports {@link Navbar}, {@link SubmitButton}, {@link Image}, {@link Avatar}.
+ * Public entry for the components: re-exports {@link Navbar}, {@link SubmitButton}, {@link Image}, {@link Avatar}, {@link BooksShell}.
+ *
+ * @module components/index
  */
 
-import { Avatar } from './avatar/Avatar';
-import { Image } from './image/Image';
-import { Navbar } from './navbar/Navbar';
-import { SubmitButton } from './submitButton/SubmitButton';
+import { Avatar } from './avatar';
+import { BooksShell } from './booksShell';
+import { Image } from './image';
+import { Navbar } from './navbar';
+import { SubmitButton } from './submitButton';
 
-export { Navbar, SubmitButton, Image, Avatar };
+export { Navbar, SubmitButton, Image, Avatar, BooksShell };
