@@ -1,6 +1,7 @@
 /**
  * Shared Axios client wired to `VITE_API_HOST`, JSON defaults, and bearer auth from the
- * `accessToken` cookie.
+ * `accessToken` cookie. A request interceptor sends users to login when the cookie is missing; a
+ * response interceptor does the same on HTTP 401 from the API (expired or invalid sessions).
  */
 
 import axios from 'axios';
@@ -12,7 +13,8 @@ import { useMainStore } from '@store/main';
  * Pre-configured Axios instance for all API helpers. Every outgoing request runs through a request
  * interceptor that requires `accessToken` in cookies: when it is missing, the user is redirected to
  * `/login?redirectTo=<current path>` and the request is aborted; when present, `Authorization` is set
- * to `Bearer <token>`.
+ * to `Bearer <token>`. Responses pass through an interceptor that applies the same login redirect on
+ * 401 (unless the app is already on `/login`).
  */
 export const apiClientInstance = axios.create({
   baseURL: import.meta.env.VITE_API_HOST ?? '',
@@ -39,6 +41,24 @@ apiClientInstance.interceptors.request.use((config) => {
 
   return config;
 });
+
+/**
+ * On unauthorized API responses, mirror the login redirect used for missing cookies so expired or
+ * rejected tokens bounce the user through `/login` with `redirectTo` preserved. Skips when already on
+ * `/login` to avoid loops; still rejects so callers receive the error.
+ */
+apiClientInstance.interceptors.response.use(
+  (response) => response,
+  (error: unknown) => {
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      if (!window.location.pathname.startsWith('/login')) {
+        const fullRedirectUrl = `/login?redirectTo=${encodeURIComponent(window.location.pathname)}`;
+        window.location.href = fullRedirectUrl;
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 /**
  * React hook that exposes a small async wrapper around imperative API calls. While the wrapped
