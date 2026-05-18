@@ -7,13 +7,13 @@ from typing import TYPE_CHECKING
 from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .base import Base
+from .base import Base, DateTimeMixin
 
 if TYPE_CHECKING:
     from .book import Book
 
 
-class Category(Base):
+class Category(Base, DateTimeMixin):
     """A tag-like shelf used to classify books."""
 
     __tablename__ = "category"

@@ -7,13 +7,13 @@ from typing import TYPE_CHECKING
 from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .base import Base
+from .base import Base, DateTimeMixin
 
 if TYPE_CHECKING:
     from .book import Book
 
 
-class Page(Base):
+class Page(Base, DateTimeMixin):
     """An ordered image reference belonging to exactly one ``Book``."""
 
     __tablename__ = "page"
