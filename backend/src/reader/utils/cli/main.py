@@ -9,6 +9,8 @@ from reader import __version__ as app_version
 from reader.commands.add_book import AddBookCommand
 from reader.config import AppConfig
 
+from .user import user
+
 
 @click.group(help="CLI for managing the Reader.")
 @click.version_option(app_version, "-v", "--version", message=f"Reader, version {app_version}")
@@ -98,3 +100,6 @@ async def add_book(ctx: click.Context, book_path: str, preview: bool) -> None:
         click.echo(str(command))
     else:
         await command.execute()
+
+
+main.add_command(user)

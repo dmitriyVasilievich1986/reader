@@ -8,7 +8,7 @@ from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, status
 from loguru import logger
 from sqlalchemy.exc import IntegrityError, NoResultFound, SQLAlchemyError
 
-from reader.modules.middlewares.dependencies import get_db
+from reader.modules.middlewares.dependencies import admin_required, get_db, user_authorized
 from reader.modules.routers.models.base.metadata import PaginationMetadata
 from reader.modules.routers.models.requests.books import GetAllBooksQuery, PatchBookBody, PostBookBody
 from reader.modules.routers.models.responses.books import (
@@ -22,7 +22,13 @@ from reader.services.database import AsyncDatabaseClient
 router = APIRouter(prefix="/book", tags=["Books"])
 
 
-@router.get("", response_model=GetAllBooksResponse, status_code=status.HTTP_200_OK, summary="Get all books")
+@router.get(
+    "",
+    response_model=GetAllBooksResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get all books",
+    dependencies=[Depends(user_authorized)],
+)
 async def get_all_books(
     db: Annotated[AsyncDatabaseClient, Depends(get_db)],
     query: Annotated[GetAllBooksQuery, Query(description="Pagination and sorting parameters")],
@@ -59,6 +65,7 @@ async def get_all_books(
     response_model=GetSingleBookResponse,
     status_code=status.HTTP_200_OK,
     summary="Get a single book",
+    dependencies=[Depends(user_authorized)],
 )
 async def get_single_book(
     book_id: Annotated[int, Path(..., description="The ID of the book")],
@@ -94,7 +101,13 @@ async def get_single_book(
     return GetSingleBookResponse.model_validate(payload)
 
 
-@router.post("", response_model=GetSingleBookResponse, status_code=status.HTTP_201_CREATED, summary="Create a new book")
+@router.post(
+    "",
+    response_model=GetSingleBookResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create a new book",
+    dependencies=[Depends(admin_required)],
+)
 async def create_book(
     body: Annotated[PostBookBody, Body(..., description="The body of the book")],
     db: Annotated[AsyncDatabaseClient, Depends(get_db)],
@@ -131,6 +144,7 @@ async def create_book(
     response_model=GetSingleBookResponse,
     status_code=status.HTTP_200_OK,
     summary="Update a book",
+    dependencies=[Depends(admin_required)],
 )
 async def update_book(
     book_id: Annotated[int, Path(..., description="The ID of the book")],
@@ -169,7 +183,13 @@ async def update_book(
     return GetSingleBookResponse.model_validate(payload)
 
 
-@router.delete("/{book_id}", response_model=None, status_code=status.HTTP_204_NO_CONTENT, summary="Delete a book")
+@router.delete(
+    "/{book_id}",
+    response_model=None,
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete a book",
+    dependencies=[Depends(admin_required)],
+)
 async def delete_book(
     book_id: Annotated[int, Path(..., description="The ID of the book")],
     db: Annotated[AsyncDatabaseClient, Depends(get_db)],

@@ -24,7 +24,7 @@ from ..conftest import ALEMBIC_INI
 def migrated_db(
     monkeypatch: pytest.MonkeyPatch,
     test_config_file: Path,
-    db_client: AsyncDatabaseClient,
+    db_client: AsyncDatabaseClient,  # noqa: ARG001
 ) -> None:
     """Apply all Alembic migrations to the ephemeral SQLite database.
 
@@ -49,7 +49,7 @@ def migrated_db(
 
 @pytest.fixture
 async def session(
-    migrated_db: None,
+    migrated_db: None,  # noqa: ARG001
     db_client: AsyncDatabaseClient,
 ) -> AsyncIterator[AsyncSession]:
     """Expose an ``AsyncSession`` against the migrated test database.

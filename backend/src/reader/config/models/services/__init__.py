@@ -9,6 +9,7 @@ __all__ = ("Services",)
 
 from pydantic import BaseModel, Field
 
+from .auth import Auth
 from .database import Database
 
 
@@ -26,3 +27,4 @@ class Services(BaseModel):
     """
 
     database: Database = Field(..., description="The database service")
+    auth: Auth = Field(..., description="The auth service")
