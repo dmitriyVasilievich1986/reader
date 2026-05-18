@@ -2,7 +2,7 @@
 
 __all__ = ("Base",)
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import DateTime
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, registry
@@ -21,5 +21,7 @@ class Base(DeclarativeBase):
 class DateTimeMixin(DeclarativeBase):
     """Mixin for datetime fields."""
 
-    created_at: Mapped[DateTime] = mapped_column(DateTime, default=datetime.now)
-    updated_at: Mapped[DateTime] = mapped_column(DateTime, default=datetime.now, onupdate=datetime.now)
+    created_at: Mapped[DateTime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[DateTime] = mapped_column(
+        DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc)
+    )
