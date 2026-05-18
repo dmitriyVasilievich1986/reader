@@ -10,12 +10,12 @@ import type { UserType } from '@store/main/types';
 
 import { apiClientInstance, useApiClientWrapper } from '../base';
 
-import type { UserPutRequest } from './types';
+import type { UserPatchRequest } from './types';
 
 /**
- * Hook that exposes user profile requests, using `useApiClientWrapper` for PUT and syncing the main store after a successful update.
+ * Hook that exposes user profile requests, using `useApiClientWrapper` for PATCH and syncing the main store after a successful update.
  *
- * @returns Object with `getUser` and `putUser` async methods.
+ * @returns Object with `getUser` and `patchUser` async methods.
  */
 export const useUserAPIClient = () => {
   const { wrapper } = useApiClientWrapper();
@@ -32,14 +32,14 @@ export const useUserAPIClient = () => {
       return response.data;
     },
     /**
-     * Sends a full profile update (`PUT /api/v1/user`) and passes the response to `setUser` so the main store matches the server.
+     * Sends a full profile update (`PATCH /api/v1/user/me`) and passes the response to `setUser` so the main store matches the server.
      *
      * @param request - Body with `firstName`, `lastName`, and `photoUrl`.
      * @returns {Promise<UserType>} Updated user returned by the API (also written to the store).
      */
-    putUser: async (request: UserPutRequest) => {
+    patchUser: async (request: UserPatchRequest) => {
       return wrapper(async () => {
-        const response = await apiClientInstance.put<UserType>('/api/v1/user', request);
+        const response = await apiClientInstance.patch<UserType>('/api/v1/user/me', request);
         setUser(response.data);
         return response.data;
       });
