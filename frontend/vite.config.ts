@@ -16,28 +16,13 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "../static/js",
-    emptyOutDir: true,
-    lib: {
-      entry: "src/main.tsx",
-      name: "Reader",
-      // the proper extensions will be added
-      fileName: "main",
-    },
-    commonjsOptions: {
-      include: /node_modules/, // Ensure CommonJS dependencies are included
-    },
+    outDir: resolve(__dirname, "../backend/static"),
+    emptyOutDir: false,
     rollupOptions: {
-      // make sure to externalize deps that shouldn't be bundled
-      // into your library
-      external: [],
-      // external: ["react"],
       output: {
-        // Provide global variables to use in the UMD build
-        // for externalized deps
-        globals: {
-          react: "React",
-        },
+        assetFileNames: "assets/[name]-[hash][extname]",
+        chunkFileNames: "assets/[name]-[hash].js",
+        entryFileNames: "assets/[name]-[hash].js",
       },
     },
   },
