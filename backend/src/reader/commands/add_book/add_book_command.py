@@ -1,5 +1,7 @@
 """CLI command that imports a book from a filesystem folder into the database."""
 
+__all__ = ("AddBookCommand",)
+
 import json
 import re
 from pathlib import Path
