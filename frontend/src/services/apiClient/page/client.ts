@@ -1,5 +1,7 @@
 /**
- * Book API helpers using the shared authenticated axios instance (`apiClientInstance`).
+ * Page API helpers using the shared authenticated axios instance (`apiClientInstance`).
+ *
+ * @returns Methods to fetch a paginated list of pages.
  */
 
 import { apiClientInstance } from '../base';
