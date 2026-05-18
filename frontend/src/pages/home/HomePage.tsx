@@ -1,7 +1,10 @@
 /**
- * Barrel module for the homePage: re-exports {@link HomePage}.
+ * HomePage.tsx
  *
- * @module pages/home/index
+ * This file contains the HomePage component, which is the landing page of the application.
+ * It loads up to five books via `getBooks(5)` (API default sorting and pagination), then renders them through `BooksShell`.
+ *
+ * @returns {JSX.Element} Top-level Material UI `Container` wrapping the grid shell for that list.
  */
 
 import Container from '@mui/material/Container';
