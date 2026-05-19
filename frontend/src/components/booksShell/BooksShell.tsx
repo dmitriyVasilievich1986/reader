@@ -17,9 +17,9 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import Skeleton from '@mui/material/Skeleton';
+import { getAuthorName } from '@utils';
 import { useNavigate } from 'react-router';
 
-import type { SimpleAuthorType } from '@services/apiClient/author';
 import type { BookType } from '@services/apiClient/book';
 
 import styles from './style.module.css';
@@ -35,13 +35,6 @@ import styles from './style.module.css';
  */
 export function BooksShell({ books }: { books: BookType[] | null }) {
   const navigate = useNavigate();
-
-  const authorName = (author: SimpleAuthorType): string => {
-    if (author.lastName === null) {
-      return author.firstName;
-    }
-    return `${author.firstName} ${author.lastName}`;
-  };
 
   if (books === null)
     return (
@@ -67,7 +60,7 @@ export function BooksShell({ books }: { books: BookType[] | null }) {
             <ImageListItemBar
               className={styles.itemBar}
               title={book.name}
-              subtitle={`By ${authorName(book.author)}`}
+              subtitle={`By ${getAuthorName(book.author)}`}
               actionIcon={
                 <IconButton
                   className={styles.infoIconButton}
