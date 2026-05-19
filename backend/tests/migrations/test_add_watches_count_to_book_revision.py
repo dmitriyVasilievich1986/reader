@@ -117,9 +117,7 @@ class TestUpgradeToAddWatchesCountRevision:
             None,
         )
         assert row is not None, f"{NEW_COLUMN} column missing from book"
-        assert row[2].upper() == "INTEGER", (
-            f"{NEW_COLUMN} type expected INTEGER, got {row[2]}"
-        )
+        assert row[2].upper() == "INTEGER", f"{NEW_COLUMN} type expected INTEGER, got {row[2]}"
         assert bool(row[3]) is True, f"{NEW_COLUMN} should be NOT NULL"
 
     def test_preserves_pre_existing_book_columns(

@@ -10,7 +10,7 @@ from reader.modules.routers.models.base import BaseRequestModel
 class PatchBookBody(BaseRequestModel):
     """Body model for patching a book."""
 
-    name: str | None = Field(None, description="The name of the book")
-    description: str | None = Field(None, description="The description of the book")
+    name: str | None = Field(None, description="The name of the book", min_length=1, max_length=255)
+    description: str | None = Field(None, description="The description of the book", min_length=1, max_length=1000)
     cover: str | None = Field(None, description="The cover of the book")
     author_id: int | None = Field(None, description="The ID of the author of the book")
