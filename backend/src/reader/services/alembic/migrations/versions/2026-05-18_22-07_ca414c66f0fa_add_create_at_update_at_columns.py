@@ -23,6 +23,7 @@ branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
 PLACED_HOLDER_TIMESTAMP: str = str(datetime.now(timezone.utc))
+TIMESTAMP_COLUMN = sa.DateTime(timezone=True)
 
 author = table("author", column("created_at"), column("updated_at"))
 book = table("book", column("created_at"), column("updated_at"))
@@ -39,27 +40,39 @@ def upgrade() -> None:
 
     """
     op.add_column(
-        "author", sa.Column("created_at", sa.DateTime, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP)
+        "author", sa.Column("created_at", TIMESTAMP_COLUMN, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP)
     )
     op.add_column(
-        "author", sa.Column("updated_at", sa.DateTime, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP)
+        "author", sa.Column("updated_at", TIMESTAMP_COLUMN, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP)
     )
-
-    op.add_column("book", sa.Column("created_at", sa.DateTime, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP))
-    op.add_column("book", sa.Column("updated_at", sa.DateTime, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP))
 
     op.add_column(
-        "category", sa.Column("created_at", sa.DateTime, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP)
+        "book", sa.Column("created_at", TIMESTAMP_COLUMN, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP)
     )
     op.add_column(
-        "category", sa.Column("updated_at", sa.DateTime, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP)
+        "book", sa.Column("updated_at", TIMESTAMP_COLUMN, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP)
     )
 
-    op.add_column("page", sa.Column("created_at", sa.DateTime, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP))
-    op.add_column("page", sa.Column("updated_at", sa.DateTime, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP))
+    op.add_column(
+        "category", sa.Column("created_at", TIMESTAMP_COLUMN, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP)
+    )
+    op.add_column(
+        "category", sa.Column("updated_at", TIMESTAMP_COLUMN, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP)
+    )
 
-    op.add_column("user", sa.Column("created_at", sa.DateTime, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP))
-    op.add_column("user", sa.Column("updated_at", sa.DateTime, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP))
+    op.add_column(
+        "page", sa.Column("created_at", TIMESTAMP_COLUMN, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP)
+    )
+    op.add_column(
+        "page", sa.Column("updated_at", TIMESTAMP_COLUMN, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP)
+    )
+
+    op.add_column(
+        "user", sa.Column("created_at", TIMESTAMP_COLUMN, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP)
+    )
+    op.add_column(
+        "user", sa.Column("updated_at", TIMESTAMP_COLUMN, nullable=False, server_default=PLACED_HOLDER_TIMESTAMP)
+    )
 
     op.execute(author.update().values(created_at=datetime.now(timezone.utc), updated_at=datetime.now(timezone.utc)))
     op.execute(book.update().values(created_at=datetime.now(timezone.utc), updated_at=datetime.now(timezone.utc)))
