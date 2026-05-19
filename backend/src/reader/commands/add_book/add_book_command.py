@@ -27,13 +27,15 @@ class AddBookCommand(BaseCommand):
     book_name: str | None = None
     file_extensions: tuple[str, ...] = (".jpg", ".jpeg", ".png")
 
-    def __init__(self, book_path: Path | str, app_config: AppConfig | None = None):
+    def __init__(self, book_path: Path | str, app_config: AppConfig | None = None, static_url: str = "/static/images"):
         """Create an import command for the given book folder.
 
         Args:
             book_path (Path | str): Directory containing page images (.jpg/.jpeg/.png).
             app_config (AppConfig, optional): Database and app configuration.
                 Defaults to ``AppConfig.get_or_create()`` when omitted.
+            static_url (str, optional): The URL prefix for static files.
+                Defaults to ``/static/images``.
 
         Returns:
             None
@@ -41,6 +43,7 @@ class AddBookCommand(BaseCommand):
         """
         self.book_path = Path(book_path)
         self.app_config = app_config or AppConfig.get_or_create()
+        self.static_url = static_url
 
     def _book_structure(
         self, book_cover: str | None = None, pages: list[str] | None = None
@@ -144,7 +147,7 @@ class AddBookCommand(BaseCommand):
     async def execute(self):
         """Create author, book, and page rows and print a JSON summary to stdout.
 
-        Page paths are stored as ``/static/i/{grandparent}/{parent}/{filename}`` relative-style
+        Page paths are stored as ``{self.static_url}/{grandparent}/{parent}/{filename}`` relative-style
         strings derived from the image files in ``book_path``.
 
         Returns:
@@ -157,7 +160,7 @@ class AddBookCommand(BaseCommand):
 
         for item in self.book_path.iterdir():
             if item.is_file() and item.suffix in self.file_extensions:
-                pages.append(f"/static/i/{item.parent.parent.name}/{item.parent.name}/{item.name}")
+                pages.append(f"{self.static_url}/{item.parent.parent.name}/{item.parent.name}/{item.name}")
 
         pages.sort()
 
