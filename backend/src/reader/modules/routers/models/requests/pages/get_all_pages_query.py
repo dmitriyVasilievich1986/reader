@@ -9,8 +9,8 @@ from reader.modules.routers.models.base.metadata import PaginationWithFiltersQue
 
 class GetAllPagesQuery(
     PaginationWithFiltersQuery[
-        Literal["id", "position", "book_id"],
-        Literal["id", "position", "book_id"],
+        Literal["id", "position", "book_id", "created_at", "updated_at"],
+        Literal["id", "position", "book_id", "created_at", "updated_at"],
     ]
 ):
     """Query model for getting all pages."""
