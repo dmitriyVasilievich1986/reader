@@ -67,14 +67,13 @@ async def get_all_books(
     dependencies=[Depends(user_authorized)],
 )
 async def get_single_book(
-    book_id: Annotated[int | str, Path(..., description="The ID or slug of the book")],
+    book_id: Annotated[int, Path(..., description="The ID of the book")],
     db: Annotated[AsyncDatabaseClient, Depends(get_db)],
 ) -> GetSingleBookResponse:
     """Return one book by primary key.
 
     Args:
-        book_id (int | str): Identifier of the book to load.
-            If the ID is a string, it is treated as a slug.
+        book_id (int): Identifier of the book to load.
         db (AsyncDatabaseClient): Database session from dependency injection.
 
     Returns:
@@ -88,9 +87,7 @@ async def get_single_book(
     books_dao = BookDAO(database_client=db)
 
     try:
-        payload = (
-            await books_dao.get_by_pk(book_id) if isinstance(book_id, int) else await books_dao.get_by_slug(book_id)
-        )
+        payload = await books_dao.get_by_pk(book_id)
     except NoResultFound as e:
         logger.error(f"Book with ID {book_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found") from e
@@ -98,6 +95,46 @@ async def get_single_book(
         logger.exception("Error getting single book", exc_info=e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error getting single book"
+        ) from e
+
+    return GetSingleBookResponse.model_validate(payload)
+
+
+@router.get(
+    "/slug/{slug}",
+    response_model=GetSingleBookResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get a single book by slug",
+    dependencies=[Depends(user_authorized)],
+)
+async def get_single_book_by_slug(
+    slug: Annotated[str, Path(..., description="The slug of the book")],
+    db: Annotated[AsyncDatabaseClient, Depends(get_db)],
+) -> GetSingleBookResponse:
+    """Return one book by slug.
+
+    Args:
+        slug (str): URL slug of the book to load.
+        db (AsyncDatabaseClient): Database session from dependency injection.
+
+    Returns:
+        GetSingleBookResponse: Serialized book.
+
+    Raises:
+        HTTPException: If the book does not exist (404) or loading fails (500).
+
+    """
+    books_dao = BookDAO(database_client=db)
+
+    try:
+        payload = await books_dao.get_by_slug(slug)
+    except NoResultFound as e:
+        logger.error(f"Book with slug {slug} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found") from e
+    except SQLAlchemyError as e:
+        logger.exception("Error getting single book by slug", exc_info=e)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error getting single book by slug"
         ) from e
 
     return GetSingleBookResponse.model_validate(payload)
