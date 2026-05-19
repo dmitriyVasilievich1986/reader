@@ -60,7 +60,7 @@ export function BooksShell({ books }: { books: BookType[] | null }) {
           <ImageListItem
             key={book.id}
             className={styles.listItem}
-            onClick={() => navigate(`/book/${book.id}`)}
+            onClick={() => navigate(`/book/${book.slug}`)}
           >
             <img src={book.cover} alt={book.name} className={styles.bookCover} />
             <ImageListItemBar

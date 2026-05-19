@@ -30,12 +30,12 @@ export function SingleBookPage() {
 
   const [book, setBook] = useState<BookType | null>(null);
 
-  const { getBook } = useBookAPIClient();
+  const { getBookBySlug } = useBookAPIClient();
 
   useEffect(() => {
     if (!bookId) return;
 
-    getBook(parseInt(bookId)).then(setBook);
+    getBookBySlug(bookId).then(setBook);
 
     return () => {
       setBook(null);
@@ -84,7 +84,7 @@ export function SingleBookPage() {
           </Box>
         </Box>
       </Box>
-      <BookPreview />
+      <BookPreview bookId={book.id} />
     </Container>
   );
 }
