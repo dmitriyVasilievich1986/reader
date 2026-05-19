@@ -19,7 +19,8 @@ import ImageListItemBar from '@mui/material/ImageListItemBar';
 import Skeleton from '@mui/material/Skeleton';
 import { useNavigate } from 'react-router';
 
-import type { BookType, SimpleAuthorType } from '@services/apiClient/book';
+import type { SimpleAuthorType } from '@services/apiClient/author';
+import type { BookType } from '@services/apiClient/book';
 
 import styles from './style.module.css';
 

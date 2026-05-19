@@ -6,6 +6,6 @@
 
 import { useBookAPIClient } from './client';
 
-import type { SimpleBookType, BookType, SimpleAuthorType } from './types';
+import type { SimpleBookType, BookType } from './types';
 
-export { useBookAPIClient, type SimpleBookType, type BookType, type SimpleAuthorType };
+export { useBookAPIClient, type SimpleBookType, type BookType };
