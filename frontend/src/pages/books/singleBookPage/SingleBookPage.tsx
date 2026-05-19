@@ -46,7 +46,9 @@ export function SingleBookPage() {
   const readBookClickHandler = () => {
     if (!book) return;
 
-    incrementWatchesCount(book.id);
+    void incrementWatchesCount(book.id).catch((error) => {
+      console.error('Failed to increment watches count', error);
+    });
     navigate(`/book/${book.id}/read`);
   };
 
