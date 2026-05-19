@@ -18,4 +18,5 @@ class GetSingleBookResponse(BaseResponseFromModelSchema, BaseDateModel):
     cover: str | None = Field(None, description="The cover of the book")
     author_id: int = Field(..., description="The ID of the author of the book")
     watches_count: int = Field(..., description="The number of times the book has been watched")
+    slug: str = Field(..., description="The slug of the book")
     author: SimpleAuthorResponse = Field(..., description="The author of the book")

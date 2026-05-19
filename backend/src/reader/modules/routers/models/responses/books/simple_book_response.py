@@ -16,3 +16,4 @@ class SimpleBookResponse(BaseResponseFromModelSchema, BaseDateModel):
     description: str | None = Field(None, description="The description of the book")
     cover: str | None = Field(None, description="The cover of the book")
     watches_count: int = Field(..., description="The number of times the book has been watched")
+    slug: str = Field(..., description="The slug of the book")

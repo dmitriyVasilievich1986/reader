@@ -259,9 +259,7 @@ class TestBooksApi:
 
         """
         author_id = await _create_author(admin_client)
-        created = (
-            await admin_client.post("/api/v1/book", json={"name": "Rewatched", "author_id": author_id})
-        ).json()
+        created = (await admin_client.post("/api/v1/book", json={"name": "Rewatched", "author_id": author_id})).json()
         initial_watches = created["watchesCount"]
 
         for _ in range(3):
