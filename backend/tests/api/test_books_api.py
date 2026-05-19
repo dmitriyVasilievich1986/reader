@@ -108,6 +108,45 @@ class TestBooksApi:
         assert response.status_code == 404
         assert response.json()["detail"] == "Book not found"
 
+    async def test_get_single_book_by_slug_returns_persisted_row(self, admin_client: AsyncClient) -> None:
+        """GET by slug returns the row previously created via POST.
+
+        Args:
+            admin_client (AsyncClient): Admin-authenticated HTTP client.
+
+        Returns:
+            None
+
+        """
+        author_id = await _create_author(admin_client, first_name="Arthur")
+        created = (
+            await admin_client.post("/api/v1/book", json={"name": "Hyperion Cantos", "author_id": author_id})
+        ).json()
+
+        response = await admin_client.get(f"/api/v1/book/slug/{created['slug']}")
+
+        assert response.status_code == 200
+        body = response.json()
+        assert body["id"] == created["id"]
+        assert body["name"] == "Hyperion Cantos"
+        assert body["slug"] == created["slug"]
+        assert body["authorId"] == author_id
+
+    async def test_get_single_book_by_slug_missing_returns_404(self, admin_client: AsyncClient) -> None:
+        """Unknown slugs surface as 404 Not Found.
+
+        Args:
+            admin_client (AsyncClient): Admin-authenticated HTTP client.
+
+        Returns:
+            None
+
+        """
+        response = await admin_client.get("/api/v1/book/slug/does-not-exist")
+
+        assert response.status_code == 404
+        assert response.json()["detail"] == "Book not found"
+
     async def test_get_all_books_paginates_and_reports_total(self, admin_client: AsyncClient) -> None:
         """GET list returns rows plus matching pagination metadata.
 

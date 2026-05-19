@@ -31,6 +31,21 @@ class BookDAO(BaseDAO[Book]):
     select_in_options_single = (Book.author, Book.categories, Book.pages)
     select_in_options_all = (Book.author,)
 
+    async def get_by_slug(self, slug: str) -> Book:
+        """Return the book whose ``slug`` field matches ``slug``.
+
+        Uses the same session handling and eager loads as :meth:`get_by_pk`,
+        keyed on ``Book.slug`` rather than the default primary-key attribute.
+
+        Args:
+            slug (str): Slug value to resolve.
+
+        Returns:
+            Book: Matching ORM instance.
+
+        """
+        return await self.get_by_pk(slug, "slug")
+
     async def _increment_watches_count_raw(self, session: AsyncSession, book_id: int) -> None:
         """Increment ``watches_count`` by one for the row matching ``book_id``.
 
