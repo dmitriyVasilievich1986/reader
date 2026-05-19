@@ -42,7 +42,10 @@ export function BooksPage() {
     }
 
     if (books === null) {
-      getBooks(limit, (currentPage - 1) * limit, 'created_at', 'desc').then(
+      const filters = searchParams.get('filters')
+        ? JSON.parse(searchParams.get('filters') as string)
+        : undefined;
+      getBooks(limit, (currentPage - 1) * limit, 'created_at', 'desc', filters).then(
         ({ data, metadata }) => {
           setBooks(data);
           setTotalBooks(metadata.total);
