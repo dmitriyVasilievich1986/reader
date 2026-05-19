@@ -105,6 +105,15 @@ export function Logout() {
           Profile
         </MenuItem>
         <Divider />
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            navigate('/book');
+          }}
+        >
+          Books
+        </MenuItem>
+        <Divider />
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
         <Divider />
         <MenuItem
