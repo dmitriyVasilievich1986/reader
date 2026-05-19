@@ -24,6 +24,15 @@ export const useBookAPIClient = () => {
       return response.data;
     },
     /**
+     * GET `/api/v1/book/slug/:slug` — returns a single {@link BookType}.
+     *
+     * @param slug - URL slug of the book.
+     */
+    getBookBySlug: async (slug: string): Promise<BookType> => {
+      const response = await apiClientInstance.get<BookType>(`/api/v1/book/slug/${slug}`);
+      return response.data;
+    },
+    /**
      * GET `/api/v1/book` with optional pagination, sort, and JSON-encoded `filters` query param.
      *
      * @param limit - Page size (passed through when set).
