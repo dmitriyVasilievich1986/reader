@@ -1,12 +1,4 @@
-/**
- * Book-related API payload types (list/detail summaries).
- */
-
-export type SimpleAuthorType = {
-  id: number;
-  firstName: string;
-  lastName: string | null;
-};
+import type { SimpleAuthorType } from '../author/types';
 
 /**
  * Lightweight book record for lists and references (mirrors book fields exposed by the API).
