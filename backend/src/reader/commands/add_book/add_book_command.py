@@ -43,7 +43,7 @@ class AddBookCommand(BaseCommand):
         """
         self.book_path = Path(book_path)
         self.app_config = app_config or AppConfig.get_or_create()
-        self.static_url = static_url
+        self.static_url = static_url.strip().rstrip("/")
 
     def _book_structure(
         self, book_cover: str | None = None, pages: list[str] | None = None
@@ -147,8 +147,8 @@ class AddBookCommand(BaseCommand):
     async def execute(self):
         """Create author, book, and page rows and print a JSON summary to stdout.
 
-        Page paths are stored as ``{self.static_url}/{grandparent}/{parent}/{filename}`` relative-style
-        strings derived from the image files in ``book_path``.
+        Page paths are stored as ``{static_url}/{grandparent}/{parent}/{filename}`` relative-style
+            strings derived from the image files in ``book_path``.
 
         Returns:
             None
