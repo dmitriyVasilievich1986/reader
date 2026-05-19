@@ -4,7 +4,7 @@
 
 import { apiClientInstance } from '../base';
 
-import type { SimpleBookType, BookType } from './types';
+import type { BookType } from './types';
 import type { PaginationMetadata, FilterType } from '../types';
 
 /**
@@ -38,9 +38,9 @@ export const useBookAPIClient = () => {
       sortBy?: string,
       sortOrder?: string,
       filters?: FilterType[]
-    ): Promise<{ data: SimpleBookType[]; metadata: PaginationMetadata }> => {
+    ): Promise<{ data: BookType[]; metadata: PaginationMetadata }> => {
       const response = await apiClientInstance.get<{
-        data: SimpleBookType[];
+        data: BookType[];
         metadata: PaginationMetadata;
       }>(`/api/v1/book`, {
         params: {
