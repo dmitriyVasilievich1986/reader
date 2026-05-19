@@ -117,9 +117,7 @@ class TestUpgradeToAddCreatedUpdatedColumnsRevision:
         info = _columns(sqlite_db_path, table)
         for column in NEW_COLUMNS:
             row = info[column]
-            assert row[2].upper() == "DATETIME", (
-                f"{table}.{column} type expected DATETIME, got {row[2]}"
-            )
+            assert row[2].upper() == "DATETIME", f"{table}.{column} type expected DATETIME, got {row[2]}"
             assert bool(row[3]) is True, f"{table}.{column} should be NOT NULL"
 
     def test_preserves_pre_existing_tables(
