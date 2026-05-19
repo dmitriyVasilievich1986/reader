@@ -18,7 +18,7 @@ export const parseIntWithCheck = (
   value: string | null | undefined | number,
   options: { defaultValue?: number; min?: number } = {}
 ): number => {
-  const { defaultValue = 1, min = 1 } = options;
+  const { defaultValue = 0, min = 0 } = options;
 
   const parsed = parseInt(String(value));
   if (Number.isNaN(parsed) || parsed < min) {

@@ -45,11 +45,11 @@ export function BooksPage() {
       const filters = searchParams.get('filters')
         ? JSON.parse(searchParams.get('filters') as string)
         : undefined;
-      getBooks(limit, (currentPage - 1) * limit, 'created_at', 'desc', filters).then(
+      getBooks(limit, currentPage * limit, 'created_at', 'desc', filters).then(
         ({ data, metadata }) => {
           setBooks(data);
           setTotalBooks(metadata.total);
-          setPage(Math.floor(metadata.offset / limit) + 1);
+          setPage(Math.floor(metadata.offset / limit));
         }
       );
     }
@@ -63,7 +63,7 @@ export function BooksPage() {
     <Container>
       <Pagination
         count={Math.ceil(totalBooks / limit)}
-        page={page}
+        page={page + 1}
         color="primary"
         shape="circular"
         sx={{ mt: 2 }}

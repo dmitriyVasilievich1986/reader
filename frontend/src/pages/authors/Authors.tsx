@@ -44,7 +44,7 @@ export function Authors() {
       return;
     }
 
-    const page = parseIntWithCheck(pageRaw, { defaultValue: 0 });
+    const page = parseIntWithCheck(pageRaw);
     const filters = searchParams.get('search')
       ? [{ column: 'name', operator: 'ilike', value: searchParams.get('search') }]
       : undefined;
@@ -141,7 +141,7 @@ export function Authors() {
           component="div"
           count={totalAuthors}
           rowsPerPage={limit}
-          page={parseIntWithCheck(searchParams.get('page'), { defaultValue: 0 })}
+          page={parseIntWithCheck(searchParams.get('page'))}
           onPageChange={(_, page) => setSearchParams({ page: page.toString() })}
           rowsPerPageOptions={[]}
         />
