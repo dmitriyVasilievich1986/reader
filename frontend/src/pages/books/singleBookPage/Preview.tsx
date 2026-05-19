@@ -8,7 +8,7 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import Skeleton from '@mui/material/Skeleton';
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { usePageAPIClient, type PageType } from '@services/apiClient/page';
 
@@ -20,10 +20,10 @@ import styles from './style.module.css';
  * renders cover thumbnails in a five-column `ImageList`. While loading—or when `bookId` is missing—shows
  * skeleton tiles; tapping a thumbnail opens `/book/:bookId/read?page=<position>`.
  *
+ * @param {number} bookId - Book id.
  * @returns {JSX.Element} Skeleton grid when `pages` is `null`, otherwise the clickable preview strip.
  */
-export function BookPreview() {
-  const { bookId } = useParams();
+export function BookPreview({ bookId }: { bookId: number }) {
   const navigate = useNavigate();
 
   const [pages, setPages] = useState<PageType[] | null>(null);
@@ -33,9 +33,9 @@ export function BookPreview() {
   useEffect(() => {
     if (!bookId) return;
 
-    getPages(4, 0, 'position', 'asc', [
-      { column: 'book_id', operator: 'eq', value: parseInt(bookId) },
-    ]).then(({ data }) => setPages(data));
+    getPages(4, 0, 'position', 'asc', [{ column: 'book_id', operator: 'eq', value: bookId }]).then(
+      ({ data }) => setPages(data)
+    );
 
     return () => {
       setPages(null);

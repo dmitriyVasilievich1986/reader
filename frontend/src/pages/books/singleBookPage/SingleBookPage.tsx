@@ -4,6 +4,7 @@
  * @module pages/books/singleBookPage/SingleBookPage
  */
 
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -30,17 +31,26 @@ export function SingleBookPage() {
 
   const [book, setBook] = useState<BookType | null>(null);
 
-  const { getBook } = useBookAPIClient();
+  const { getBookBySlug, incrementWatchesCount } = useBookAPIClient();
 
   useEffect(() => {
     if (!bookId) return;
 
-    getBook(parseInt(bookId)).then(setBook);
+    getBookBySlug(bookId).then(setBook);
 
     return () => {
       setBook(null);
     };
   }, [bookId]);
+
+  const readBookClickHandler = () => {
+    if (!book) return;
+
+    void incrementWatchesCount(book.id).catch((error) => {
+      console.error('Failed to increment watches count', error);
+    });
+    navigate(`/book/${book.id}/read`);
+  };
 
   const authorName = useMemo(() => {
     if (!book) return '';
@@ -74,17 +84,23 @@ export function SingleBookPage() {
             <Typography className={styles.author} variant="body1">
               {authorName}
             </Typography>
+            <Box className={styles.watchesCountContainer}>
+              <VisibilityIcon />
+              <Typography className={styles.watchesCount} variant="body1">
+                {book.watchesCount} views
+              </Typography>
+            </Box>
             <Button
               className={styles.readButton}
               variant="contained"
-              onClick={() => navigate(`/book/${bookId}/read`)}
+              onClick={readBookClickHandler}
             >
               Read
             </Button>
           </Box>
         </Box>
       </Box>
-      <BookPreview />
+      <BookPreview bookId={book.id} />
     </Container>
   );
 }

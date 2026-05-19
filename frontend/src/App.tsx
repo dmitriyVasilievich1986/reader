@@ -19,6 +19,7 @@ const LoginPage = lazy(() => import('@pages/login').then((m) => ({ default: m.Lo
 const BooksPage = lazy(() => import('@pages/books').then((m) => ({ default: m.BooksPage })));
 const ReadBookPage = lazy(() => import('@pages/books').then((m) => ({ default: m.ReadBookPage })));
 const ProfilePage = lazy(() => import('@pages/profile').then((m) => ({ default: m.Profile })));
+const AuthorsPage = lazy(() => import('@pages/authors').then((m) => ({ default: m.Authors })));
 const SingleBookPage = lazy(() =>
   import('@pages/books').then((m) => ({ default: m.SingleBookPage }))
 );
@@ -50,6 +51,7 @@ function App() {
             <Route path=":bookId" element={<SingleBookPage />} />
             <Route path=":bookId/read" element={<ReadBookPage />} />
           </Route>
+          <Route path="/author" element={<AuthorsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </Suspense>

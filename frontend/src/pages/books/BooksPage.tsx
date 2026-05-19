@@ -5,10 +5,13 @@
  */
 
 import Container from '@mui/material/Container';
+import Pagination from '@mui/material/Pagination';
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router';
 
 import { BooksShell } from '@components/booksShell';
-import { useBookAPIClient, type SimpleBookType } from '@services/apiClient/book';
+import { useBookAPIClient, type BookType } from '@services/apiClient/book';
+import { parseIntWithCheck } from '@utils/parseIntWithCheck';
 
 /**
  * Books list route: loads up to ten books via `getBooks(10)` (API sorting and pagination), then
@@ -18,22 +21,60 @@ import { useBookAPIClient, type SimpleBookType } from '@services/apiClient/book'
  * @returns {JSX.Element} Top-level Material UI `Container` wrapping the grid shell for that list.
  */
 export function BooksPage() {
-  const [books, setBooks] = useState<SimpleBookType[] | null>(null);
+  const limit = 10;
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [books, setBooks] = useState<BookType[] | null>(null);
+  const [totalBooks, setTotalBooks] = useState<number>(limit);
+  const [page, setPage] = useState<number>(parseIntWithCheck(searchParams.get('page')));
 
   const { getBooks } = useBookAPIClient();
 
   useEffect(() => {
+    const currentPage = parseIntWithCheck(searchParams.get('page'), { defaultValue: page });
+
+    if (!searchParams.get('page')) {
+      setSearchParams((prev) => {
+        prev.set('page', currentPage.toString());
+        return prev;
+      });
+    }
+
     if (books === null) {
-      getBooks(10).then(({ data }) => setBooks(data));
+      const filters = searchParams.get('filters')
+        ? JSON.parse(searchParams.get('filters') as string)
+        : undefined;
+      getBooks(limit, currentPage * limit, 'created_at', 'desc', filters).then(
+        ({ data, metadata }) => {
+          setBooks(data);
+          setTotalBooks(metadata.total);
+          setPage(Math.floor(metadata.offset / limit));
+        }
+      );
     }
 
     return () => {
       setBooks(null);
     };
-  }, []);
+  }, [searchParams]);
 
   return (
     <Container>
+      <Pagination
+        count={Math.ceil(totalBooks / limit)}
+        page={page + 1}
+        color="primary"
+        shape="circular"
+        sx={{ mt: 2 }}
+        onChange={(_, value) => {
+          setBooks(null);
+          setSearchParams((prev) => {
+            prev.set('page', value.toString());
+            return prev;
+          });
+        }}
+      />
       <BooksShell books={books} />
     </Container>
   );

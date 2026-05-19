@@ -17,9 +17,10 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import Skeleton from '@mui/material/Skeleton';
+import { getAuthorName } from '@utils';
 import { useNavigate } from 'react-router';
 
-import type { SimpleBookType } from '@services/apiClient/book';
+import type { BookType } from '@services/apiClient/book';
 
 import styles from './style.module.css';
 
@@ -29,10 +30,10 @@ import styles from './style.module.css';
  * Selecting a tile navigates to `/book/:bookId`.
  *
  * @param {object} props - Component props.
- * @param {SimpleBookType[] | null} props.books - Library rows to render, or `null` while loading.
+ * @param {BookType[] | null} props.books - Library rows to render, or `null` while loading.
  * @returns {JSX.Element} Skeleton grid without `Container`, or book grid wrapped in Material UI `Container`.
  */
-export function BooksShell({ books }: { books: SimpleBookType[] | null }) {
+export function BooksShell({ books }: { books: BookType[] | null }) {
   const navigate = useNavigate();
 
   if (books === null)
@@ -40,7 +41,7 @@ export function BooksShell({ books }: { books: SimpleBookType[] | null }) {
       <ImageList className={styles.bookList} cols={5} gap={4}>
         {Array.from({ length: 5 }).map((_, index) => (
           <ImageListItem key={index}>
-            <Skeleton className={styles.skeletonPoster} variant="rectangular" />
+            <Skeleton width={200} height={300} variant="rectangular" />
           </ImageListItem>
         ))}
       </ImageList>
@@ -53,12 +54,13 @@ export function BooksShell({ books }: { books: SimpleBookType[] | null }) {
           <ImageListItem
             key={book.id}
             className={styles.listItem}
-            onClick={() => navigate(`/book/${book.id}`)}
+            onClick={() => navigate(`/book/${book.slug}`)}
           >
             <img src={book.cover} alt={book.name} className={styles.bookCover} />
             <ImageListItemBar
               className={styles.itemBar}
               title={book.name}
+              subtitle={`By ${getAuthorName(book.author)}`}
               actionIcon={
                 <IconButton
                   className={styles.infoIconButton}

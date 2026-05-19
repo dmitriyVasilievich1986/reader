@@ -37,7 +37,7 @@ export function Navbar() {
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Image src={defaultImage} width={50} height={50} alt="Home" />
+              <Image src={defaultImage} width={80} height={80} alt="Home" />
               <Stack direction="row" spacing={2}>
                 <Link
                   to="/"
@@ -45,14 +45,6 @@ export function Navbar() {
                 >
                   <Typography variant="h6" sx={{ color: 'inherit' }}>
                     Home
-                  </Typography>
-                </Link>
-                <Link
-                  to="/book"
-                  className="text-[#fff3b0] transition-colors hover:text-[#e09f3e] no-underline"
-                >
-                  <Typography variant="h6" sx={{ color: 'inherit' }}>
-                    Books
                   </Typography>
                 </Link>
               </Stack>

@@ -4,7 +4,7 @@
 
 import { apiClientInstance } from '../base';
 
-import type { SimpleBookType, BookType } from './types';
+import type { BookType } from './types';
 import type { PaginationMetadata, FilterType } from '../types';
 
 /**
@@ -24,6 +24,15 @@ export const useBookAPIClient = () => {
       return response.data;
     },
     /**
+     * GET `/api/v1/book/slug/:slug` — returns a single {@link BookType}.
+     *
+     * @param slug - URL slug of the book.
+     */
+    getBookBySlug: async (slug: string): Promise<BookType> => {
+      const response = await apiClientInstance.get<BookType>(`/api/v1/book/slug/${slug}`);
+      return response.data;
+    },
+    /**
      * GET `/api/v1/book` with optional pagination, sort, and JSON-encoded `filters` query param.
      *
      * @param limit - Page size (passed through when set).
@@ -38,9 +47,9 @@ export const useBookAPIClient = () => {
       sortBy?: string,
       sortOrder?: string,
       filters?: FilterType[]
-    ): Promise<{ data: SimpleBookType[]; metadata: PaginationMetadata }> => {
+    ): Promise<{ data: BookType[]; metadata: PaginationMetadata }> => {
       const response = await apiClientInstance.get<{
-        data: SimpleBookType[];
+        data: BookType[];
         metadata: PaginationMetadata;
       }>(`/api/v1/book`, {
         params: {
@@ -52,6 +61,15 @@ export const useBookAPIClient = () => {
         },
       });
       return { data: response.data.data, metadata: response.data.metadata };
+    },
+    /**
+     * POST `/api/v1/book/:bookId/watch` — increments the watches count for a book.
+     *
+     * @param bookId - Book id.
+     */
+    incrementWatchesCount: async (bookId: number): Promise<BookType> => {
+      const response = await apiClientInstance.post<BookType>(`/api/v1/book/${bookId}/watch`);
+      return response.data;
     },
   };
 };
