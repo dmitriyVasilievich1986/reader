@@ -66,7 +66,7 @@ services:
       - frontend
     environment:
       - VITE_API_HOST=
-      - VITE_IMAGES_HOST=/static/i
+      - VITE_IMAGES_HOST=/static/images
     volumes:
       - ./frontend/src:/opt/frontend/src
       - ./frontend/package.json:/opt/frontend/package.json
