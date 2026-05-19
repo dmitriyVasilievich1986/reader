@@ -1,5 +1,5 @@
 /**
- * Book-related API payload types (list/detail summaries).
+ * Author-related API payload types (list/detail summaries).
  */
 
 export type SimpleAuthorType = {
