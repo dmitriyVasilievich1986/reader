@@ -41,15 +41,17 @@ def upgrade() -> None:
         Column("last_name", String),
         Column("cover", String, nullable=True),
         PrimaryKeyConstraint("id", name="pk_author"),
+        UniqueConstraint("first_name", "last_name", name="uq_author_name"),
     )
     op.create_table(
         "book",
         Column("id", Integer),
-        Column("name", String, unique=True, nullable=False),
+        Column("name", String, nullable=False),
         Column("description", String),
         Column("author_id", Integer(), nullable=False),
         Column("cover", String, nullable=True),
         PrimaryKeyConstraint("id", name="pk_book"),
+        UniqueConstraint("name", name="uq_book_name"),
         ForeignKeyConstraint(
             ["author_id"],
             ["author.id"],
