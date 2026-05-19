@@ -4,11 +4,10 @@ __all__ = ("SimpleCategoryResponse",)
 
 from pydantic import Field
 
-from reader.modules.routers.models.base import BaseResponseFromModelSchema
-from reader.utils.models import DateModel
+from reader.modules.routers.models.base import BaseDateModel, BaseResponseFromModelSchema
 
 
-class SimpleCategoryResponse(BaseResponseFromModelSchema, DateModel):
+class SimpleCategoryResponse(BaseResponseFromModelSchema, BaseDateModel):
     """Response model for a simple category."""
 
     id: int = Field(..., description="The ID of the category")

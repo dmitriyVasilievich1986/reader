@@ -4,11 +4,10 @@ __all__ = ("GetSingleCategoryResponse",)
 
 from pydantic import Field
 
-from reader.modules.routers.models.base import BaseResponseFromModelSchema
-from reader.utils.models import DateModel
+from reader.modules.routers.models.base import BaseDateModel, BaseResponseFromModelSchema
 
 
-class GetSingleCategoryResponse(BaseResponseFromModelSchema, DateModel):
+class GetSingleCategoryResponse(BaseResponseFromModelSchema, BaseDateModel):
     """Response model for getting a single category."""
 
     id: int = Field(..., description="The ID of the category")

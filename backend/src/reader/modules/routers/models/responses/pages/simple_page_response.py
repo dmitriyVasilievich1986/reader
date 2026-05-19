@@ -4,10 +4,10 @@ __all__ = ("SimplePageResponse",)
 
 from pydantic import Field
 
-from reader.modules.routers.models.base import BaseResponseFromModelSchema
+from reader.modules.routers.models.base import BaseDateModel, BaseResponseFromModelSchema
 
 
-class SimplePageResponse(BaseResponseFromModelSchema):
+class SimplePageResponse(BaseResponseFromModelSchema, BaseDateModel):
     """Response model for a simple page."""
 
     id: int = Field(..., description="The ID of the page")
