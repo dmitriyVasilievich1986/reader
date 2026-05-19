@@ -246,16 +246,10 @@ async def watch_book(
     books_dao = BookDAO(database_client=db)
 
     try:
-        book = await books_dao.get_by_pk(book_id)
+        payload = await books_dao.increment_watches_count(book_id)
     except NoResultFound as e:
         logger.error(f"Book with ID {book_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found") from e
-    except SQLAlchemyError as e:
-        logger.exception("Error watching book", exc_info=e)
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error watching book") from e
-
-    try:
-        payload = await books_dao.update(book_id, watches_count=book.watches_count + 1)
     except SQLAlchemyError as e:
         logger.exception("Error watching book", exc_info=e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error watching book") from e
