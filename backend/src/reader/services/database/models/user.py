@@ -5,10 +5,10 @@ __all__ = ("User",)
 from sqlalchemy import Boolean, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
-from .base import Base
+from .base import Base, DateTimeMixin
 
 
-class User(Base):
+class User(Base, DateTimeMixin):
     """An application user with credentials, profile fields, and access flags."""
 
     __tablename__ = "user"

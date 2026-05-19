@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .base import Base
+from .base import Base, DateTimeMixin
 
 if TYPE_CHECKING:
     from .author import Author
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from .page import Page
 
 
-class Book(Base):
+class Book(Base, DateTimeMixin):
     """A published work keyed by ``name`` with author, categories, and pages."""
 
     __tablename__ = "book"
@@ -24,6 +24,7 @@ class Book(Base):
     name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
     description: Mapped[str | None] = mapped_column(String, nullable=True)
     cover: Mapped[str | None] = mapped_column(String, nullable=True)
+    watches_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
 
     author_id: Mapped[int] = mapped_column(Integer, ForeignKey("author.id"))
     author: Mapped["Author"] = relationship("Author", back_populates="books")

@@ -14,7 +14,6 @@ from reader.modules.routers.models.requests.books import GetAllBooksQuery, Patch
 from reader.modules.routers.models.responses.books import (
     GetAllBooksResponse,
     GetSingleBookResponse,
-    SimpleBookResponse,
 )
 from reader.services.daos.book_dao import BookDAO
 from reader.services.database import AsyncDatabaseClient
@@ -54,7 +53,7 @@ async def get_all_books(
         logger.exception("Error getting all books", exc_info=e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error getting all books") from e
 
-    data = [SimpleBookResponse.model_validate(book) for book in payload]
+    data = [GetSingleBookResponse.model_validate(book) for book in payload]
     metadata = PaginationMetadata(total=total, **query.model_dump())
 
     return GetAllBooksResponse(data=data, metadata=metadata)
@@ -217,3 +216,42 @@ async def delete_book(
     except SQLAlchemyError as e:
         logger.exception("Error deleting book", exc_info=e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error deleting book") from e
+
+
+@router.post(
+    "/{book_id}/watch",
+    response_model=GetSingleBookResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Watch a book",
+    dependencies=[Depends(user_authorized)],
+)
+async def watch_book(
+    book_id: Annotated[int, Path(..., description="The ID of the book")],
+    db: Annotated[AsyncDatabaseClient, Depends(get_db)],
+) -> GetSingleBookResponse:
+    """Increment the watch counter for a book and return the updated row.
+
+    Args:
+        book_id (int): Identifier of the book to watch.
+        db (AsyncDatabaseClient): Database session from dependency injection.
+
+    Returns:
+        GetSingleBookResponse: Serialized book after incrementing watches.
+
+    Raises:
+        HTTPException: If the book does not exist (404) or loading or update
+            fails (500).
+
+    """
+    books_dao = BookDAO(database_client=db)
+
+    try:
+        payload = await books_dao.increment_watches_count(book_id)
+    except NoResultFound as e:
+        logger.error(f"Book with ID {book_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found") from e
+    except SQLAlchemyError as e:
+        logger.exception("Error watching book", exc_info=e)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error watching book") from e
+
+    return GetSingleBookResponse.model_validate(payload)

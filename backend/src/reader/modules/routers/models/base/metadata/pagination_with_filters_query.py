@@ -5,7 +5,7 @@ __all__ = ("PaginationWithFiltersQuery",)
 
 from pydantic import Field, Json
 
-from reader.utils.filter import Filter
+from reader.utils.models.filter import Filter
 
 from .pagination_query import PaginationQuery
 

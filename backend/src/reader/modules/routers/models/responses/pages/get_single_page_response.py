@@ -4,11 +4,11 @@ __all__ = ("GetSinglePageResponse",)
 
 from pydantic import Field
 
-from reader.modules.routers.models.base import BaseResponseFromModelSchema
+from reader.modules.routers.models.base import BaseDateModel, BaseResponseFromModelSchema
 from reader.modules.routers.models.responses.books.simple_book_response import SimpleBookResponse
 
 
-class GetSinglePageResponse(BaseResponseFromModelSchema):
+class GetSinglePageResponse(BaseResponseFromModelSchema, BaseDateModel):
     """Response model for getting a single page."""
 
     id: int = Field(..., description="The ID of the page")

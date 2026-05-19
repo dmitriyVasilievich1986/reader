@@ -12,7 +12,7 @@ class UserDAO(BaseDAO[User]):
     """Persistence helpers for ``User`` rows, including password hashing on create."""
 
     database_model = User
-    get_all_columns = (User.id, User.username, User.email)
+    get_all_columns = (User.id, User.username, User.email, User.created_at, User.updated_at)
 
     async def get_by_username(self, username: str) -> User:
         """Return the user with the given unique username.

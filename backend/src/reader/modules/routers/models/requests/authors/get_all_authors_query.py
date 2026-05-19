@@ -9,8 +9,8 @@ from reader.modules.routers.models.base.metadata import PaginationWithFiltersQue
 
 class GetAllAuthorsQuery(
     PaginationWithFiltersQuery[
-        Literal["id", "first_name", "last_name"],
-        Literal["id", "first_name", "last_name"],
+        Literal["id", "first_name", "last_name", "created_at", "updated_at"],
+        Literal["id", "first_name", "last_name", "created_at", "updated_at"],
     ]
 ):
     """Query model for getting all authors."""
