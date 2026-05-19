@@ -70,4 +70,4 @@ ENV PATH="/opt/backend/.venv/bin:${PATH}"
 
 EXPOSE 8000
 
-ENTRYPOINT ["python", "-m", "uvicorn", "reader.modules.app:get_app", "--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT ["python", "src/reader"]
