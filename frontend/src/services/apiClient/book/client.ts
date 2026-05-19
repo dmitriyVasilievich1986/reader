@@ -62,5 +62,14 @@ export const useBookAPIClient = () => {
       });
       return { data: response.data.data, metadata: response.data.metadata };
     },
+    /**
+     * POST `/api/v1/book/:bookId/watch` — increments the watches count for a book.
+     *
+     * @param bookId - Book id.
+     */
+    incrementWatchesCount: async (bookId: number): Promise<BookType> => {
+      const response = await apiClientInstance.post<BookType>(`/api/v1/book/${bookId}/watch`);
+      return response.data;
+    },
   };
 };
