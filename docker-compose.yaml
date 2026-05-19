@@ -42,7 +42,7 @@ services:
         required: false
     environment:
       - CONFIG_FILE_PATH=/opt/backend/configurations/local.yaml
-    command: uvicorn src.reader.modules.app:get_app --host 0.0.0.0
+    command: uvicorn src.reader.modules.app:get_app --factory --host 0.0.0.0
       --reload --port 8000
     ports:
       - 8000:8000
