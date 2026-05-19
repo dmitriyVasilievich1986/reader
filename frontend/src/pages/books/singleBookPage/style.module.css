@@ -40,6 +40,13 @@
   width: 150px;
 }
 
+.watchesCountContainer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #fdf0d5;
+}
+
 .previewImageListLoading,
 .previewImageList {
   width: 100%;
