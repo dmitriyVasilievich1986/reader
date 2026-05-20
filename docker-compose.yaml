@@ -70,6 +70,7 @@ services:
     volumes:
       - ./frontend/src:/opt/frontend/src
       - ./frontend/package.json:/opt/frontend/package.json
+      - ./frontend/package-lock.json:/opt/frontend/package-lock.json
       - ./frontend/application-version.json:/opt/frontend/application-version.json
       - ./frontend/scripts:/opt/frontend/scripts
       - ./frontend/tsconfig.app.json:/opt/frontend/tsconfig.app.json
