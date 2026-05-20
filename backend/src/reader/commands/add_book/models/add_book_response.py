@@ -128,15 +128,15 @@ class AddBookResponse:
         ]
         author_dao = AuthorDAO(database_client=self.db_client, session=None)
 
-        author, _ = await author_dao.get_all(filters=author_filters)
-        if len(author) > 1:
+        authors, _ = await author_dao.get_all(filters=author_filters)
+        if len(authors) > 1:
             raise ValueError(f"Multiple authors found for {self.author.first_name} {self.author.last_name}")
-        if len(author) == 0:
+        if len(authors) == 0:
             return await author_dao.create(
                 first_name=self.author.first_name, last_name=self.author.last_name, cover=None
             )
 
-        return author[0]
+        return authors[0]
 
     async def save(self) -> None:
         """Persist the author and all collected books to the database.
