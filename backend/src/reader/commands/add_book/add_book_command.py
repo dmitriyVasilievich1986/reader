@@ -108,15 +108,15 @@ class AddBookCommand(BaseCommand[AddBookResponse]):
 
         """
         logger.info(f"Executing add book command for author: {self.author_path}")
-        author_name_splited = self.author_path.name.split("_")
-        if len(author_name_splited) == 1:
-            author = Author(first_name=author_name_splited[0], last_name=None)
-        elif len(author_name_splited) == 2:
-            author = Author(first_name=author_name_splited[0], last_name=author_name_splited[1])
+        author_name_split = self.author_path.name.split("_")
+        if len(author_name_split) == 1:
+            author = Author(first_name=author_name_split[0], last_name=None)
+        elif len(author_name_split) == 2:
+            author = Author(first_name=author_name_split[0], last_name=author_name_split[1])
 
         response = AddBookResponse(db_client=self.db_client, author=author)
         for book_path in self.author_path.iterdir():
-            pages_pathes: list[Path] = sorted(
+            page_paths: list[Path] = sorted(
                 list(book_path.iterdir()),
                 key=lambda x: int(re.search(r"\d+", x.name).group(0)),  # type: ignore[union-attr]
             )
@@ -126,7 +126,7 @@ class AddBookCommand(BaseCommand[AddBookResponse]):
                     position=index,
                     cover=f"{self.static_url}/{page_path.parent.parent.name}/{page_path.parent.name}/{page_path.name}",
                 )
-                for index, page_path in enumerate(pages_pathes, start=1)
+                for index, page_path in enumerate(page_paths, start=1)
             ]
             book = Book(
                 path=book_path, name=book_path.name.replace("_", " ").capitalize(), cover=pages[0].cover, pages=pages
