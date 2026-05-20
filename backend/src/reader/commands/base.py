@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 
-class BaseCommand(ABC):
+class BaseCommand[ResultType: Any](ABC):
     """Abstract async command with initialize, validate, and execute hooks.
 
     Subclasses implement the three-step lifecycle: optional setup via
@@ -26,7 +26,7 @@ class BaseCommand(ABC):
         pass
 
     @abstractmethod
-    async def execute(self) -> None:
+    async def execute(self) -> ResultType:
         """Execute the command's business logic.
 
         This method contains the main operation that the command performs.
