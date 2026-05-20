@@ -16,19 +16,22 @@ from .book import Book
 class AddBookResponse:
     """Collects parsed books for an author and persists them to the database."""
 
-    def __init__(self, db_client: AsyncDatabaseClient, author: Author):
+    def __init__(self, db_client: AsyncDatabaseClient, author: Author) -> None:
         """Initialize the response with a database client and author.
 
         Args:
             db_client (AsyncDatabaseClient): Client used to open database sessions.
             author (Author): Author associated with the books in this response.
 
+        Returns:
+            None
+
         """
         self.db_client = db_client
         self.books: list[Book] = []
         self.author = author
 
-    def add_book(self, book: Book):
+    def add_book(self, book: Book) -> None:
         """Append a book to the in-memory collection.
 
         Args:

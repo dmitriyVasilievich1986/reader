@@ -18,7 +18,7 @@ class Book(BaseModel):
     cover: str = Field(..., description="The cover of the book")
     pages: list[Page] = Field(..., description="The pages of the book")
 
-    def add_page(self, page: Page):
+    def add_page(self, page: Page) -> "Book":
         """Return a copy of the book with an additional page appended.
 
         Args:
@@ -46,8 +46,7 @@ class Book(BaseModel):
         if not isinstance(other, Page):
             raise NotImplementedError("Can only add Page instance")
 
-        self.add_page(other)
-        return self
+        return self.add_page(other)
 
     def __str__(self) -> str:
         """Return a colored, human-readable summary of the book.

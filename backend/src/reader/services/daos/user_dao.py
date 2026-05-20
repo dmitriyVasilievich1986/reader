@@ -3,6 +3,8 @@
 __all__ = ("UserDAO",)
 
 
+from typing import Any
+
 from reader.services.auth import PasswordService
 from reader.services.daos.base import BaseDAO
 from reader.services.database.models.user import User
@@ -26,11 +28,11 @@ class UserDAO(BaseDAO[User]):
         """
         return await self.get_by_pk(username, "username")
 
-    async def create(self, **kwargs) -> User:
+    async def create(self, **kwargs: Any) -> User:
         """Insert a user, replacing plaintext ``password`` with a keyed hash.
 
         Args:
-            **kwargs: ``User`` column values. ``password`` must be plaintext; it
+            **kwargs (Any): ``User`` column values. ``password`` must be plaintext; it
                 is hashed with ``PasswordService`` before persistence.
 
         Returns:

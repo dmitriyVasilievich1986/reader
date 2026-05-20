@@ -4,6 +4,7 @@ __all__ = ("AddBookCommand",)
 
 import re
 from pathlib import Path
+from typing import Any
 
 from loguru import logger
 from sqlalchemy.exc import NoResultFound
@@ -42,11 +43,11 @@ class AddBookCommand(BaseCommand[AddBookResponse]):
         app_config = app_config or AppConfig.get_or_create()
         self.db_client = AsyncDatabaseClient(app_config)
 
-    async def initialize(self, **kwargs):
+    async def initialize(self, **kwargs: Any) -> None:
         """Initialize the command.
 
         Args:
-            **kwargs: Unused keyword arguments retained for ``BaseCommand`` compatibility.
+            **kwargs (Any): Unused keyword arguments retained for ``BaseCommand`` compatibility.
 
         Returns:
             None
@@ -54,7 +55,7 @@ class AddBookCommand(BaseCommand[AddBookResponse]):
         """
         pass
 
-    async def validate(self):
+    async def validate(self) -> None:
         """Verify the author folder layout and that books are not duplicates.
 
         Returns:
