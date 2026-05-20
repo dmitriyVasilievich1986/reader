@@ -3,6 +3,7 @@
 __all__ = ("AddBookResponse",)
 
 import pydash
+from loguru import logger
 
 from reader.services.daos import AuthorDAO, BookDAO, PageDAO
 from reader.services.database import AsyncDatabaseClient
@@ -98,6 +99,7 @@ class AddBookResponse:
             None
 
         """
+        logger.info(f"Saving book: {book_to_save.name}")
         async with self.db_client.session_factory() as session:
             book_dao = BookDAO(database_client=None, session=session)
             page_dao = PageDAO(database_client=None, session=session)
@@ -116,6 +118,7 @@ class AddBookResponse:
             ValueError: If more than one author matches the configured name.
 
         """
+        logger.info(f"Saving author: {self.author.first_name} {self.author.last_name}")
         author_filters = [
             AuthorModel.first_name == self.author.first_name,
             AuthorModel.last_name == self.author.last_name,
@@ -139,7 +142,11 @@ class AddBookResponse:
             None
 
         """
+        logger.info("Starting to save author and books...")
+        logger.debug(f"Data to save: {self}")
         author = await self._save_author()
 
         for book in self.books:
             await self._save_book(book, author)
+
+        logger.info("Author and books saved successfully")

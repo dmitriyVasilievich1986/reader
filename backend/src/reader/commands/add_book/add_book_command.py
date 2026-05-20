@@ -5,6 +5,7 @@ __all__ = ("AddBookCommand",)
 import re
 from pathlib import Path
 
+from loguru import logger
 from sqlalchemy.exc import NoResultFound
 
 from reader.config import AppConfig
@@ -104,6 +105,7 @@ class AddBookCommand(BaseCommand[AddBookResponse]):
                 pages, ready to be persisted.
 
         """
+        logger.info(f"Executing add book command for author: {self.author_path}")
         author_name_splited = self.author_path.name.split("_")
         if len(author_name_splited) == 1:
             author = Author(first_name=author_name_splited[0], last_name=None)
@@ -129,4 +131,5 @@ class AddBookCommand(BaseCommand[AddBookResponse]):
             )
             response += book
 
+        logger.info(f"Add book command executed successfully for author: {self.author_path}")
         return response
