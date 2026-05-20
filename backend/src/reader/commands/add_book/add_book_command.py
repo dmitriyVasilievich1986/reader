@@ -92,7 +92,7 @@ class AddBookCommand(BaseCommand[AddBookResponse]):
             count = 0
             for page_path in book_path.iterdir():
                 count += 1
-                if not page_path.is_file() or page_path.suffix not in self.file_extensions:
+                if not page_path.is_file() or page_path.suffix.lower() not in self.file_extensions:
                     raise ValueError(f"Page path {page_path} is not a file or does not have a valid extension")
                 if re.search(r"\d+", page_path.name) is None:
                     raise ValueError(f"Page path {page_path} does not have a valid number in the name")
