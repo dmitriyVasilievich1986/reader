@@ -20,7 +20,7 @@ from .models import AddBookResponse, Author, Book, Page
 class AddBookCommand(BaseCommand[AddBookResponse]):
     """Import books from an author folder on disk into the database."""
 
-    file_extensions: tuple[str, ...] = (".jpg", ".jpeg", ".png")
+    file_extensions: tuple[str, ...] = (".jpg", ".jpeg", ".png", ".webp")
 
     def __init__(
         self, author_path: Path | str, app_config: AppConfig | None = None, static_url: str = "/static/images"
