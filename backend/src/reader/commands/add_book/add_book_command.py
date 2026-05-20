@@ -68,6 +68,8 @@ class AddBookCommand(BaseCommand[AddBookResponse]):
         """
         if not self.author_path.exists():
             raise ValueError(f"Author path {self.author_path} does not exist")
+        if not self.author_path.is_dir():
+            raise ValueError(f"Author path {self.author_path} is not a directory")
         if len(self.author_path.name.split("_")) > 2:
             raise ValueError(f"Author path {self.author_path} has more than 2 parts")
 
