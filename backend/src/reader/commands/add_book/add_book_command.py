@@ -20,7 +20,7 @@ from .models import AddBookResponse, Author, Book, Page
 class AddBookCommand(BaseCommand[AddBookResponse]):
     """Import books from an author folder on disk into the database."""
 
-    file_extensions: tuple[str, ...] = (".jpg", ".jpeg", ".png")
+    file_extensions: tuple[str, ...] = (".jpg", ".jpeg", ".png", ".webp")
 
     def __init__(
         self, author_path: Path | str, app_config: AppConfig | None = None, static_url: str = "/static/images"
@@ -92,7 +92,7 @@ class AddBookCommand(BaseCommand[AddBookResponse]):
             count = 0
             for page_path in book_path.iterdir():
                 count += 1
-                if not page_path.is_file() or page_path.suffix not in self.file_extensions:
+                if not page_path.is_file() or page_path.suffix.lower() not in self.file_extensions:
                     raise ValueError(f"Page path {page_path} is not a file or does not have a valid extension")
                 if re.search(r"\d+", page_path.name) is None:
                     raise ValueError(f"Page path {page_path} does not have a valid number in the name")
