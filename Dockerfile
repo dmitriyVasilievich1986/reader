@@ -1,6 +1,7 @@
 FROM node:24-slim AS frontend
 
 WORKDIR /opt/frontend
+ARG VITE_API_HOST=
 
 COPY ./frontend /opt/frontend
 

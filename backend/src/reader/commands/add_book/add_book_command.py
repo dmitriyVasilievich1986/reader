@@ -2,106 +2,52 @@
 
 __all__ = ("AddBookCommand",)
 
-import json
 import re
 from pathlib import Path
+from typing import Any
 
 from loguru import logger
+from sqlalchemy.exc import NoResultFound
 
 from reader.config import AppConfig
-from reader.services.daos import AuthorDAO, BookDAO, PageDAO
+from reader.services.daos import BookDAO
 from reader.services.database import AsyncDatabaseClient
 
 from ..base import BaseCommand
+from .models import AddBookResponse, Author, Book, Page
 
 
-class AddBookCommand(BaseCommand):
-    """Load book images under ``book_path`` and persist author, book, and pages.
+class AddBookCommand(BaseCommand[AddBookResponse]):
+    """Import books from an author folder on disk into the database."""
 
-    The parent directory name optionally encodes ``author_first_name``
-    ``author_last_name`` as ``first_last`` segments separated by underscores.
-    """
-
-    author_first_name: str | None = None
-    author_last_name: str | None = None
-    book_name: str | None = None
     file_extensions: tuple[str, ...] = (".jpg", ".jpeg", ".png")
 
-    def __init__(self, book_path: Path | str, app_config: AppConfig | None = None, static_url: str = "/static/images"):
-        """Create an import command for the given book folder.
+    def __init__(
+        self, author_path: Path | str, app_config: AppConfig | None = None, static_url: str = "/static/images"
+    ):
+        """Configure the command for a given author directory.
 
         Args:
-            book_path (Path | str): Directory containing page images (.jpg/.jpeg/.png).
-            app_config (AppConfig, optional): Database and app configuration.
-                Defaults to ``AppConfig.get_or_create()`` when omitted.
-            static_url (str, optional): The URL prefix for static files.
-                Defaults to ``/static/images``.
-
-        Returns:
-            None
+            author_path (Path | str): Filesystem path to the author folder
+                containing one subdirectory per book.
+            app_config (AppConfig | None, optional): Application configuration
+                used to create the database client. Defaults to a new or
+                cached ``AppConfig`` instance.
+            static_url (str, optional): Base URL prefix for page cover paths.
+                Defaults to ``"/static/images"``.
 
         """
-        self.book_path = Path(book_path)
-        self.app_config = app_config or AppConfig.get_or_create()
+        self.author_path = Path(author_path)
         self.static_url = static_url.strip().rstrip("/")
 
-    def _book_structure(
-        self, book_cover: str | None = None, pages: list[str] | None = None
-    ) -> dict[str, Path | str | list[str]]:
-        """Build a JSON-serializable summary of detected book metadata.
+        app_config = app_config or AppConfig.get_or_create()
+        self.db_client = AsyncDatabaseClient(app_config)
 
-        Args:
-            book_cover (str, optional): Representative cover URL or path fragment.
-                Defaults to None (omitted from the payload).
-            pages (list[str], optional): Sorted page identifiers. Defaults to None
-                (omitted from the payload).
-
-        Returns:
-            dict[str, Path | str | list[str]]: Keys such as ``Book path``, names, and optional ``Book cover``
-            / ``Pages``. Values may include non-string objects coerced via ``json.dumps``.
-
-        """
-        payload = {
-            "Book path": self.book_path,
-            "Author first name": self.author_first_name,
-            "Author last name": self.author_last_name,
-            "Author full name": self.author_full_name,
-            "Book name": self.book_name,
-        }
-        if book_cover is not None:
-            payload["Book cover"] = book_cover
-        if pages is not None:
-            payload["Pages"] = pages  # type: ignore[assignment]
-
-        return payload  # type: ignore[return-value]
-
-    def __str__(self) -> str:
-        """Return indented JSON describing the command state.
-
-        Returns:
-            str: JSON text for the default book-structure payload without cover/pages.
-
-        """
-        return json.dumps(self._book_structure(), indent=2, default=str)
-
-    @property
-    def author_full_name(self) -> str:
-        """Compose a display name from first and optional last author name.
-
-        Returns:
-            str: ``first_only`` when last name is absent, otherwise ``first last``.
-
-        """
-        if self.author_last_name is None:
-            return self.author_first_name  # type: ignore[return-value]
-
-        return f"{self.author_first_name} {self.author_last_name}"
-
-    async def initialize(self, **kwargs):
+    async def initialize(self, **kwargs: Any) -> None:
         """Initialize the command.
 
         Args:
-            **kwargs: Unused keyword arguments retained for ``BaseCommand`` compatibility.
+            **kwargs (Any): Unused keyword arguments retained for ``BaseCommand`` compatibility.
 
         Returns:
             None
@@ -109,71 +55,84 @@ class AddBookCommand(BaseCommand):
         """
         pass
 
-    async def validate(self):
-        """Ensure ``book_path`` layout and derive ``book_name`` and author fields.
+    async def validate(self) -> None:
+        """Verify the author folder layout and that books are not duplicates.
 
         Returns:
             None
 
         Raises:
-            ValueError: If ``book_path`` or its parent is missing or not a directory,
-                if no image pages exist inside ``book_path``, or if the parent folder
-                name has more than two underscore-separated segments.
+            ValueError: If the author path is missing, malformed, contains
+                non-directory entries, includes duplicate book names, has
+                invalid page files, or contains a book with no pages.
 
         """
-        if not self.book_path.exists():
-            raise ValueError(f"Book path {self.book_path} does not exist")
-        if not self.book_path.is_dir():
-            raise ValueError(f"Book path {self.book_path} is not a directory")
-        if not (parent_folder := self.book_path.parent).is_dir():
-            raise ValueError(f"Parent folder {parent_folder} is not a directory")
-        for item in self.book_path.iterdir():
-            if item.is_file() and item.suffix in self.file_extensions:
-                break
-        else:
-            raise ValueError(f"Book path {self.book_path} does not contain any image files")
+        if not self.author_path.exists():
+            raise ValueError(f"Author path {self.author_path} does not exist")
+        if not self.author_path.is_dir():
+            raise ValueError(f"Author path {self.author_path} is not a directory")
+        if len(self.author_path.name.split("_")) > 2:
+            raise ValueError(f"Author path {self.author_path} has more than 2 parts")
 
-        self.book_name = re.sub(r"_|\s+", " ", self.book_path.name.capitalize())
+        book_dao = BookDAO(database_client=self.db_client, session=None)
+        for book_path in self.author_path.iterdir():
+            if not book_path.is_dir():
+                raise ValueError(f"Book path {book_path} is not a directory")
+            try:
+                book_name = book_path.name.replace("_", " ").capitalize()
+                _ = await book_dao.get_by_pk(book_name, "name")
+            except NoResultFound:
+                pass
+            else:
+                raise ValueError(f"Book {book_name} already exists, path - {book_path}")
 
-        if len(parent_splited := parent_folder.name.split("_")) > 2:
-            raise ValueError(f"Parent folder {parent_folder} has more than 2 parts")
+            if not book_path.is_dir():
+                raise ValueError(f"Book path {book_path} is not a directory")
 
-        if len(parent_splited) == 2:
-            self.author_first_name = parent_splited[0]
-            self.author_last_name = parent_splited[1]
-        elif len(parent_splited) == 1:
-            self.author_first_name = parent_splited[0]
+            count = 0
+            for page_path in book_path.iterdir():
+                count += 1
+                if not page_path.is_file() or page_path.suffix not in self.file_extensions:
+                    raise ValueError(f"Page path {page_path} is not a file or does not have a valid extension")
+                if re.search(r"\d+", page_path.name) is None:
+                    raise ValueError(f"Page path {page_path} does not have a valid number in the name")
 
-    async def execute(self):
-        """Create author, book, and page rows and print a JSON summary to stdout.
+            if count == 0:
+                raise ValueError(f"Book path {book_path} does not contain any pages")
 
-        Page paths are stored as ``{static_url}/{grandparent}/{parent}/{filename}`` relative-style
-            strings derived from the image files in ``book_path``.
+    async def execute(self) -> AddBookResponse:
+        """Parse author and book folders into an ``AddBookResponse``.
 
         Returns:
-            None
+            AddBookResponse: Parsed author metadata and books with ordered
+                pages, ready to be persisted.
 
         """
-        logger.info(f"Adding book {self.book_path}...")
-        db_client = AsyncDatabaseClient(self.app_config)
-        pages: list[str] = []
+        logger.info(f"Executing add book command for author: {self.author_path}")
+        author_name_split = self.author_path.name.split("_")
+        if len(author_name_split) == 1:
+            author = Author(first_name=author_name_split[0], last_name=None)
+        elif len(author_name_split) == 2:
+            author = Author(first_name=author_name_split[0], last_name=author_name_split[1])
 
-        for item in self.book_path.iterdir():
-            if item.is_file() and item.suffix in self.file_extensions:
-                pages.append(f"{self.static_url}/{item.parent.parent.name}/{item.parent.name}/{item.name}")
-
-        pages.sort()
-
-        async with db_client.session_factory() as session:
-            book_dao = BookDAO(database_client=None, session=session)
-            author_dao = AuthorDAO(database_client=None, session=session)
-            page_dao = PageDAO(database_client=None, session=session)
-
-            author = await author_dao.create(
-                first_name=self.author_first_name, last_name=self.author_last_name, cover=None
+        response = AddBookResponse(db_client=self.db_client, author=author)
+        for book_path in self.author_path.iterdir():
+            page_paths: list[Path] = sorted(
+                list(book_path.iterdir()),
+                key=lambda x: int(re.search(r"\d+", x.name).group(0)),  # type: ignore[union-attr]
             )
-            book = await book_dao.create(name=self.book_name, author_id=author.id, cover=pages[0])
-            for index, page in enumerate(pages, start=1):
-                await page_dao.create(book_id=book.id, position=index, cover=page)
+            pages = [
+                Page(
+                    path=page_path,
+                    position=index,
+                    cover=f"{self.static_url}/{page_path.parent.parent.name}/{page_path.parent.name}/{page_path.name}",
+                )
+                for index, page_path in enumerate(page_paths, start=1)
+            ]
+            book = Book(
+                path=book_path, name=book_path.name.replace("_", " ").capitalize(), cover=pages[0].cover, pages=pages
+            )
+            response += book
 
-        logger.info(json.dumps(self._book_structure(book_cover=pages[0], pages=pages), indent=2, default=str))
+        logger.info(f"Add book command executed successfully for author: {self.author_path}")
+        return response
