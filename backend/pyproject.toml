@@ -23,6 +23,7 @@ dependencies = [
     "asyncclick>=8.3.0.7",
     "asyncpg>=0.31.0",
     "bcrypt>=5.0.0",
+    "colorama>=0.4.6",
     "fastapi>=0.136.1",
     "greenlet>=3.5.0",
     "loguru>=0.7.3",
@@ -46,6 +47,7 @@ dev = [
     "pytest-cov>=7.1.0",
     "python-dotenv>=1.2.2",
     "ruff>=0.15.13",
+    "types-colorama>=0.4.15.20260508",
 ]
 
 [build-system]
