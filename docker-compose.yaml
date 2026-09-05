@@ -8,7 +8,7 @@ services:
     volumes:
       - ./nginx/config/nginx.conf:/etc/nginx/nginx.conf
       - reader-static:/usr/share/nginx/html/static
-      - ./static/images:/usr/share/nginx/html/static/images
+      - ./backend/static/images:/usr/share/nginx/html/static/images
       - ./nginx/ssl:/etc/nginx/ssl
     networks:
       - reader-network
@@ -21,20 +21,14 @@ services:
     env_file:
       - path: ./backend/db.env
         required: true
-    ports:
-      - 5432:5432
     volumes:
       - ./db/data:/var/lib/postgresql
     networks:
       - reader-network
 
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: development
-    container_name: reader-backend
     image: reader:latest
+    container_name: reader-backend
     env_file:
       - path: ./backend/.env
         required: true
@@ -42,10 +36,6 @@ services:
         required: false
     environment:
       - CONFIG_FILE_PATH=/opt/backend/configurations/local.yaml
-    command: uvicorn src.reader.modules.app:get_app --factory --host 0.0.0.0
-      --reload --port 8000
-    ports:
-      - 8000:8000
     volumes:
       - ./backend/configurations:/opt/backend/configurations
       - ./backend/src:/opt/backend/src
@@ -59,39 +49,10 @@ services:
       retries: 3
       start_period: 10s
 
-  frontend:
-    image: node:24
-    container_name: reader-frontend
-    profiles:
-      - frontend
-    environment:
-      - VITE_API_HOST=
-      - VITE_IMAGES_HOST=/static/images
-    volumes:
-      - ./frontend/src:/opt/frontend/src
-      - ./frontend/package.json:/opt/frontend/package.json
-      - ./frontend/package-lock.json:/opt/frontend/package-lock.json
-      - ./frontend/application-version.json:/opt/frontend/application-version.json
-      - ./frontend/scripts:/opt/frontend/scripts
-      - ./frontend/tsconfig.app.json:/opt/frontend/tsconfig.app.json
-      - ./frontend/tsconfig.json:/opt/frontend/tsconfig.json
-      - ./frontend/tsconfig.node.json:/opt/frontend/tsconfig.node.json
-      - ./frontend/vite.config.ts:/opt/frontend/vite.config.ts
-      - ./frontend/index.html:/opt/frontend/index.html
-      - reader-static:/opt/backend/static
-    working_dir: /opt/frontend
-    command: ["/bin/bash", "scripts/start.sh"]
-    networks:
-      - reader-network
-    depends_on:
-      - backend
-
 networks:
   reader-network:
     external: false
 
 volumes:
-  reader-volume:
-    external: true
   reader-static:
     external: false
