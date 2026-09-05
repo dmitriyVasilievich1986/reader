@@ -15,18 +15,19 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": ".",
     "paths": {
-      "@components": ["src/components"],
-      "@components/*": ["src/components/*"],
-      "@pages": ["src/pages"],
-      "@pages/*": ["src/pages/*"],
-      "@store": ["src/store"],
-      "@store/*": ["src/store/*"],
-      "@services": ["src/services"],
-      "@services/*": ["src/services/*"],
-      "@utils": ["src/utils"],
-      "@utils/*": ["src/utils/*"]
+      "@components": ["./src/components"],
+      "@components/*": ["./src/components/*"],
+      "@pages": ["./src/pages"],
+      "@pages/*": ["./src/pages/*"],
+      "@store": ["./src/store"],
+      "@store/*": ["./src/store/*"],
+      "@services": ["./src/services"],
+      "@services/*": ["./src/services/*"],
+      "@utils": ["./src/utils"],
+      "@utils/*": ["./src/utils/*"],
+      "@assets": ["./src/assets"],
+      "@assets/*": ["./src/assets/*"]
     },
 
     /* Linting */

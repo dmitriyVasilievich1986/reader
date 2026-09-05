@@ -2,6 +2,7 @@ FROM node:24-slim AS frontend
 
 WORKDIR /opt/frontend
 ARG VITE_API_HOST=
+ARG VITE_IMAGES_HOST=/static/images
 
 COPY ./frontend /opt/frontend
 
@@ -25,39 +26,6 @@ COPY ./backend/pyproject.toml ./
 COPY ./backend/uv.lock ./
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --no-dev --no-install-project --link-mode=copy --no-editable
-
-FROM python:3.13-slim-bookworm AS development
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends curl \
-    && rm -rf /var/lib/apt/lists/*
-
-COPY --from=ghcr.io/astral-sh/uv:0.6 /uv /bin/uv
-
-COPY --from=build /opt/backend/.venv /opt/backend/.venv
-
-WORKDIR /opt/backend
-
-# Lockfile + sync first so backend/src changes do not invalidate dependency layers.
-COPY ./backend/pyproject.toml ./
-COPY ./backend/uv.lock ./
-
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --frozen --link-mode=copy --no-editable --no-install-project
-
-COPY ./backend/src ./src
-COPY ./backend/LICENSE ./
-COPY ./backend/Readme.md ./
-
-RUN --mount=type=cache,target=/root/.cache/uv \
-uv sync --frozen --link-mode=copy --no-editable
-
-COPY --from=frontend /opt/backend/static /opt/backend/static
-
-COPY ./backend/configurations ./configurations
-
-ENV PYTHONPATH="/opt/backend/src"
-ENV PATH="/opt/backend/.venv/bin:${PATH}"
 
 FROM python:3.13-slim-bookworm AS production
 

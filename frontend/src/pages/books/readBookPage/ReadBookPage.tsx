@@ -16,6 +16,7 @@ import Stack from '@mui/material/Stack';
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router';
 
+import { Image } from '@components/image/Image';
 import { usePageAPIClient, type PageType } from '@services/apiClient/page';
 
 import styles from './style.module.css';
@@ -155,19 +156,21 @@ export function ReadBookPage() {
         />
       </Fade>
       <Stack className={styles.pageStack}>
-        {pages.map((page) => (
-          <img
-            key={page.id}
-            ref={(el) => {
-              if (el) imageRefs.current.set(page.position, el);
-              else imageRefs.current.delete(page.position);
-            }}
-            src={page.cover}
-            alt={page.position.toString()}
-            data-position={page.position}
-            className={styles.pageImage}
-          />
-        ))}
+        {pages.map((page) => {
+          return (
+            <Image
+              key={page.id}
+              ref={(el) => {
+                if (el) imageRefs.current.set(page.position, el);
+                else imageRefs.current.delete(page.position);
+              }}
+              src={page.cover}
+              alt={page.position.toString()}
+              data-position={page.position}
+              className={styles.pageImage}
+            />
+          );
+        })}
       </Stack>
     </Container>
   );

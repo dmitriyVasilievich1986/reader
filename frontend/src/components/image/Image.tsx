@@ -3,24 +3,11 @@
  */
 
 import StorefrontIcon from '@mui/icons-material/Storefront';
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 
-/**
- * Renders an `<img>` when `src` is present and loads successfully; otherwise shows `StorefrontIcon`.
- *
- * @param {object} props - Component props.
- * @param {string | null | undefined} props.src - Image URL; when empty, the fallback icon is shown.
- * @param {number | string | undefined} props.width - Passed to the image or icon sizing (`style` / `sx`).
- * @param {number | string | undefined} props.height - Passed to the image or icon sizing (`style` / `sx`).
- * @param {string | undefined} props.alt - Accessible label for the image or icon fallback.
- * @returns {JSX.Element} Image or Material UI storefront icon.
- */
-export function Image(props: {
-  src?: string | null;
-  width?: number | string;
-  height?: number | string;
-  alt?: string;
-}) {
+import type { ImageProps } from './types';
+
+export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(props, ref) {
   const [failed, setFailed] = useState(false);
 
   if (!props.src || failed) {
@@ -34,11 +21,13 @@ export function Image(props: {
 
   return (
     <img
-      src={props.src}
+      src={import.meta.env.VITE_IMAGES_HOST + props.src}
       loading="lazy"
       style={{ width: props.width, height: props.height }}
       onError={() => setFailed(true)}
       alt={props.alt ?? 'Image'}
+      className={props.className}
+      ref={ref}
     />
   );
-}
+});
