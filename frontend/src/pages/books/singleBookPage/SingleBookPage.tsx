@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router';
 
+import { Image } from '@components/image/Image';
 import { useBookAPIClient, type BookType } from '@services/apiClient/book';
 
 import { BookPreview } from './Preview';
@@ -76,7 +77,7 @@ export function SingleBookPage() {
     <Container>
       <Box className={styles.hero}>
         <Box className={styles.heroInner}>
-          <img src={book.cover} alt={book.name} className={styles.cover} />
+          <Image src={book.cover} alt={book.name} className={styles.cover} />
           <Box>
             <Typography className={styles.title} variant="h4">
               {book.name}

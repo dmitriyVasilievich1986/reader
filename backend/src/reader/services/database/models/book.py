@@ -2,7 +2,7 @@
 
 __all__ = ("Book",)
 
-from typing import TYPE_CHECKING
+from typing import Any, TYPE_CHECKING
 
 from slugify import slugify
 from sqlalchemy import ForeignKey, Integer, String
@@ -36,12 +36,12 @@ class Book(Base, DateTimeMixin):
     pages: Mapped[list["Page"]] = relationship("Page", back_populates="book")
     slug: Mapped[str] = mapped_column(String, nullable=False, unique=True, index=True)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Build a ``Book``, defaulting ``slug`` from ``name`` when omitted.
 
         Args:
-            *args: Positional arguments forwarded to ``Base.__init__``.
-            **kwargs: Column values for the entity. Include ``name`` when
+            *args (Any): Positional arguments forwarded to ``Base.__init__``.
+            **kwargs (Any): Column values for the entity. Include ``name`` when
                 ``slug`` is omitted so a slug can be derived.
 
         Returns:
