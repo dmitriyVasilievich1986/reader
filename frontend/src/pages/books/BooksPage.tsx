@@ -27,12 +27,11 @@ export function BooksPage() {
 
   const [books, setBooks] = useState<BookType[] | null>(null);
   const [totalBooks, setTotalBooks] = useState<number>(limit);
-  const [page, setPage] = useState<number>(parseIntWithCheck(searchParams.get('page')));
 
   const { getBooks } = useBookAPIClient();
 
   useEffect(() => {
-    const currentPage = parseIntWithCheck(searchParams.get('page'), { defaultValue: page });
+    const currentPage = parseIntWithCheck(searchParams.get('page'), { defaultValue: 1, min: 1 });
 
     if (!searchParams.get('page')) {
       setSearchParams((prev) => {
@@ -45,11 +44,10 @@ export function BooksPage() {
       const filters = searchParams.get('filters')
         ? JSON.parse(searchParams.get('filters') as string)
         : undefined;
-      getBooks(limit, currentPage * limit, 'created_at', 'desc', filters).then(
+      getBooks(limit, (currentPage - 1) * limit, 'created_at', 'desc', filters).then(
         ({ data, metadata }) => {
           setBooks(data);
           setTotalBooks(metadata.total);
-          setPage(Math.floor(metadata.offset / limit));
         }
       );
     }
@@ -63,7 +61,7 @@ export function BooksPage() {
     <Container>
       <Pagination
         count={Math.ceil(totalBooks / limit)}
-        page={page + 1}
+        page={parseIntWithCheck(searchParams.get('page'), { defaultValue: 1, min: 1 })}
         color="primary"
         shape="circular"
         sx={{ mt: 2 }}

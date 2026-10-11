@@ -20,6 +20,7 @@ import Skeleton from '@mui/material/Skeleton';
 import { getAuthorName } from '@utils';
 import { useNavigate } from 'react-router';
 
+import { Image } from '@components/image/Image';
 import type { BookType } from '@services/apiClient/book';
 
 import styles from './style.module.css';
@@ -56,7 +57,7 @@ export function BooksShell({ books }: { books: BookType[] | null }) {
             className={styles.listItem}
             onClick={() => navigate(`/book/${book.slug}`)}
           >
-            <img src={book.cover} alt={book.name} className={styles.bookCover} />
+            <Image src={book.cover} alt={book.name} className={styles.bookCover} />
             <ImageListItemBar
               className={styles.itemBar}
               title={book.name}

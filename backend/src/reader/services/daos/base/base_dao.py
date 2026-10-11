@@ -272,12 +272,12 @@ class BaseDAO[DatabaseModel: Base](ABC):
         async with self.database_client.session_factory() as session:  # type: ignore[union-attr]
             return await self._get_all_raw(session, limit, offset, sort_by, sort_order, filters)
 
-    async def _create_raw(self, session: AsyncSession, **kwargs) -> DatabaseModel:
+    async def _create_raw(self, session: AsyncSession, **kwargs: Any) -> DatabaseModel:
         """Insert a row and return the persisted instance loaded by PK.
 
         Args:
             session (AsyncSession): Active async session.
-            **kwargs: Column values accepted by ``database_model``.
+            **kwargs (Any): Column values accepted by ``database_model``.
 
         Returns:
             DatabaseModel: The created row after commit and reload.
@@ -288,11 +288,11 @@ class BaseDAO[DatabaseModel: Base](ABC):
         await session.commit()
         return await self._get_by_pk_raw(session, getattr(obj, self.pk_column_name), self.pk_column_name)
 
-    async def create(self, **kwargs) -> DatabaseModel:
+    async def create(self, **kwargs: Any) -> DatabaseModel:
         """Create a row from keyword arguments matching the model fields.
 
         Args:
-            **kwargs: Column names and values for ``database_model``.
+            **kwargs (Any): Column names and values for ``database_model``.
 
         Returns:
             DatabaseModel: The created row after commit and reload.

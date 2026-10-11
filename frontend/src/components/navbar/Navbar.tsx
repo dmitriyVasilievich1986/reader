@@ -6,6 +6,7 @@
  * @returns MUI `AppBar` wrapping a toolbar and router links.
  */
 
+import { default as defaultImage } from '@assets/reader.svg';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -14,10 +15,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router';
 
-import { Image } from '@components/image';
-
 import { Logout } from './logout/Logout';
-import { default as defaultImage } from './reader.svg';
 /**
  * Sticky app bar with primary navigation links (e.g. Home).
  *
@@ -37,7 +35,7 @@ export function Navbar() {
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Image src={defaultImage} width={80} height={80} alt="Home" />
+              <img src={defaultImage} width={80} height={80} alt="Home" />
               <Stack direction="row" spacing={2}>
                 <Link
                   to="/"

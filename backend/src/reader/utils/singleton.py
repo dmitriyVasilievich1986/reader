@@ -1,44 +1,33 @@
-"""Singleton metaclass for thread-safe singleton pattern implementation."""
+"""Thread-safe singleton metaclass for one-instance-per-class semantics."""
 
 __all__ = ("Singleton",)
 
 from threading import Lock
-from typing import ClassVar
+from typing import Any, ClassVar
 
 
-class Singleton(type):
-    """Thread-safe singleton metaclass.
+class Singleton[InstanceType: Any](type):
+    """Metaclass that ensures at most one instance exists per concrete class.
 
-    This metaclass ensures that only one instance of a class is created,
-    regardless of how many times the class is instantiated. The implementation
-    is thread-safe using a Lock to prevent race conditions in multi-threaded
-    environments.
-
-    Usage:
-        class MyClass(metaclass=Singleton):
-            pass
-
-        instance1 = MyClass()
-        instance2 = MyClass()
-        # instance1 is instance2 == True
+    The first call to a class constructor creates and caches the instance;
+    subsequent calls return the same object. Access is synchronized with a
+    lock so instance creation is safe across threads.
     """
 
-    _instances: ClassVar[dict] = {}
+    _instances: ClassVar[dict[type, InstanceType]] = {}
     _lock: Lock = Lock()
 
-    def __call__(cls, *args, **kwargs):
-        """Create or return the singleton instance of the class.
-
-        On first call, creates a new instance and stores it. Subsequent calls
-        return the same stored instance. This method is thread-safe and will
-        ensure only one instance is created even in concurrent environments.
+    def __call__(cls, *args: Any, **kwargs: Any) -> InstanceType:
+        """Return the singleton instance for ``cls``, creating it if needed.
 
         Args:
-            *args: Positional arguments passed to the class constructor.
-            **kwargs: Keyword arguments passed to the class constructor.
+            *args (Any): Positional arguments forwarded to the class
+                constructor on first instantiation.
+            **kwargs (Any): Keyword arguments forwarded to the class
+                constructor on first instantiation.
 
         Returns:
-            The singleton instance of the class.
+            InstanceType: The cached singleton instance for ``cls``.
 
         """
         with cls._lock:

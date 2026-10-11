@@ -10,6 +10,7 @@ import Skeleton from '@mui/material/Skeleton';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
+import { Image } from '@components/image/Image';
 import { usePageAPIClient, type PageType } from '@services/apiClient/page';
 
 import styles from './style.module.css';
@@ -65,7 +66,7 @@ export function BookPreview({ bookId }: { bookId: number }) {
           className={styles.previewItem}
           onClick={() => navigate(`/book/${bookId}/read?page=${page.position}`)}
         >
-          <img src={page.cover} alt={page.position.toString()} className={styles.previewThumb} />
+          <Image src={page.cover} alt={page.position.toString()} className={styles.previewThumb} />
         </ImageListItem>
       ))}
     </ImageList>
