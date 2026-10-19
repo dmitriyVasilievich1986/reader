@@ -21,11 +21,7 @@ COPY --from=ghcr.io/astral-sh/uv:0.6 /uv /bin/uv
 WORKDIR /opt/backend
 
 # Install dependencies and the project (provides the `reader` CLI)
-COPY ./backend/pyproject.toml ./
-COPY ./backend/uv.lock ./
-COPY ./backend/Readme.md ./
-COPY ./backend/LICENSE ./
-COPY ./backend/src ./src
+COPY ./backend .
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --no-dev --group sqlite --link-mode=copy --no-editable
 
@@ -39,11 +35,8 @@ RUN groupadd --system reader \
 
 WORKDIR /opt/backend
 
-COPY --from=build /opt/backend/.venv /opt/backend/.venv
-COPY ./backend/pyproject.toml ./
-COPY ./backend/src ./src
-COPY --from=frontend --chown=reader:reader /opt/frontend/dist /opt/backend/static
-COPY ./backend/configurations ./configurations
+COPY --from=build /opt/backend .
+COPY --from=frontend --chown=reader:reader /opt/frontend/dist ./static
 
 # The app writes book images into static/ and may create files in its workdir
 RUN chown reader:reader /opt/backend
