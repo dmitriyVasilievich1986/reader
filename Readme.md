@@ -34,7 +34,7 @@ Per-tier setup, configuration, and API examples live in [`backend/Readme.md`](ba
 | CLI           | `asyncclick`                                                     |
 | Logging       | Loguru                                                           |
 | Tests         | Pytest, `pytest-asyncio`, `httpx` (ASGI transport)               |
-| Tooling       | `uv` for dependency management, `ruff`, `mypy`                   |
+| Tooling       | `uv` for dependency management, `ruff`, `ty`                     |
 
 ### Frontend (`frontend/`)
 

@@ -68,7 +68,7 @@ class BookDAO(BaseDAO[Book]):
                 updated_at=datetime.now(timezone.utc),
             )
         )
-        if result.rowcount == 0:  # type: ignore[attr-defined]
+        if result.rowcount == 0:  # ty: ignore[unresolved-attribute]
             raise NoResultFound()
         await session.commit()
 
@@ -92,6 +92,6 @@ class BookDAO(BaseDAO[Book]):
             await self._increment_watches_count_raw(self.session, book_id)
             return await self._get_by_pk_raw(self.session, book_id, self.pk_column_name)
 
-        async with self.database_client.session_factory() as session:  # type: ignore[union-attr]
+        async with self.database_client.session_factory() as session:  # ty: ignore[unresolved-attribute]
             await self._increment_watches_count_raw(session, book_id)
             return await self._get_by_pk_raw(session, book_id, self.pk_column_name)

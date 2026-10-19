@@ -92,7 +92,7 @@ If you change ports, paths, env vars or the build output location, update
 
 GitHub Actions run on pushes and PRs to `main` and `development`:
 
-- `build_backend.yml` — `ruff check`, `ruff format --check`, `mypy`, `uv build`
+- `build_backend.yml` — `ruff check`, `ruff format --check`, `ty check`, `uv build`
 - `test_backend.yml` — `pytest`
 - `build_frontend.yml` — `npm ci && npm run build`
 

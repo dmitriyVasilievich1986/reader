@@ -153,7 +153,7 @@ class BaseDAO[DatabaseModel: Base](ABC):
         if self.session is not None:
             return await self._get_by_pk_raw(self.session, pk, pk_column_name, filters)
 
-        async with self.database_client.session_factory() as session:  # type: ignore[union-attr]
+        async with self.database_client.session_factory() as session:  # ty: ignore[unresolved-attribute]
             return await self._get_by_pk_raw(session, pk, pk_column_name, filters)
 
     async def _get_total_raw(
@@ -192,7 +192,7 @@ class BaseDAO[DatabaseModel: Base](ABC):
         if self.session is not None:
             return await self._get_total_raw(self.session, filters)
 
-        async with self.database_client.session_factory() as session:  # type: ignore[union-attr]
+        async with self.database_client.session_factory() as session:  # ty: ignore[unresolved-attribute]
             return await self._get_total_raw(session, filters)
 
     async def _get_all_raw(
@@ -269,7 +269,7 @@ class BaseDAO[DatabaseModel: Base](ABC):
         if self.session is not None:
             return await self._get_all_raw(self.session, limit, offset, sort_by, sort_order, filters)
 
-        async with self.database_client.session_factory() as session:  # type: ignore[union-attr]
+        async with self.database_client.session_factory() as session:  # ty: ignore[unresolved-attribute]
             return await self._get_all_raw(session, limit, offset, sort_by, sort_order, filters)
 
     async def _create_raw(self, session: AsyncSession, **kwargs: Any) -> DatabaseModel:
@@ -301,7 +301,7 @@ class BaseDAO[DatabaseModel: Base](ABC):
         if self.session is not None:
             return await self._create_raw(self.session, **kwargs)
 
-        async with self.database_client.session_factory() as session:  # type: ignore[union-attr]
+        async with self.database_client.session_factory() as session:  # ty: ignore[unresolved-attribute]
             return await self._create_raw(session, **kwargs)
 
     async def _update_raw(
@@ -346,7 +346,7 @@ class BaseDAO[DatabaseModel: Base](ABC):
         if self.session is not None:
             return await self._update_raw(self.session, pk, col, **kwargs)
 
-        async with self.database_client.session_factory() as session:  # type: ignore[union-attr]
+        async with self.database_client.session_factory() as session:  # ty: ignore[unresolved-attribute]
             return await self._update_raw(session, pk, col, **kwargs)
 
     @overload
@@ -384,7 +384,7 @@ class BaseDAO[DatabaseModel: Base](ABC):
             bool: True after the row was deleted and the session committed.
 
         """
-        instance_ = await self._get_by_pk_raw(session, pk, pk_column_name) if instance is None else instance  # type: ignore[arg-type]
+        instance_ = await self._get_by_pk_raw(session, pk, pk_column_name) if instance is None else instance  # ty: ignore[invalid-argument-type]
         await session.delete(instance_)
         await session.commit()
         return True
@@ -406,5 +406,5 @@ class BaseDAO[DatabaseModel: Base](ABC):
         if self.session is not None:
             return await self._delete_raw(self.session, pk, col, None)
 
-        async with self.database_client.session_factory() as session:  # type: ignore[union-attr]
+        async with self.database_client.session_factory() as session:  # ty: ignore[unresolved-attribute]
             return await self._delete_raw(session, pk, col, None)
