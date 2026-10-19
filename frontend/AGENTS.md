@@ -24,7 +24,7 @@ Run from `frontend/`:
 
 ```bash
 npm run dev           # Vite dev server (http://localhost:5173)
-npm run build         # tsc -b && vite build → ../backend/static
+npm run build         # tsc -b && vite build → dist/
 npm run build:watch   # rebuild on change
 npm run lint:check    # eslint .
 npm run lint:fix      # eslint . --fix
@@ -38,7 +38,7 @@ Before finishing a change, all of these must pass:
 npx tsc -b && npm run lint:check && npm run format:check
 ```
 
-Do not run `npm run build` just to verify — it writes into `../backend/static`.
+Do not run `npm run build` just to verify — it writes into `dist/`.
 
 ## Source layout
 
@@ -221,7 +221,7 @@ import type { BookType } from '@services/apiClient/book';
 
 ## Don'ts
 
-- Don't edit `dist/`, `node_modules/`, or `../backend/static` by hand.
+- Don't edit `dist/` or `node_modules/` by hand.
 - Don't add a second HTTP client, router or state library.
 - Don't commit secrets to `.env`; it only holds the local `VITE_API_HOST`.
 - Don't add dependencies without need; if you do, use `npm install` so

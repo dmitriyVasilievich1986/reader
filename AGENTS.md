@@ -35,8 +35,9 @@ reader/
 The frontend has no server of its own — it is a static bundle that talks
 **only** to the backend's REST API. Treat them as one product:
 
-- **Build output goes into the backend.** `npm run build` writes the bundle to
-  `backend/static/` (`index.html` + `assets/`). The backend serves it via the
+- **Build output.** `npm run build` writes the bundle to `frontend/dist/`
+  (`index.html` + `assets/`); the Docker image copies it into
+  `/opt/backend/static`. The backend serves it via the
   `/assets` and `/images` static mounts and a catch-all route that returns
   `index.html` for client-side routing. In Docker, nginx serves the same files.
 - **API contract.** The frontend calls `/api/v1/...` through one Axios client

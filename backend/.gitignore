@@ -6,6 +6,7 @@
 *.env
 logs/
 static/
+configurations/local.yaml
 
 .ruff_cache/
 .DS_Store

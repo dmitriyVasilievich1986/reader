@@ -1,0 +1,65 @@
+# Build context is the repo root; only backend/ and frontend/ are copied into the image.
+
+# Repository, CI and editor files
+.git/
+.github/
+.claude/
+.cursor/
+.vscode/
+.idea/
+**/.DS_Store
+**/AGENTS.md
+
+# Deployment files and local data
+Dockerfile
+docker-compose*.yaml
+nginx/
+db/
+static/
+
+# Backend: secrets and local configuration
+backend/.env
+backend/*.env
+backend/configurations/local.yaml
+backend/configurations/local.example.yaml
+
+# Backend: local databases and data
+backend/*.sqlite3
+backend/logs/
+
+# Backend: frontend build output (built inside the image)
+backend/static/
+
+# Backend: virtual environments
+backend/.venv/
+backend/venv/
+
+# Backend: Python caches and build artifacts
+**/__pycache__/
+**/*.py[cod]
+backend/build/
+backend/dist/
+backend/*.egg-info/
+backend/src/*.egg-info/
+
+# Backend: tooling caches
+**/.mypy_cache/
+**/.ruff_cache/
+**/.pytest_cache/
+
+# Backend: tests and coverage reports
+backend/tests/
+backend/htmlcov/
+backend/.coverage
+backend/.coverage.*
+backend/coverage.xml
+
+# Backend: scratch notebooks
+backend/notebooks/
+**/.ipynb_checkpoints/
+
+# Frontend: secrets, dependencies and build output
+frontend/*.env
+frontend/.env
+frontend/node_modules/
+frontend/dist/

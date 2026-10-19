@@ -35,8 +35,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: resolve(__dirname, '../backend/static'),
-    emptyOutDir: false,
+    outDir: resolve(__dirname, 'dist'),
     rollupOptions: {
       output: {
         assetFileNames: 'assets/[name]-[hash][extname]',

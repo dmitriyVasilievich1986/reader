@@ -46,7 +46,7 @@ jobs:
       - name: Install dependencies
         if: steps.changes.outputs.backend == 'true'
         working-directory: ./backend
-        run: uv sync --frozen --dev
+        run: uv sync --frozen --no-dev --group test --group sqlite
 
       - name: Run tests with coverage
         if: steps.changes.outputs.backend == 'true'
