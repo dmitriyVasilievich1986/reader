@@ -7,7 +7,7 @@ the FastAPI application instance with all necessary middleware, routers, and set
 __all__ = ("get_app",)
 
 
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 
@@ -59,11 +59,15 @@ def get_app(config: AppConfig | None = None) -> FastAPI:
     logger.debug("Mounting static assets from %s...", str(app_config.info.paths_info.static))
     mount_static_files(app, app_config)
 
+    app_router = APIRouter(prefix=app_config.info.api_info.api_prefix)
+
     logger.debug("Adding API router...")
-    app.include_router(api_router)
+    app_router.include_router(api_router)
 
     logger.debug("Adding index router...")
-    app.include_router(index_router)
+    app_router.include_router(index_router)
+
+    app.include_router(app_router)
 
     logger.info("App created successfully.")
     return app
