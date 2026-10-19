@@ -7,7 +7,7 @@ the FastAPI application instance with all necessary middleware, routers, and set
 __all__ = ("get_app",)
 
 
-from fastapi import FastAPI, APIRouter
+from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 
