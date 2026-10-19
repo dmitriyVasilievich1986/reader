@@ -23,7 +23,7 @@ class CORSInfo(BaseModel):
     """
 
     origins: list[str] = Field(
-        default_factory=lambda: ["*"],
+        ...,
         description='List of allowed origins or "*" to allow any origin',
     )
     allow_credentials: bool = Field(
@@ -31,10 +31,10 @@ class CORSInfo(BaseModel):
         description="Whether to allow credentials to cross-origin callers",
     )
     allow_methods: list[str] = Field(
-        default_factory=lambda: ["*"],
+        ...,
         description='List of allowed HTTP methods or "*" to allow any method',
     )
     allow_headers: list[str] = Field(
-        default_factory=lambda: ["*"],
+        ...,
         description='List of allowed HTTP headers or "*" to allow any header',
     )
