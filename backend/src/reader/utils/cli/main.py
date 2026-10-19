@@ -53,6 +53,7 @@ def run(ctx: click.Context, host: str, port: int) -> None:
     """Start uvicorn serving the Reader ASGI application.
 
     Args:
+        ctx (click.Context): Command context populated by ``main``.
         host (str): Bind address for the HTTP server.
         port (int): TCP port for the HTTP server.
 
