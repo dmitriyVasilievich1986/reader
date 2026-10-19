@@ -6,7 +6,6 @@ ARG VITE_IMAGES_HOST=/static/images
 
 COPY ./frontend /opt/frontend
 
-RUN mkdir -p /opt/backend/static
 RUN npm ci
 RUN npm run build
 
@@ -21,25 +20,39 @@ COPY --from=ghcr.io/astral-sh/uv:0.6 /uv /bin/uv
 
 WORKDIR /opt/backend
 
-# Install dependencies from pyproject.toml
+# Install dependencies and the project (provides the `reader` CLI)
 COPY ./backend/pyproject.toml ./
 COPY ./backend/uv.lock ./
+COPY ./backend/Readme.md ./
+COPY ./backend/LICENSE ./
+COPY ./backend/src ./src
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --no-dev --no-install-project --link-mode=copy --no-editable
+    uv sync --no-dev --group sqlite --link-mode=copy --no-editable
 
 FROM python:3.13-slim-bookworm AS production
+
+ENV ENVIRONMENT=prod
+
+# Run as an unprivileged user instead of root
+RUN groupadd --system reader \
+    && useradd --system --gid reader --no-create-home --home-dir /opt/backend reader
 
 WORKDIR /opt/backend
 
 COPY --from=build /opt/backend/.venv /opt/backend/.venv
 COPY ./backend/pyproject.toml ./
 COPY ./backend/src ./src
-COPY --from=frontend /opt/backend/static /opt/backend/static
+COPY --from=frontend --chown=reader:reader /opt/frontend/dist /opt/backend/static
 COPY ./backend/configurations ./configurations
+
+# The app writes book images into static/ and may create files in its workdir
+RUN chown reader:reader /opt/backend
 
 # Add binaries for run inside container
 ENV PYTHONPATH="/opt/backend/src"
 ENV PATH="/opt/backend/.venv/bin:${PATH}"
+
+USER reader
 
 EXPOSE 8000
 
