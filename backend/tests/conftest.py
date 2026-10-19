@@ -60,6 +60,10 @@ def sqlite_db_path(tmp_path: Path) -> Path:
 def test_config_file(tmp_path: Path, sqlite_db_path: Path) -> Path:
     """Write minimal ``AppConfig`` YAML that targets the per-test SQLite file.
 
+    Static paths point inside ``tmp_path`` so tests never touch the real
+    frontend build output; ``alembic_ini`` points at the repository config.
+    ``api_prefix`` is empty so API tests can call ``/api/v1/...`` directly.
+
     Args:
         tmp_path (pathlib.Path): Pytest-provided temporary directory unique to
             the test.
@@ -70,7 +74,9 @@ def test_config_file(tmp_path: Path, sqlite_db_path: Path) -> Path:
         pathlib.Path: Absolute path to the written ``test.yaml`` file.
 
     """
+    static_dir = tmp_path / "static"
     payload = {
+        "environment": "test",
         "info": {
             "name": "Reader",
             "description": "test",
@@ -78,12 +84,20 @@ def test_config_file(tmp_path: Path, sqlite_db_path: Path) -> Path:
                 "app_port": 8000,
                 "debug": False,
                 "log_level": "INFO",
+                "api_prefix": "",
             },
             "cors_info": {
                 "origins": ["*"],
                 "allow_credentials": True,
                 "allow_methods": ["GET"],
                 "allow_headers": ["*"],
+            },
+            "paths_info": {
+                "alembic_ini": str(ALEMBIC_INI),
+                "static": str(static_dir),
+                "assets": str(static_dir / "assets"),
+                "images": str(static_dir / "images"),
+                "index_html": str(static_dir / "index.html"),
             },
         },
         "services": {
@@ -106,9 +120,12 @@ def test_config_file(tmp_path: Path, sqlite_db_path: Path) -> Path:
 def app_config(monkeypatch: pytest.MonkeyPatch, test_config_file: Path) -> AppConfig:
     """Load ``AppConfig`` from the test YAML via ``CONFIG_FILE_PATH``.
 
+    Environment variables outrank the YAML file, so ``ENVIRONMENT`` and the JWT
+    settings are pinned here to keep values from ``.env`` out of the tests.
+
     Args:
-        monkeypatch (pytest.MonkeyPatch): Sets ``CONFIG_FILE_PATH`` for the
-            duration of the test.
+        monkeypatch (pytest.MonkeyPatch): Sets ``CONFIG_FILE_PATH`` and the
+            pinned overrides for the duration of the test.
         test_config_file (pathlib.Path): Path to YAML written by
             ``test_config_file``.
 
@@ -117,6 +134,9 @@ def app_config(monkeypatch: pytest.MonkeyPatch, test_config_file: Path) -> AppCo
 
     """
     monkeypatch.setenv("CONFIG_FILE_PATH", str(test_config_file))
+    monkeypatch.setenv("ENVIRONMENT", "test")
+    monkeypatch.setenv("SERVICES__AUTH__JWT_SECRET_KEY", "test-jwt-secret-key")
+    monkeypatch.setenv("SERVICES__AUTH__JWT_ALGORITHM", "HS256")
     return AppConfig.get_or_create(reload=True)
 
 
