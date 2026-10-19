@@ -41,19 +41,14 @@ dev = [
     "ruff>=0.15.13",
     "types-colorama>=0.4.15.20260508",
 ]
-postgres = [
-    "asyncpg>=0.32.0",
-    "psycopg[binary]>=3.3.6",
-]
-sqlite = [
-    "aiosqlite>=0.22.1",
-    "greenlet>=3.5.0",
-]
+postgres = ["asyncpg>=0.32.0", "psycopg[binary]>=3.3.6"]
+sqlite = ["aiosqlite>=0.22.1", "greenlet>=3.5.0"]
 test = [
     "httpx>=0.28.1",
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
     "pytest-cov>=7.1.0",
+    "pytest-env>=1.7.1",
 ]
 
 [build-system]
@@ -198,7 +193,10 @@ markers = [
     "slow: mark test as slow running",
     "integration: mark test as integration test",
     "api: mark test as an API endpoint test",
+    "migrations: mark test as an Alembic migration test",
 ]
+env_files = ["test.env"]
+env = ["ENVIRONMENT=test"]
 
 [tool.coverage.run]
 source = ["src/reader"]
