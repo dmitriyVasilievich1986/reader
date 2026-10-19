@@ -29,6 +29,7 @@ uv run --env-file=.env <command>
 
 ```bash
 uv sync                                               # install deps (incl. dev group)
+uv run pre-commit install                             # install git hooks (see root AGENTS.md)
 uv add <pkg> / uv add --dev <pkg>                     # add a dependency (updates uv.lock)
 
 uv run --env-file=.env pytest                         # all tests + coverage

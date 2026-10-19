@@ -99,6 +99,18 @@ GitHub Actions run on pushes and PRs to `main` and `development`:
 Run the same checks locally before opening a PR (commands are in the tier
 AGENTS files).
 
+### Pre-commit
+
+`.pre-commit-config.yaml` runs the CI linters (ruff, ty, eslint, prettier),
+basic file hygiene checks, and blocks commits to `main`/`development`.
+`pre-commit` is in the backend dev group:
+
+```bash
+cd backend
+uv run pre-commit install            # once per clone
+uv run pre-commit run --all-files    # run every hook manually
+```
+
 ## Git workflow
 
 ### Protected branches
