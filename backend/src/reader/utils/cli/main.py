@@ -48,26 +48,27 @@ async def show_config(ctx: click.Context) -> None:
 @main.command(help="Start the Reader application server.")
 @click.option("--host", default="0.0.0.0", help="Host to bind the server to.")
 @click.option("--port", default=8000, help="Port to bind the server to.")
-@click.option("--reload", is_flag=True, help="Enable auto-reload for development.")
-def run(host: str, port: int, reload: bool) -> None:
+@click.pass_context
+def run(ctx: click.Context, host: str, port: int) -> None:
     """Start uvicorn serving the Reader ASGI application.
 
     Args:
         host (str): Bind address for the HTTP server.
         port (int): TCP port for the HTTP server.
-        reload (bool, optional): Enable dev auto-reload. Defaults to ``False``.
 
     Returns:
         None
 
     """
-    click.echo(f"Starting Reader on {host}:{port} (reload={reload})")
+    config: AppConfig = ctx.obj["config"]
+    click.echo(f"Starting Reader on {host}:{port}")
     uvicorn.run(
         "reader.modules.app:get_app",
         host=host,
         port=port,
-        reload=reload,
+        reload=True,
         factory=True,
+        log_level=config.info.api_info.log_level.lower(),
     )
 
 
