@@ -58,14 +58,14 @@ repos:
         pass_filenames: false
 
       # Frontend
-      - id: eslint
-        name: eslint (frontend)
+      - id: oxlint
+        name: oxlint (frontend)
         entry: npm --prefix frontend run -s lint:check
         language: system
         files: ^frontend/.*\.(ts|tsx|js|jsx|mjs|cjs)$
         pass_filenames: false
-      - id: prettier
-        name: prettier (frontend)
+      - id: oxfmt
+        name: oxfmt (frontend)
         entry: npm --prefix frontend run -s format:check
         language: system
         files: ^frontend/
