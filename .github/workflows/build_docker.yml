@@ -1,0 +1,51 @@
+name: build-docker
+
+on:
+  push:
+    branches:
+      - main
+      - development
+  pull_request:
+    branches:
+      - main
+      - development
+
+jobs:
+  build-docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Detect image changes
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            docker:
+              - 'Dockerfile'
+              - '.dockerignore'
+              - 'backend/**'
+              - 'frontend/**'
+              - '.github/workflows/build_docker.yml'
+
+      - name: Skip Docker build (no relevant changes)
+        if: steps.changes.outputs.docker != 'true'
+        run: echo "No Dockerfile, backend, frontend or workflow changes; marking check successful."
+
+      - name: Set up Docker Buildx
+        if: steps.changes.outputs.docker == 'true'
+        uses: docker/setup-buildx-action@v3
+
+      # Build only, to verify the image; it is not pushed to any registry
+      - name: Build image
+        if: steps.changes.outputs.docker == 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: reader:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

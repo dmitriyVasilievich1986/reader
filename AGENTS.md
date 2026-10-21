@@ -27,7 +27,7 @@ reader/
 ├── Dockerfile                # Multi-stage image: frontend build → backend venv → runtime
 ├── docker-compose.yaml       # Main deployment: nginx + postgres + backend
 ├── docker-compose-infra.yaml # nginx + postgres only (backend run outside Docker)
-└── .github/workflows/        # CI: build_backend, build_frontend, test_backend, test_frontend
+└── .github/workflows/        # CI: build_backend, build_frontend, test_backend, test_frontend, build_docker
 ```
 
 ## How frontend and backend work together
@@ -96,6 +96,7 @@ GitHub Actions run on pushes and PRs to `main` and `development`:
 - `test_backend.yml` — `pytest`
 - `build_frontend.yml` — `voidzero-dev/setup-vp` (`vp install`), `vp fmt --check` (Oxfmt), `vp lint` (Oxlint + type check), `vp run build`
 - `test_frontend.yml` — `vp test run --coverage` (uploads `frontend/coverage/`)
+- `build_docker.yml` — builds the `Dockerfile` image with Buildx (no push)
 
 Run the same checks locally before opening a PR (commands are in the tier
 AGENTS files).
