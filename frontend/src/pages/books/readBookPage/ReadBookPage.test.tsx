@@ -163,9 +163,7 @@ describe('ReadBookPage', () => {
     expect(chip()).toHaveStyle({ visibility: 'hidden' });
   });
 
-  // Known bug: `Image` does not forward `data-position` to the <img>, so the observer reads
-  // `dataset.position` as undefined and shows "Page NaN". Switch back to `it` once fixed.
-  it.fails('tracks the page that crosses the middle of the viewport', async () => {
+  it('tracks the page that crosses the middle of the viewport', async () => {
     renderReadBookPage();
     await screen.findByRole('img', { name: '1' });
 

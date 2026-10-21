@@ -27,6 +27,7 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(pro
       onError={() => setFailed(true)}
       alt={props.alt ?? 'Image'}
       className={props.className}
+      data-position={props['data-position']}
       ref={ref}
     />
   );
