@@ -4,7 +4,7 @@ Project-level guidance for AI coding agents. Each tier has its own detailed
 rules — read them before changing code there:
 
 - [`backend/AGENTS.md`](backend/AGENTS.md) — FastAPI service, DB, migrations, tests
-- [`frontend/AGENTS.md`](frontend/AGENTS.md) — React SPA, ESLint/Prettier rules
+- [`frontend/AGENTS.md`](frontend/AGENTS.md) — React SPA (Vite+), Oxlint/Oxfmt rules
 
 ## What the project is
 
@@ -101,7 +101,7 @@ AGENTS files).
 
 ### Pre-commit
 
-`.pre-commit-config.yaml` runs the CI linters (ruff, ty, eslint, prettier),
+`.pre-commit-config.yaml` runs the linters (ruff, ty, oxlint, oxfmt),
 basic file hygiene checks, and blocks commits to `main`/`development`.
 `pre-commit` is in the backend dev group:
 
