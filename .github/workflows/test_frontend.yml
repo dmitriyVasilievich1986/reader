@@ -1,0 +1,55 @@
+name: test-frontend
+
+on:
+  push:
+    branches:
+      - main
+      - development
+  pull_request:
+    branches:
+      - main
+      - development
+
+jobs:
+  test-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Detect frontend changes
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            frontend:
+              - 'frontend/**'
+              - '.github/workflows/test_frontend.yml'
+
+      - name: Skip frontend tests (no relevant changes)
+        if: steps.changes.outputs.frontend != 'true'
+        run: echo "No frontend or workflow changes; marking check successful."
+
+      # Installs Vite+ (version from package.json), Node.js and runs `vp install`
+      - name: Setup Vite+
+        if: steps.changes.outputs.frontend == 'true'
+        uses: voidzero-dev/setup-vp@v1.21.2
+        with:
+          working-directory: ./frontend
+          node-version: "24"
+          cache: true
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Run tests with coverage
+        if: steps.changes.outputs.frontend == 'true'
+        working-directory: ./frontend
+        run: vp test run --coverage
+
+      - name: Upload coverage HTML report
+        uses: actions/upload-artifact@v4
+        if: steps.changes.outputs.frontend == 'true' && always()
+        with:
+          name: frontend-coverage-report
+          path: frontend/coverage/
+          retention-days: 7

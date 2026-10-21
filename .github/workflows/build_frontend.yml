@@ -41,15 +41,16 @@ jobs:
           cache: true
           cache-dependency-path: frontend/package-lock.json
 
-      - name: Check format, lint and types
+      - name: Run oxfmt formatter check
         if: steps.changes.outputs.frontend == 'true'
         working-directory: ./frontend
-        run: vp check
+        run: vp fmt --check .
 
-      - name: Run tests
+      # Type-aware lint: also reports TypeScript type errors (`typeCheck` in vite.config.ts)
+      - name: Run oxlint linter and type check
         if: steps.changes.outputs.frontend == 'true'
         working-directory: ./frontend
-        run: vp test
+        run: vp lint .
 
       - name: Build project
         if: steps.changes.outputs.frontend == 'true'
