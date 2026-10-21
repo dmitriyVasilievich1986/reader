@@ -12,7 +12,7 @@ described elsewhere.
 - Drivers: `aiosqlite` (local/tests), `psycopg` / `asyncpg` (PostgreSQL)
 - Pydantic v2 + `pydantic-settings[yaml]` for config
 - `asyncclick` CLI, Loguru logging, `bcrypt` + `pyjwt` for auth
-- Dev: `pytest`, `pytest-asyncio`, `pytest-cov`, `httpx`, `ruff`, `mypy`
+- Dev: `pytest`, `pytest-asyncio`, `pytest-cov`, `httpx`, `ruff`, `ty`
 
 ## Running commands
 
@@ -25,10 +25,11 @@ uv run --env-file=.env <command>
 `.env` provides `CONFIG_FILE_PATH` (the YAML config to load) and the
 `SERVICES__AUTH__*` secrets. Without it, config falls back to
 `configurations/prod.yaml` and auth secrets are missing. Never call `python`,
-`pytest`, `ruff`, `mypy`, `alembic` or `reader` directly, and never `pip install`.
+`pytest`, `ruff`, `ty`, `alembic` or `reader` directly, and never `pip install`.
 
 ```bash
 uv sync                                               # install deps (incl. dev group)
+uv run pre-commit install                             # install git hooks (see root AGENTS.md)
 uv add <pkg> / uv add --dev <pkg>                     # add a dependency (updates uv.lock)
 
 uv run --env-file=.env pytest                         # all tests + coverage
@@ -36,7 +37,7 @@ uv run --env-file=.env pytest tests/api/test_books_api.py -k slug
 uv run --env-file=.env ruff check src tests           # lint
 uv run --env-file=.env ruff check src tests --fix     # lint with autofix
 uv run --env-file=.env ruff format src tests          # format
-uv run --env-file=.env mypy                           # type-check (packages = ["reader"])
+uv run --env-file=.env ty check                       # type-check (src/reader)
 
 uv run --env-file=.env reader run                     # start the API (http://localhost:8000)
 uv run --env-file=.env reader show-config             # print resolved AppConfig
@@ -52,7 +53,7 @@ Before finishing a change, all of these must pass:
 ```bash
 uv run --env-file=.env ruff check src tests
 uv run --env-file=.env ruff format --check src tests
-uv run --env-file=.env mypy
+uv run --env-file=.env ty check
 uv run --env-file=.env pytest
 ```
 
@@ -230,13 +231,18 @@ class BookDAO(BaseDAO[Book]):
         """
 ```
 
-## Typing (mypy)
+## Typing (ty)
 
-- `disallow_untyped_defs` / `disallow_incomplete_defs`: annotate every
-  parameter and return type (including `-> None`).
+Type-checked with Astral's [ty](https://docs.astral.sh/ty/) (`[tool.ty]` in
+`pyproject.toml`, scope `src/reader`). Warnings fail the check.
+
+- Ruff `ANN` rules: annotate every parameter and return type (including
+  `-> None`); `Any` is allowed. Tests are exempt.
+- `unsound-return-statement` is an error: don't return `Any` from a function
+  with a concrete return type — narrow or `cast` it.
 - Use modern syntax: `X | None`, `list[int]`, PEP 695 generics (`class BaseDAO[M: Base]`).
-- `warn_unused_ignores` is on: only add `# type: ignore[code]` with a specific
-  code when needed.
+- Unused ignores are errors: only add `# ty: ignore[<rule>]` with a specific
+  ty rule when needed. mypy-style `# type: ignore[code]` is not honoured.
 
 ## Ruff
 

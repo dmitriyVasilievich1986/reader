@@ -6,7 +6,6 @@
  * @returns MUI `AppBar` wrapping a toolbar and router links.
  */
 
-import { default as defaultImage } from '@assets/reader.svg';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -14,6 +13,8 @@ import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router';
+
+import { default as defaultImage } from '@assets/reader.svg';
 
 import { Logout } from './logout/Logout';
 /**

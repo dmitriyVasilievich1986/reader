@@ -140,7 +140,7 @@ class Filter[ColumnType: str](BaseModel):
             case "lt":
                 return column < self.value
             case "in":
-                return column.in_(self.value)  # type: ignore[arg-type]
+                return column.in_(self.value)  # ty: ignore[invalid-argument-type]
             case "like":
                 return column.like(f"%{self.value}%")
             case "ilike":

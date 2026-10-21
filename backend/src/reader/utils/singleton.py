@@ -3,7 +3,7 @@
 __all__ = ("Singleton",)
 
 from threading import Lock
-from typing import Any, ClassVar
+from typing import Any, cast, ClassVar
 
 
 class Singleton[InstanceType: Any](type):
@@ -14,7 +14,7 @@ class Singleton[InstanceType: Any](type):
     lock so instance creation is safe across threads.
     """
 
-    _instances: ClassVar[dict[type, InstanceType]] = {}
+    _instances: ClassVar[dict[type, Any]] = {}
     _lock: Lock = Lock()
 
     def __call__(cls, *args: Any, **kwargs: Any) -> InstanceType:
@@ -34,4 +34,4 @@ class Singleton[InstanceType: Any](type):
             if cls not in cls._instances:
                 instance = super().__call__(*args, **kwargs)
                 cls._instances[cls] = instance
-        return cls._instances[cls]
+        return cast("InstanceType", cls._instances[cls])

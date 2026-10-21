@@ -4,8 +4,8 @@
 
 import { apiClientInstance } from '../base';
 
-import type { SimpleAuthorType } from './types';
 import type { PaginationMetadata, FilterType } from '../types';
+import type { SimpleAuthorType } from './types';
 
 /**
  * Factory for author endpoints (`/api/v1/author`).

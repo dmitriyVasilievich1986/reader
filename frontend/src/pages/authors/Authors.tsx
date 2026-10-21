@@ -10,11 +10,11 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
-import { getAuthorName, parseIntWithCheck } from '@utils';
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 
 import { useAuthorAPIClient, type SimpleAuthorType } from '@services/apiClient/author';
+import { getAuthorName, parseIntWithCheck } from '@utils';
 
 export function Authors() {
   const limit = 10;

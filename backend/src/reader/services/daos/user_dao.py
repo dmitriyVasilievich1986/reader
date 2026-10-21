@@ -44,5 +44,5 @@ class UserDAO(BaseDAO[User]):
         if self.session is not None:
             return await self._create_raw(self.session, **(kwargs | {"password": hashed_password}))
 
-        async with self.database_client.session_factory() as session:  # type: ignore[union-attr]
+        async with self.database_client.session_factory() as session:  # ty: ignore[unresolved-attribute]
             return await self._create_raw(session, **(kwargs | {"password": hashed_password}))

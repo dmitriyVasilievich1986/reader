@@ -4,7 +4,7 @@ Project-level guidance for AI coding agents. Each tier has its own detailed
 rules — read them before changing code there:
 
 - [`backend/AGENTS.md`](backend/AGENTS.md) — FastAPI service, DB, migrations, tests
-- [`frontend/AGENTS.md`](frontend/AGENTS.md) — React SPA, ESLint/Prettier rules
+- [`frontend/AGENTS.md`](frontend/AGENTS.md) — React SPA (Vite+), Oxlint/Oxfmt rules
 
 ## What the project is
 
@@ -92,12 +92,24 @@ If you change ports, paths, env vars or the build output location, update
 
 GitHub Actions run on pushes and PRs to `main` and `development`:
 
-- `build_backend.yml` — `ruff check`, `ruff format --check`, `mypy`, `uv build`
+- `build_backend.yml` — `ruff check`, `ruff format --check`, `ty check`, `uv build`
 - `test_backend.yml` — `pytest`
-- `build_frontend.yml` — `npm ci && npm run build`
+- `build_frontend.yml` — `voidzero-dev/setup-vp` (`vp install`), `vp check`, `vp run build`
 
 Run the same checks locally before opening a PR (commands are in the tier
 AGENTS files).
+
+### Pre-commit
+
+`.pre-commit-config.yaml` runs the linters (ruff, ty, oxlint, oxfmt),
+basic file hygiene checks, and blocks commits to `main`/`development`.
+`pre-commit` is in the backend dev group:
+
+```bash
+cd backend
+uv run pre-commit install            # once per clone
+uv run pre-commit run --all-files    # run every hook manually
+```
 
 ## Git workflow
 

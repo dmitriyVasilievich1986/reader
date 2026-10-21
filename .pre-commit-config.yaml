@@ -1,0 +1,72 @@
+# Install once from backend/: `uv run pre-commit install`
+# Run on everything:          `uv run pre-commit run --all-files`
+#
+# Backend and frontend hooks call the tools pinned in backend/uv.lock and
+# frontend/package-lock.json, so they match CI exactly.
+default_install_hook_types: [pre-commit]
+default_stages: [pre-commit]
+
+exclude: |
+  (?x)^(
+    backend/notebooks/.*|
+    backend/static/.*|
+    backend/htmlcov/.*|
+    frontend/dist/.*|
+    db/data/.*|
+    .*\.lock|
+    .*package-lock\.json
+  )$
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: no-commit-to-branch
+        args: [--branch, main, --branch, development]
+      - id: check-merge-conflict
+      - id: check-added-large-files
+      - id: detect-private-key
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+        exclude: ^frontend/tsconfig.*\.json$ # JSONC (comments)
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+
+  - repo: local
+    hooks:
+      # Backend (same checks as .github/workflows/build_backend.yml)
+      - id: ruff-check
+        name: ruff check (backend)
+        entry: uv run --project backend ruff check --fix
+        language: system
+        types_or: [python, pyi]
+        files: ^backend/(src|tests)/
+      - id: ruff-format
+        name: ruff format (backend)
+        entry: uv run --project backend ruff format
+        language: system
+        types_or: [python, pyi]
+        files: ^backend/(src|tests)/
+      - id: ty
+        name: ty check (backend)
+        entry: uv run --project backend ty check --project backend
+        language: system
+        types_or: [python, pyi]
+        files: ^backend/src/
+        pass_filenames: false
+
+      # Frontend
+      - id: oxlint
+        name: oxlint (frontend)
+        entry: npm --prefix frontend run -s lint:check
+        language: system
+        files: ^frontend/.*\.(ts|tsx|js|jsx|mjs|cjs)$
+        pass_filenames: false
+      - id: oxfmt
+        name: oxfmt (frontend)
+        entry: npm --prefix frontend run -s format:check
+        language: system
+        files: ^frontend/
+        pass_filenames: false

@@ -6,8 +6,8 @@
 
 import { apiClientInstance } from '../base';
 
-import type { PageType } from './types';
 import type { PaginationMetadata, FilterType } from '../types';
+import type { PageType } from './types';
 
 /**
  * Factory for page endpoints (`/api/v1/page`).

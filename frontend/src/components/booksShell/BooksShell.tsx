@@ -17,13 +17,14 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import Skeleton from '@mui/material/Skeleton';
-import { getAuthorName } from '@utils';
 import { useNavigate } from 'react-router';
 
 import { Image } from '@components/image/Image';
-import type { BookType } from '@services/apiClient/book';
+import { getAuthorName } from '@utils';
 
 import styles from './style.module.css';
+
+import type { BookType } from '@services/apiClient/book';
 
 /**
  * Responsive five-column shell for browsing books: skeleton placeholders when `props.books` is `null`,

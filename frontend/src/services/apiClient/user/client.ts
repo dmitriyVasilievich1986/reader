@@ -6,11 +6,11 @@
  */
 
 import { useMainStore } from '@store/main/mainStore';
-import type { UserType } from '@store/main/types';
 
 import { apiClientInstance, useApiClientWrapper } from '../base';
 
 import type { UserPatchRequest } from './types';
+import type { UserType } from '@store/main/types';
 
 /**
  * Hook that exposes user profile requests, using `useApiClientWrapper` for PATCH and syncing the main store after a successful update.

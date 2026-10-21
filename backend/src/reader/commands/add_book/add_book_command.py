@@ -119,7 +119,7 @@ class AddBookCommand(BaseCommand[AddBookResponse]):
         for book_path in self.author_path.iterdir():
             page_paths: list[Path] = sorted(
                 list(book_path.iterdir()),
-                key=lambda x: int(re.search(r"\d+", x.name).group(0)),  # type: ignore[union-attr]
+                key=lambda x: int(re.search(r"\d+", x.name).group(0)),  # ty: ignore[unresolved-attribute]
             )
             pages = [
                 Page(

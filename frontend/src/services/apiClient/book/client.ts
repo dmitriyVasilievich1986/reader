@@ -4,8 +4,8 @@
 
 import { apiClientInstance } from '../base';
 
-import type { BookType } from './types';
 import type { PaginationMetadata, FilterType } from '../types';
+import type { BookType } from './types';
 
 /**
  * Factory for book endpoints (`/api/v1/book`).

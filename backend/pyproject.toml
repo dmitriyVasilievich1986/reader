@@ -36,9 +36,10 @@ dependencies = [
 [dependency-groups]
 dev = [
     "ipykernel>=7.2.0",
-    "mypy>=2.1.0",
+    "pre-commit>=4.7.0",
     "python-dotenv>=1.2.2",
     "ruff>=0.15.13",
+    "ty>=0.0.89",
     "types-colorama>=0.4.15.20260508",
 ]
 postgres = ["asyncpg>=0.32.0", "psycopg[binary]>=3.3.6"]
@@ -117,8 +118,9 @@ select = [
     "COM",   # flake8-commas (COM)
     "D",     # pydocstyle (D)
     "FIX",   # flake8-fixme (FIX)
+    "ANN",   # flake8-annotations (ANN), replaces mypy `disallow_untyped_defs` / `disallow_incomplete_defs`
 ]
-ignore = ["E712", "RUF001", "N817", "N814", "RUF100", "COM812", "D203", "D213"]
+ignore = ["E712", "RUF001", "N817", "N814", "RUF100", "COM812", "D203", "D213", "ANN401"]
 
 extend-select = ["I"]
 
@@ -128,6 +130,14 @@ unfixable = []
 
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.per-file-ignores]
+# mypy only checked the `reader` package, so tests stay exempt from annotation rules.
+"tests/**" = ["ANN"]
+
+[tool.ruff.lint.flake8-annotations]
+# Like mypy, allow `__init__` without `-> None` when at least one argument is annotated.
+mypy-init-return = true
 
 [tool.ruff.lint.mccabe]
 max-complexity = 18
@@ -159,19 +169,23 @@ known-third-party = [
     "sqlalchemy",
 ]
 
-[tool.mypy]
-python_version = "3.13"
-mypy_path = ["src"]
-packages = ["reader"]
-show_error_codes = true
-warn_unused_configs = true
-warn_return_any = true
-warn_unused_ignores = true
-check_untyped_defs = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-strict_equality = true
-plugins = ["sqlalchemy.ext.mypy.plugin"]
+[tool.ty.environment]
+python-version = "3.13"
+root = ["src"]
+
+[tool.ty.src]
+include = ["src/reader"]
+
+[tool.ty.rules]
+# Equivalent of mypy `warn_return_any`.
+unsound-return-statement = "error"
+# Equivalent of mypy `warn_unused_ignores`.
+unused-ignore-comment = "error"
+unused-type-ignore-comment = "error"
+ignore-comment-unknown-rule = "error"
+
+[tool.ty.terminal]
+error-on-warning = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
