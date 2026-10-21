@@ -17,8 +17,8 @@ described elsewhere.
 - HTTP: Axios + `js-cookie` (bearer token in the `accessToken` cookie)
 - Utilities: `dayjs`, `classnames`, `rison`
 
-There is no test runner configured. Verify changes with type-check, lint and
-format (see below).
+- Tests: Vitest 5 (bundled with Vite+, run via `vp test`) + jsdom +
+  Testing Library (`@testing-library/react`, `jest-dom`, `user-event`).
 
 ## Commands
 
@@ -35,14 +35,26 @@ npm run lint:fix      # vp lint . --fix
 npm run format:check  # vp fmt --check .
 npm run format:fix    # vp fmt .
 npx vp check          # format + lint + type check in one run
+npm run test          # vp test — run tests once
+npm run test:watch    # vp test watch
+npm run test:coverage # vp test run --coverage → coverage/
 ```
 
 Before finishing a change, all of these must pass (no errors; don't add new
 warnings):
 
 ```bash
-npx tsc -b && npx vp check
+npx tsc -b && npx vp check && npx vp test
 ```
+
+### Tests
+
+- Config lives in the `test` block of `vite.config.ts` (no `vitest.config.ts`):
+  jsdom environment, globals enabled, setup in `src/setupTests.ts`
+  (jest-dom matchers + Testing Library cleanup).
+- Put tests next to the code as `<name>.test.ts` / `<name>.test.tsx` under `src/`.
+- Import Vitest APIs from `vite-plus/test`, not `vitest`
+  (`import { describe, expect, it, vi } from 'vite-plus/test'`).
 
 Do not run `npm run build` just to verify — it writes into `dist/`.
 

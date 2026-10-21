@@ -4,4 +4,5 @@ export type ImageProps = {
   height?: number | string;
   alt?: string;
   className?: string;
+  'data-position'?: number;
 };
