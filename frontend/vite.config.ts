@@ -1312,6 +1312,18 @@ export default defineConfig({
     tabWidth: 2,
     arrowParens: 'always',
     sortPackageJson: false,
+    sortImports: {
+      groups: [
+        ['builtin', 'external'],
+        'internal',
+        ['parent', 'sibling', 'index', 'style'],
+        'type',
+        'unknown',
+      ],
+      internalPattern: ['@components', '@pages', '@store', '@services', '@utils', '@assets'],
+      ignoreCase: true,
+      newlinesBetween: true,
+    },
     ignorePatterns: [],
   },
   plugins: lazyPlugins(() => [react()]),
