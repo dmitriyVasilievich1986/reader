@@ -11,7 +11,10 @@
     "format:fix": "vp fmt .",
     "lint:check": "vp lint .",
     "lint:fix": "vp lint . --fix",
-    "preview": "vp preview"
+    "preview": "vp preview",
+    "test": "vp test",
+    "test:watch": "vp test watch",
+    "test:coverage": "vp test run --coverage"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -31,11 +34,17 @@
     "zustand": "^5.0.13"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-v8": "^5.0.5",
     "autoprefixer": "^10.5.0",
     "globals": "^15.14.0",
+    "jsdom": "^30.1.3",
     "postcss": "^8.5.14",
     "tailwindcss": "^3.4.19",
     "typescript": "~5.6.2",

@@ -46,6 +46,11 @@ jobs:
         working-directory: ./frontend
         run: vp check
 
+      - name: Run tests
+        if: steps.changes.outputs.frontend == 'true'
+        working-directory: ./frontend
+        run: vp test
+
       - name: Build project
         if: steps.changes.outputs.frontend == 'true'
         working-directory: ./frontend

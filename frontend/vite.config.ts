@@ -1351,4 +1351,16 @@ export default defineConfig({
       },
     },
   },
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./src/setupTests.ts'],
+    include: ['src/**/*.test.{ts,tsx}'],
+    css: { modules: { classNameStrategy: 'non-scoped' } },
+    coverage: {
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/**/*.test.{ts,tsx}', 'src/setupTests.ts', 'src/main.tsx', 'src/vite-env.d.ts'],
+      reporter: ['text', 'html'],
+    },
+  },
 });
