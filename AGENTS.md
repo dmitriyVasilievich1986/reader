@@ -94,7 +94,7 @@ GitHub Actions run on pushes and PRs to `main` and `development`:
 
 - `build_backend.yml` — `ruff check`, `ruff format --check`, `ty check`, `uv build`
 - `test_backend.yml` — `pytest`
-- `build_frontend.yml` — `npm ci && npm run build`
+- `build_frontend.yml` — `voidzero-dev/setup-vp` (`vp install`), `vp check`, `vp run build`
 
 Run the same checks locally before opening a PR (commands are in the tier
 AGENTS files).
