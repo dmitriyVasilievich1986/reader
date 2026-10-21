@@ -1,3 +1,7 @@
+/**
+ * Tests for {@link parseIntWithCheck}.
+ */
+
 import { describe, expect, it } from 'vite-plus/test';
 
 import { parseIntWithCheck } from './parseIntWithCheck';
