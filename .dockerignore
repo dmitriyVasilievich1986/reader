@@ -52,6 +52,7 @@ backend/tests/
 backend/htmlcov/
 backend/.coverage
 backend/.coverage.*
+**/*.ipynb
 backend/coverage.xml
 
 # Backend: scratch notebooks
