@@ -41,7 +41,7 @@ uv run --env-file=.env ty check                       # type-check (src/reader)
 
 uv run --env-file=.env reader run                     # start the API (http://localhost:8000)
 uv run --env-file=.env reader show-config             # print resolved AppConfig
-uv run --env-file=.env reader add-book --book-path <dir> [--preview]
+uv run --env-file=.env reader sync-books --library-path <dir> [--preview]
 uv run --env-file=.env reader user create-user --username ... --email ... [--is-admin] --password
 
 uv run --env-file=.env alembic -c src/reader/services/alembic/alembic.ini upgrade head
@@ -66,7 +66,7 @@ part of unrelated work.
 src/reader/
 ├── __init__.py            # __version__ (hatch reads the package version here)
 ├── __main__.py            # python -m reader → uvicorn
-├── commands/              # Business workflows used by the CLI (base.py, add_book/)
+├── commands/              # Business workflows used by the CLI (base.py, sync_books/)
 ├── config/                # AppConfig (singleton, YAML + env) and nested settings models
 ├── modules/
 │   ├── app.py             # get_app() FastAPI factory

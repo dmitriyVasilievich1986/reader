@@ -30,7 +30,7 @@ by the frontend.
 backend/
 ├── configurations/          # YAML configs per environment (local, prod)
 ├── src/reader/
-│   ├── commands/            # CLI workflows (e.g. add_book)
+│   ├── commands/            # CLI workflows (e.g. sync_books)
 │   ├── config/              # AppConfig + nested Pydantic settings models
 │   ├── modules/
 │   │   ├── app.py           # FastAPI factory (get_app)
@@ -126,8 +126,8 @@ mounts the combined API router under `/api`.
 
 - `show-config` — prints the resolved `AppConfig` as JSON.
 - `run` — launches Uvicorn pointing at the FastAPI factory.
-- `add-book --book-path <dir> [--preview]` — ingest a book from a local
-  directory, or print a dry-run plan.
+- `sync-books --library-path <dir> [--static-url <url>] [--preview]` — import
+  every author and book from a local library folder, or print a dry-run plan.
 - `user create-user --username --email --password [--is-admin] [--first-name] [--last-name] [--photo-url]` —
   provision a new account (the only way to create users).
 - `user check-password --username --password` — verify a stored hash.
